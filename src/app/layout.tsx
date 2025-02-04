@@ -12,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${titilliumWeb.className}`}
+        className={`${titilliumWeb.className} bg-slate-100`}
       >
         {children}
       </body>

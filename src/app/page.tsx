@@ -1,29 +1,28 @@
 import Image from "next/image";
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 gap-10">
-      <h1 className="text-6xl font-bold">
-        Ambientapp
-      </h1>
-      <p>Pasantía Empresarial para el Desarrollo de una Plataforma Tecnológica en el Departamento de Ingeniería Ambiental de la FIC</p>
-      <Image
-        src="/ambiental.png"
-        alt="Ambientapp"
-        width={200}
-        height={200}
-      />
-      <Link href="/login">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    <div className="flex gap-5 w-full h-screen p-5">
+      <div className="flex flex-col gap-3 items-center justify-center w-1/2 border-r-2 border-blueDark">
+        <h1 className="text-2xl font-bold text-blueDark">
+          Pasantia Ambiental
+        </h1>
+        <Button
+          className="px-5 py-2 rounded-3xl"
+        >
           Login
-        </button>
-      </Link>
-      <Link href="/docente">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Docente
-        </button>
-      </Link>
+        </Button>
+      </div>
+      <div className="bg-blueDark rounded-3xl w-1/2 flex items-center justify-center">
+        <Image
+          src={"/ambiental.png"}
+          alt="Pasantia Ambiental"
+          height={500}
+          width={500}
+          className="rounded-3xl"
+        />
+      </div>
     </div>
   );
 }
