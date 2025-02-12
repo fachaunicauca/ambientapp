@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-3 w-1/2 py-36">
           <Input placeholder="Usuario" />
-          <Input type="password" placeholder="Contraseña" />
+          <PasswordInput placeholder="Contraseña" />
           <div className="flex items-center space-x-2 pb-2">
             <Checkbox id="terms" />
             <label
@@ -33,12 +34,11 @@ export default function Home() {
             <Image src="/googlewhite.svg" alt="Google" height={20} width={20} className="hidden group-hover:block" />
             <h1>Iniciar Sesión con Google</h1>
           </Button>
-
         </div>
       </div>
       <div className="bg-[url('/bg.svg')] bg-cover rounded-xl flex flex-col gap-2 w-4/5">
         <div className="flex flex-col gap-5 p-6 items-center justify-center">
-          <Image src={"/u2.png"} alt="Logo" height={200} width={200} />
+          <Image src={"/u.png"} alt="Logo" height={200} width={200} />
         </div>
       </div>
     </div>
