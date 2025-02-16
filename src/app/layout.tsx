@@ -1,5 +1,5 @@
 import "./globals.css";
-import { titilliumWeb } from "@/lib/fonts";
+import { openSans } from "@/lib/fonts";
 import { metadata } from "@/lib/metadata";
 
 export { metadata };
@@ -12,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${titilliumWeb.className} bg-slate-100`}
+        className={`${openSans.className}`}
       >
         {children}
       </body>
