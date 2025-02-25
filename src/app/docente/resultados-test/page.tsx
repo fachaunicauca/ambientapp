@@ -1,10 +1,10 @@
 import MainLayout from "@/components/mainLayout/mainLayout"
 import Title from "@/components/ui/title";
 
-export default function Docente() {
+export default function ResultadosTest() {
     return (
         <MainLayout>
-            <Title title="Docente" />
+            <Title title="Resultados de test" />
         </MainLayout>
     )
 }

@@ -6,7 +6,7 @@ import Footer from "@/components/footer/topFooter/topFooter";
 export default function Home() {
   return (
     <>
-      <div className="flex gap-2 w-full h-screen">
+      <div className="flex gap-2 w-full h-full md:h-screen">
         <LoginForm />
         <InfoSection />
       </div>

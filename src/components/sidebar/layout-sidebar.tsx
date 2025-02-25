@@ -3,9 +3,9 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar"
 
 export default function LayoutSidebar({ children }: { children: React.ReactNode }) {
     return (
-        <SidebarProvider>
+        <SidebarProvider className="flex h-screen">
             <AppSidebar />
-            <main>
+            <main className="flex-1 flex flex-col overflow-auto">
                 <SidebarTrigger />
                 {children}
             </main>

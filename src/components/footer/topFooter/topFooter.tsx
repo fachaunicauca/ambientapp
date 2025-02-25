@@ -2,15 +2,15 @@ import MainFooter from "../mainFooter/mainFooter";
 
 export default function Footer() {
     return (
-        <div className="flex flex-col justify-between h-80 bg-security text-[#73737e] p-8">
-            <div className="flex justify-between">
+        <div className="flex flex-col gap-20 md:gap-0 justify-between h-full md:h-80 bg-security text-[#73737e] p-8">
+            <div className="flex justify-between flex-col md:flex-row gap-20">
                 <div className="flex flex-col gap-3 font-bold">
                     <span className="text-2xl">Universidad del Cauca</span>
                     <span>NIT. 891500319-2</span>
                 </div>
 
                 <div className="flex gap-5 h-16 items-center text-sm">
-                    <div className="flex flex-col gap-2 items-end">
+                    <div className="flex flex-col gap-2 items-start md:items-end">
                         <p>Laboratorio de ingenieria ambiental y sanitaria</p>
                         <p>Vicerrectoría</p>
                         <p>d-civil@unicauca.edu.co</p>

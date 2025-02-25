@@ -6,7 +6,8 @@ import {
     Home,
     Skull,
     BookText,
-    Siren
+    Siren,
+    GraduationCap,
 } from "lucide-react"
 
 import { NavMain } from "@/components/sidebar/nav-main"
@@ -31,17 +32,40 @@ const data = {
     navMain: [
         {
             title: "Inicio",
-            url: "#",
+            url: "/home",
             icon: Home,
             isActive: true,
             items: [
                 {
                     title: "Conoceme",
-                    url: "#",
+                    url: "/home",
                 },
                 {
                     title: "Proyectos",
-                    url: "#",
+                    url: "/home",
+                }
+            ],
+        },
+        {
+            title: "Docente",
+            url: '/docente',
+            icon: GraduationCap,
+            items: [
+                {
+                    title: "Guías de laboratorio",
+                    url: "/docente/guia-laboratorio",
+                },
+                {
+                    title: "Solicitud de práctica",
+                    url: "/docente/practica-laboratorio",
+                },
+                {
+                    title: "Manejo de residuos",
+                    url: "/docente/manejo-residuos",
+                },
+                {
+                    title: "Resultados test",
+                    url: "/docente/resultados-test",
                 }
             ],
         },
