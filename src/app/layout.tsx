@@ -1,6 +1,7 @@
 import "./globals.css";
 import { openSans } from "@/lib/fonts";
 import { metadata } from "@/lib/metadata";
+import { Toaster } from "@/components/ui/sonner"
 
 export { metadata };
 
@@ -15,6 +16,7 @@ export default function RootLayout({
         className={`${openSans.className}`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );

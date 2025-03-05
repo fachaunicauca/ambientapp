@@ -8,14 +8,14 @@ import { JSX } from "react";
 
 export default function DynamicBreadCrumb() {
     const pathname = usePathname();
-    const segments = pathname.split("/").filter(Boolean);
+    const segments = pathname.split("/").filter(segment => segment && segment !== "dashboard");
     const breadcrumbItems: JSX.Element[] = [];
     
-    if (pathname !== '/home') {
+    if (pathname !== '/dashboard/home') {
         breadcrumbItems.push(
             <BreadcrumbItem key="/home">
                 <BreadcrumbLink asChild>
-                    <Link href="/home">{routeList['/home'] || 'Inicio'}</Link>
+                    <Link href="/dashboard/home">{routeList['/dashboard/home'] || 'Inicio'}</Link>
                 </BreadcrumbLink>
             </BreadcrumbItem>
         );
@@ -25,24 +25,25 @@ export default function DynamicBreadCrumb() {
     }
 
     segments.forEach((segment, index) => {
-        const currentPath = `/${segments.slice(0, index + 1).join("/")}`;
-        const label = routeList[currentPath] || decodeURIComponent(segment);
+        const displaySegments = segments.slice(0, index + 1);
+        const navigationPath = `/dashboard/${displaySegments.join("/")}`;
+        const label = routeList[navigationPath] || decodeURIComponent(segment);
         const isLast = index === segments.length - 1;
 
         breadcrumbItems.push(
-            <BreadcrumbItem key={currentPath}>
+            <BreadcrumbItem key={navigationPath}>
                 {isLast ? (
                     <BreadcrumbPage>{label}</BreadcrumbPage>
                 ) : (
                     <BreadcrumbLink asChild>
-                        <Link href={currentPath}>{label}</Link>
+                        <Link href={navigationPath}>{label}</Link>
                     </BreadcrumbLink>
                 )}
             </BreadcrumbItem>
         );
 
         if (!isLast) {
-            breadcrumbItems.push(<BreadcrumbSeparator key={`sep-${currentPath}`} />);
+            breadcrumbItems.push(<BreadcrumbSeparator key={`sep-${navigationPath}`} />);
         }
     });
 

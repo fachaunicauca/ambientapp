@@ -33,7 +33,6 @@ export default {
 				neutroHover: '#F6F6F6',
 				neutroText: '#690007',
 				security: '#E0E0FF',
-				grayScale71:'#46464F',
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
@@ -83,14 +82,7 @@ export default {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
-			},
-			fontSize: {
-                '22px': '22px',
-            },
-			letterSpacing: {
-                '1.25': '0.0125em',
-				'0.1' : '0.001'
-            },
+			}
 		}
 	},
 	plugins: [tailwindcssAnimate],

@@ -11,9 +11,11 @@ const PasswordInput = React.forwardRef<HTMLInputElement, React.ComponentProps<"i
         return (
             <div className="relative flex items-center">
                 <input
+                    id="password"
                     type={showPassword ? "text" : "password"}
                     className={cn(
-                        "flex h-9 w-full rounded-2xl border border-blueDark/20 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-blueDark placeholder:text-blueDark/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+                        "flex h-8 md:h-9 w-full rounded-2xl border border-blueDark/20 bg-transparent px-3 py-1 text-[12px] md:text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-blueDark placeholder:text-blueDark/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                        "pr-9",
                         className
                     )}
                     ref={ref}

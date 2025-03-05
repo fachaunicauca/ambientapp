@@ -32,40 +32,40 @@ const data = {
     navMain: [
         {
             title: "Inicio",
-            url: "/home",
+            url: "/dashboard/home",
             icon: Home,
             isActive: true,
             items: [
                 {
                     title: "Conoceme",
-                    url: "/home",
+                    url: "/dashboard/home",
                 },
                 {
                     title: "Proyectos",
-                    url: "/home",
+                    url: "/dashboard/home",
                 }
             ],
         },
         {
             title: "Docente",
-            url: '/docente',
+            url: '/dashboard/docente',
             icon: GraduationCap,
             items: [
                 {
                     title: "Guías de laboratorio",
-                    url: "/docente/guia-laboratorio",
+                    url: "/dashboard/docente/guia-laboratorio",
                 },
                 {
                     title: "Solicitud de práctica",
-                    url: "/docente/practica-laboratorio",
+                    url: "/dashboard/docente/practica-laboratorio",
                 },
                 {
                     title: "Manejo de residuos",
-                    url: "/docente/manejo-residuos",
+                    url: "/dashboard/docente/manejo-residuos",
                 },
                 {
                     title: "Resultados test",
-                    url: "/docente/resultados-test",
+                    url: "/dashboard/docente/resultados-test",
                 }
             ],
         },
@@ -94,7 +94,7 @@ const data = {
         },
         {
             title: "Comunicación de riesgo",
-            url: "/comunicacion-riesgo",
+            url: "#",
             icon: Skull,
             items: [
                 {
@@ -111,7 +111,7 @@ const data = {
                 },
                 {
                     title: "Evaluacion",
-                    url: "/comunicacion-riesgo/evaluacion",
+                    url: "#",
                 },
             ],
         },
@@ -164,7 +164,7 @@ const data = {
     ]
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader className="bg-blueDark text-white p-4 items-start">
@@ -187,4 +187,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarRail />
         </Sidebar>
     )
-}
+});
