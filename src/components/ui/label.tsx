@@ -3,6 +3,12 @@
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { cva, type VariantProps } from "class-variance-authority"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 import { cn } from "@/lib/utils"
 
@@ -24,7 +30,16 @@ const Label = React.forwardRef<
       className={cn(labelVariants(), className)}
       {...props}
     />
-    {required && <span className="font-semibold text-error">*</span>}
+    {required && <span className="font-semibold text-error">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger type="button">*</TooltipTrigger>
+          <TooltipContent>
+            <p>Este campo es obligatorio</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </span>}
   </div>
 ))
 Label.displayName = LabelPrimitive.Root.displayName

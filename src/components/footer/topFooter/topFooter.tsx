@@ -9,7 +9,7 @@ export default function Footer() {
                     <span className="text-sm md:text-base">NIT. 891500319-2</span>
                 </div>
 
-                <div className="flex gap-5 h-16 items-center text-[12px] md:text-sm">
+                <div className="flex gap-5 h-16 items-center">
                     <div className="flex flex-col gap-2 items-start md:items-end">
                         <p>Laboratorio de ingenieria ambiental y sanitaria</p>
                         <p>Vicerrectoría</p>
