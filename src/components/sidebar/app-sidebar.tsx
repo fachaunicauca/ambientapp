@@ -94,7 +94,7 @@ const data = {
         },
         {
             title: "Comunicación de riesgo",
-            url: "#",
+            url: "/dashboard/comunicacion-riesgo",
             icon: Skull,
             items: [
                 {
@@ -111,7 +111,7 @@ const data = {
                 },
                 {
                     title: "Evaluacion",
-                    url: "#",
+                    url: "/dashboard/comunicacion-riesgo/evaluacion",
                 },
             ],
         },
