@@ -12,9 +12,9 @@ export default function FileItem({ file, onView }: FileItemProps) {
             <div className="flex items-center space-x-3">
                 <FileText
                     size={30}
-                    className={`${file.type === "pdf" ? "text-redLight" : "text-orange-500"}`}
+                    className="text-redLight"
                 />
-                <span>{file.name}</span>
+                <span className="font-bold">{file.name}</span>
             </div>
             <Tooltip>
                 <TooltipTrigger>

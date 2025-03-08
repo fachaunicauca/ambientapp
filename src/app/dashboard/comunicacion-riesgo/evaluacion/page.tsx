@@ -29,7 +29,7 @@ export default function LoginTest() {
     return (
         <>
             <Title title="Iniciar Evaluación" />
-            <div className="mt-12">
+            <section className="mt-12">
                 <div className="bg-white p-6 rounded-lg shadow-lg w-full">
                     <h3 className="text-lg font-semibold tracking-1.25 leading-19 m-2">Información del Estudiante</h3>
                     {error && <p className="text-error m-2 text-sm">{error}</p>}
@@ -64,7 +64,7 @@ export default function LoginTest() {
                         </div>
                     </form>
                 </div>
-            </div>
+            </section>
         </>
     );
 }
