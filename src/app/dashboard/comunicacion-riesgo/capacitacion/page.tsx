@@ -1,6 +1,6 @@
 "use client";
 
-import FileItem from "@/components/comunication-components/preparation-component/file-item";
+import FileItem from "@/components/comunicationComponents/preparationComponent/fileItem";
 import Title from "@/components/ui/title";
 import { useRouter } from "next/navigation";
 

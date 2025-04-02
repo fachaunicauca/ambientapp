@@ -1,28 +1,29 @@
-'use client'
-
+'use client'; 
 import { useState } from 'react';
-import { fetchStudentData } from '@/lib/query';
-import { useRouter } from 'next/navigation'; 
+import { fetchQuestionsData } from '@/api/apiEvaluation/services/evaluation-services';
+import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Title from '@/components/ui/title';
 
 export default function LoginTest() {
-    const [studentInfo, setStudentInfo] = useState({ code: "", subject: "", teacher: "" });
+    const [evaluacionInfo, setEvaluacionInfo] = useState({ code: "", subject: "", teacher: "" });
     const [error, setError] = useState("");
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(""); 
+        setError("");
 
-        const result = await fetchStudentData(studentInfo);
+        const result = await fetchQuestionsData(evaluacionInfo);
 
         if (result.error) {
-            setError(result.error); 
+            setError(result.error);
             return;
         } else {
-            router.push(`/dashboard/comunicacion-riesgo/evaluacion/test?code=${studentInfo.code}&subject=${studentInfo.subject}`);  
+            router.push(
+                `/dashboard/comunicacion-riesgo/evaluacion/test?code=${evaluacionInfo.code}&subject=${evaluacionInfo.subject}&teacher=${evaluacionInfo.teacher}`
+            );
         }
     };
 
@@ -35,25 +36,25 @@ export default function LoginTest() {
                     {error && <p className="text-error m-2 text-sm">{error}</p>}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="flex flex-col md:flex-row flex-wrap gap-4">
-                            <Input 
-                                type="text" 
-                                placeholder="Código de estudiante" 
-                                value={studentInfo.code}
-                                onChange={(e) => setStudentInfo({ ...studentInfo, code: e.target.value })}
+                            <Input
+                                type="text"
+                                placeholder="Código de estudiante"
+                                value={evaluacionInfo.code}
+                                onChange={(e) => setEvaluacionInfo({ ...evaluacionInfo, code: e.target.value })}
                                 className="flex-1 w-full md:w-1/3 rounded-lg"
                             />
-                            <Input 
-                                type="text" 
-                                placeholder="Materia" 
-                                value={studentInfo.subject}
-                                onChange={(e) => setStudentInfo({ ...studentInfo, subject: e.target.value })}
+                            <Input
+                                type="text"
+                                placeholder="Materia"
+                                value={evaluacionInfo.subject}
+                                onChange={(e) => setEvaluacionInfo({ ...evaluacionInfo, subject: e.target.value })}
                                 className="flex-1 w-full md:w-1/3 rounded-lg"
                             />
-                            <Input 
-                                type="text" 
-                                placeholder="Docente" 
-                                value={studentInfo.teacher}
-                                onChange={(e) => setStudentInfo({ ...studentInfo, teacher: e.target.value })} 
+                            <Input
+                                type="text"
+                                placeholder="Docente"
+                                value={evaluacionInfo.teacher}
+                                onChange={(e) => setEvaluacionInfo({ ...evaluacionInfo, teacher: e.target.value })}
                                 className="flex-1 w-full md:w-1/3 rounded-lg"
                             />
                         </div>
