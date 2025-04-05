@@ -21,7 +21,6 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "@/components/ui/sidebar"
-import Link from "next/link"
 import Image from "next/image"
 
 const data = {
@@ -180,17 +179,16 @@ export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.Com
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader className="bg-blueDark text-white p-4 items-start">
-                <Link href={"/"}>
-                    <Image
-                        src={"/u.png"}
-                        alt="Logo"
-                        width={110}
-                        height={110}
-                        className="group-data-[collapsible=icon]:w-0"
-                    />
-                </Link>
+                <Image
+                    src={"/u.png"}
+                    alt="Logo"
+                    width={150}
+                    height={150}
+                    className="group-data-[collapsible=icon]:w-0 uni-logo"
+                    priority
+                />
             </SidebarHeader>
-            <SidebarContent className="bg-blueDark text-white pt-10">
+            <SidebarContent className="bg-blueDark text-white pt-8">
                 <NavMain items={data.navMain} />
             </SidebarContent>
             <SidebarFooter className="bg-blueDark text-white">

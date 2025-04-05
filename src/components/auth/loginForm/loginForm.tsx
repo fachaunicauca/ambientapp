@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import LabeledInput from "@/components/ui/labeledInput";
@@ -12,21 +11,22 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loadCredentials, saveCredentials, clearCredentials } from "@/lib/rememberMe";
+import { loginAction } from "@/actions/authAction";
+import { LoginResponse } from "@/actions/responseType";
 
 export default function LoginForm() {
     const router = useRouter();
     const [rememberMe, setRememberMe] = useState(false);
-    
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm({
+
+    const { register, handleSubmit, formState: { errors }, setValue, setError } = useForm({
         resolver: zodResolver(userSchema),
         defaultValues: {
             email: "",
             password: ""
         },
-        mode: "onChange"
+        mode: "onSubmit"
     });
 
-    // Cargar credenciales guardadas al iniciar
     useEffect(() => {
         const savedCredentials = loadCredentials();
         if (savedCredentials) {
@@ -41,18 +41,49 @@ export default function LoginForm() {
         password: string;
     }
 
-    const onSubmit = (data: FormData) => {
-        console.log("Datos enviados:", data);
+    const onSubmit = async (data: FormData) => {
+        console.log("Datos del formulario:", data);
         
-        // Manejar la opción de recordar credenciales
+        try {
+            // Usar el Server Action
+            const res = await loginAction(data);
+            console.log("Resultado de la acción:", res);
+            
+
+            if (res.success) {
+                handleSuccessfulLogin(data);
+                return;
+            }
+            handleAuthError(res);
+        } catch (error) {
+            console.error("Error al ejecutar Server Action:", error);
+            setError("email", { type: "server", message: "" });
+            setError("password", { type: "server", message: "" });
+            setError("root", {
+                type: "server",
+                message: "Error al iniciar sesión. Por favor, inténtalo nuevamente."
+            });
+            toast.error("Error al iniciar sesión. Por favor, inténtalo nuevamente.");
+        }
+    };
+
+    const handleSuccessfulLogin = (data: FormData) => {
         if (rememberMe) {
             saveCredentials(data.email, data.password);
         } else {
             clearCredentials();
         }
-        
+
         toast.success("¡Inicio de sesión exitoso!");
         router.push("/dashboard/home");
+    };
+
+    const handleAuthError = (result: LoginResponse) => {
+        setError("email", { type: "server", message: "" });
+        setError("password", { type: "server", message: "" });
+
+        setError("root", { type: "server", message: result.error });
+        toast.error(result.error);
     };
 
     return (
@@ -66,7 +97,10 @@ export default function LoginForm() {
                         Inicio de sesión
                     </h1>
                 </div>
-                <form className="flex flex-col gap-3 w-[70%] md:w-[50%] py-10" onSubmit={handleSubmit(onSubmit)}>
+                <form
+                    className="flex flex-col gap-3 w-[70%] md:w-[50%] py-10"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
                     <LabeledInput
                         label="Correo institucional"
                         id="email"
@@ -76,7 +110,9 @@ export default function LoginForm() {
                         className={errors.email ? "border-error" : ""}
                         {...register("email")}
                     />
-                    {errors.email && <span className="text-error text-[12px] md:text-sm">{errors.email.message}</span>}
+                    {errors.email && errors.email.message !== "" && (
+                        <span className="text-xs md:text-sm text-error font-medium">{errors.email.message}</span>
+                    )}
 
                     <LabeledInput
                         label="Contraseña"
@@ -87,8 +123,11 @@ export default function LoginForm() {
                         className={errors.password ? "border-error" : ""}
                         {...register("password")}
                     />
-                    {errors.password && <span className="text-error text-[12px] md:text-sm">{errors.password.message}</span>}
-                    
+                    {errors.password && errors.password.message !== "" && (
+                        <span className="text-xs md:text-sm text-error font-medium">{errors.password.message}</span>
+                    )}
+                    {errors.root && <span className="text-error text-[12px] md:text-sm">{errors.root.message as string}</span>}
+
                     <div className="flex items-center space-x-2 pb-2">
                         <Checkbox
                             id="terms"
@@ -102,17 +141,9 @@ export default function LoginForm() {
                             Recordar por 30 días
                         </label>
                     </div>
-                    
+
                     <Button variant="default" type="submit" className="w-full">
                         Iniciar sesión
-                    </Button>
-                    
-                    <span className="text-gray-700 text-center">ó</span>
-                    
-                    <Button variant="secondary" type="submit" className="w-full">
-                        <Image src="/google.svg" alt="Google" height={20} width={20} className="block group-hover:hidden" />
-                        <Image src="/googlewhite.svg" alt="Google" height={20} width={20} className="hidden group-hover:block" />
-                        <span className="text-[12px] md:text-sm">Iniciar sesión con Google</span>
                     </Button>
                 </form>
             </div>
