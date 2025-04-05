@@ -8,6 +8,7 @@ import {
     BookText,
     Siren,
     GraduationCap,
+    TableProperties,
 } from "lucide-react"
 
 import { NavMain } from "@/components/sidebar/nav-main"
@@ -67,6 +68,17 @@ const data = {
                     title: "Resultados test",
                     url: "/dashboard/docente/resultados-test",
                 }
+            ],
+        },
+        {
+            title: "Inventario",
+            url: '/dashboard/inventario',
+            icon: TableProperties,
+            items: [
+                {
+                    title: "Agregar un reactivo",
+                    url: "/dashboard/inventario/agregar-reactivo",
+                },
             ],
         },
         {

@@ -12,7 +12,7 @@ const buttonVariants = cva(
         default:
           "bg-blue text-white shadow hover:bg-blueLight transition-all duration-500 px-5 py-2 rounded-2xl mt-2 w-full",
         secondary:
-          "bg-white text-blue border border-blue hover:bg-blue hover:text-white transition-all duration-500 flex gap-2 px-5 py-2 rounded-2xl w-full group",
+          "bg-white text-blue border border-blue hover:bg-blue hover:text-white transition-all duration-500 mt-2 flex gap-2 px-5 py-2 rounded-2xl w-full group",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
