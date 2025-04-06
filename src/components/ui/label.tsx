@@ -34,7 +34,7 @@ const Label = React.forwardRef<
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger type="button">*</TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent className="bg-error">
             <p>Este campo es obligatorio</p>
           </TooltipContent>
         </Tooltip>

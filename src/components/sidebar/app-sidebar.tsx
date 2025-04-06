@@ -26,7 +26,7 @@ const data = {
     user: {
         name: "Mario Perdomo",
         email: "cmperdomo@unicauca.edu.co",
-        avatar: "/user.png",
+        avatar: "/user.webp"
     },
     navMain: [
         {
@@ -170,8 +170,8 @@ export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.Com
                 <Image
                     src={"/u.png"}
                     alt="Logo"
-                    width={150}
-                    height={150}
+                    width={120}
+                    height={120}
                     className="group-data-[collapsible=icon]:w-0 uni-logo"
                     priority
                 />

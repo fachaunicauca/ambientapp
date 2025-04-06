@@ -11,7 +11,7 @@ export default function LoginHeader () {
                 height={50}
             />
             <div className="border border-blue h-full"></div>
-            <Label>Laboratorio de ingenieria ambiental y sanitaria</Label>
+            <Label>Sistema de gestión ambiental</Label>
         </div>
     )
 }

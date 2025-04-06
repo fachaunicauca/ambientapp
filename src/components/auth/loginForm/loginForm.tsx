@@ -87,7 +87,7 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="flex flex-col items-center gap-3 w-full md:w-1/2">
+        <div className="flex flex-col items-center gap-3 w-full xl:w-1/2 h-screen md:h-full">
             <div className="w-full p-2">
                 <LoginHeader />
             </div>
