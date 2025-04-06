@@ -1,13 +1,15 @@
+import {heroui} from '@heroui/theme';
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
-	content: [
-		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-	],
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@heroui/theme/dist/components/(chip|input|form).js"
+  ],
 	theme: {
 		extend: {
 			colors: {
@@ -85,5 +87,5 @@ export default {
 			}
 		}
 	},
-	plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate,heroui()],
 } satisfies Config;
