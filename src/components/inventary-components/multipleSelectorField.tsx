@@ -44,12 +44,19 @@ export default function MultipleSelectorField({
     }
 
     return (
-      <div className="w-full h-auto max-h-[195px] mt-2 flex flex-wrap py-0.5 px-2 gap-1 overflow-auto">
+      <div className="w-full h-auto max-h-[155px] mt-2 flex flex-wrap py-0.5 px-2 gap-1 overflow-auto">
         {arrayValues.map((value) => (
           <Chip
             key={value}
             size="md"
-            className="bg-blue text-white rounded-full"
+            className="bg-blue text-white rounded-full cursor-pointer select-none"
+            onClick={() => {
+              setValues((prev) => {
+                const newSet = new Set(prev);
+                newSet.delete(value);
+                return newSet;
+              });
+            }}
           >
             {options.find((op) => op.value === value)?.label}
           </Chip>
@@ -73,14 +80,14 @@ export default function MultipleSelectorField({
           </Tooltip>
         </TooltipProvider>
       </div>
-      <div className="w-full max-h-[250px] border-small px-1 py-2 rounded-2xl border-blueDark/20 dark:border-default-100">
+      <div className="w-full max-h-[200px] border-small px-1 py-2 rounded-2xl border-blueDark/20 dark:border-default-100">
         <p className="text-sm text-muted-foreground pl-2">
           Seleccione los riesgos del reactivo
         </p>
         <div className="grid grid-cols-2">
           <Listbox
             classNames={{
-              list: "max-h-[150] overflow-auto",
+              list: "max-h-[160px] overflow-auto",
             }}
             items={options}
             label="Multiple selection"
@@ -91,7 +98,9 @@ export default function MultipleSelectorField({
           >
             {(item) => (
               <ListboxItem key={item.value} textValue={item.label}>
-                <Chip size="md">{item.label}</Chip>
+                <Chip key={item.value} size="md">
+                  {item.label}
+                </Chip>
               </ListboxItem>
             )}
           </Listbox>
