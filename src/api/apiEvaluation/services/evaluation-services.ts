@@ -2,9 +2,13 @@ import { StudentTestResponse } from "../interfaces/interfaces";
 
 export const fetchQuestionsData = async (evaluacionInfo: { code: string; subject: string; teacher: string }) => {
     try {
-        
-        const url = `http://localhost:8080/takeTest?subject_name=${evaluacionInfo.subject}&student_code=${evaluacionInfo.code}&teacher_name=${evaluacionInfo.teacher }`;
-        const response = await fetch(url);
+        const baseUrl = process.env.NEXT_PUBLIC_API_TEST_BASE_URL
+
+        if (!baseUrl) {
+            throw new Error("La URL base no está definida en las variables de entorno.");
+        }
+
+        const response = await fetch(`${baseUrl}/takeTest?subject_name=${evaluacionInfo.subject}&student_code=${evaluacionInfo.code}&teacher_name=${evaluacionInfo.teacher }`);
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
@@ -26,19 +30,20 @@ export const fetchQuestionsData = async (evaluacionInfo: { code: string; subject
 
 export async function submitTest(payload: StudentTestResponse): Promise<number> {
     try {
-        console.log(payload)
-        const response = await fetch('http://localhost:8080/takeTest', {
+        const baseUrl = process.env.NEXT_PUBLIC_API_TEST_BASE_URL
+        if (!baseUrl) {
+            throw new Error("La URL base no está definida en las variables de entorno.");
+        }
+        const response = await fetch(`${baseUrl}/takeTest`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(payload),
         });
-        console.log('Payload enviado:', JSON.stringify(payload, null, 2));
         if (!response.ok) {
             throw new Error('Error al enviar las respuestas.');
         }
-
         const score = await response.json();
         return score;
     } catch (error) {

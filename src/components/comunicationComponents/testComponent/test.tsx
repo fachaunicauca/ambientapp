@@ -45,7 +45,7 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
             const returnedScore = await submitTest(payload);
             setScore(returnedScore * 100);
             setSubmitSuccess(true);
-            setTimeLeft(0); // Set the timer to 00:00
+            setTimeLeft(0);
         } catch (error) {
             console.error("Error al enviar las respuestas:", error);
             alert("Hubo un error al enviar las respuestas.");
@@ -57,10 +57,10 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
     useEffect(() => {
         if (timeLeft <= 0) {
             if (timeLeft !== 0) {
-                setTimeLeft(0); // Ensure the timer stops at 00:00
+                setTimeLeft(0);
             }
             if (!submitSuccess && !isSubmitting) {
-                handleSubmit(); // Submit only if not already submitted
+                handleSubmit();
             }
             return;
         }

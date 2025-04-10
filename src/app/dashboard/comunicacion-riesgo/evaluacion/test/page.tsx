@@ -1,7 +1,6 @@
 'use client';
 
 import Test from "@/components/comunicationComponents/testComponent/test";
-import { Skeleton } from '@/components/ui/skeleton';
 import { fetchQuestionsData } from "@/api/apiEvaluation/services/evaluation-services";
 import { useState, useEffect } from "react";
 
@@ -42,7 +41,7 @@ export default function EvaluationPageContent() {
             } catch (error) {
                 console.error('Error al obtener las preguntas:', error);
             } finally {
-                setLoading(false);
+                setLoading(false); 
             }
         };
 
@@ -54,13 +53,27 @@ export default function EvaluationPageContent() {
     if (!params.code) return <div>Error: Código del estudiante no proporcionado</div>;
     if (!params.subject) return <div>Error: Nombre de la materia no proporcionado</div>;
     if (!params.teacher) return <div>Error: Nombre del docente no proporcionado</div>;
-    if (loading) return <Skeleton />;
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center">
+                <div className="text-center">
+                    <p className="text-gray-500 mt-4">Cargando Evaluación...</p>
+                </div>
+            </div>
+        );
+    }
+
     if (!questions.length) return <div>No se encontraron preguntas disponibles.</div>;
 
     return (
         <section>
-            <Test studentCode={params.code} subjectName={params.subject}
-                teacherName={params.teacher} questions={questions} />
+            <Test
+                studentCode={params.code}
+                subjectName={params.subject}
+                teacherName={params.teacher}
+                questions={questions}
+            />
         </section>
     );
 }

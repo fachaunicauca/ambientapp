@@ -1,4 +1,5 @@
-'use client'; 
+'use client';
+
 import { useState } from 'react';
 import { fetchQuestionsData } from '@/api/apiEvaluation/services/evaluation-services';
 import { useRouter } from 'next/navigation';
@@ -9,21 +10,29 @@ import Title from '@/components/ui/title';
 export default function LoginTest() {
     const [evaluacionInfo, setEvaluacionInfo] = useState({ code: "", subject: "", teacher: "" });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
-        const result = await fetchQuestionsData(evaluacionInfo);
+        try {
+            const result = await fetchQuestionsData(evaluacionInfo);
 
-        if (result.error) {
-            setError(result.error);
-            return;
-        } else {
-            router.push(
-                `/dashboard/comunicacion-riesgo/evaluacion/test?code=${evaluacionInfo.code}&subject=${evaluacionInfo.subject}&teacher=${evaluacionInfo.teacher}`
-            );
+            if (result.error) {
+                setError(result.error);
+            } else {
+                router.push(
+                    `/dashboard/comunicacion-riesgo/evaluacion/test?code=${evaluacionInfo.code}&subject=${evaluacionInfo.subject}&teacher=${evaluacionInfo.teacher}`
+                );
+            }
+        } catch (error) {
+            console.error("Error al iniciar evaluación:", error);
+            setError("Hubo un error al iniciar la evaluación.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -59,8 +68,34 @@ export default function LoginTest() {
                             />
                         </div>
                         <div className="flex justify-center mt-4">
-                            <Button type="submit" className="rounded-full w-full md:w-4xl">
-                                Iniciar Evaluación
+                            <Button type="submit" className="rounded-full w-full md:w-4xl" disabled={loading}>
+                                {loading ? (
+                                    <div className="flex items-center justify-center">
+                                        <svg
+                                            className="animate-spin h-5 w-5 mr-2 text-white"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v8h8a8 8 0 01-8 8V12H4z"
+                                            ></path>
+                                        </svg>
+                                        Iniciando...
+                                    </div>
+                                ) : (
+                                    "Iniciar Evaluación"
+                                )}
                             </Button>
                         </div>
                     </form>
