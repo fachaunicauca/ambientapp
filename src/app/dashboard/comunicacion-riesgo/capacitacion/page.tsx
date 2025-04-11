@@ -1,7 +1,7 @@
 "use client";
 
 import FileItem from "@/components/comunicationComponents/preparationComponent/fileItem";
-import Title from "@/components/ui/title";
+import Title from "@/components/ui/typography/title";
 import { useRouter } from "next/navigation";
 
 const files = [

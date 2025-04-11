@@ -5,7 +5,7 @@ import { submitTest } from "@/api/apiEvaluation/services/evaluation-services";
 import { useState, useEffect, useCallback } from "react";
 import QuestionCard from "./questionCard";
 import PaginationControls from "./paginationControl";
-import ScoreCircle from "@/components/ui/score-circle";
+import ScoreCircle from "@/components/ui/feedback/score-circle";
 
 interface EvaluationProps {
     studentCode: string;

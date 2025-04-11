@@ -1,4 +1,4 @@
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/form/checkbox";
 import { Question } from "@/api/apiEvaluation/interfaces/interfaces"; 
 
 interface QuestionCardProps {

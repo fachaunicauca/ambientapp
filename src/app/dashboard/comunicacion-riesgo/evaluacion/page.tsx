@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { fetchQuestionsData } from '@/api/apiEvaluation/services/evaluation-services';
 import { useRouter } from 'next/navigation';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Title from '@/components/ui/title';
+import { Button } from "@/components/ui/buttons/button";
+import { Input } from "@/components/ui/form/input";
+import Title from '@/components/ui/typography/title';
 
 export default function LoginTest() {
     const [evaluacionInfo, setEvaluacionInfo] = useState({ code: "", subject: "", teacher: "" });

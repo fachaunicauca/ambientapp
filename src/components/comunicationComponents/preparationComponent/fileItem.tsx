@@ -1,5 +1,5 @@
 import { FileText, Eye } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/navigation/tooltip";
 
 interface FileItemProps {
     file: { name: string; type: string; url: string };
