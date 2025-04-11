@@ -1,4 +1,4 @@
-import Title from "@/components/ui/title";
+import Title from "@/components/ui/typography/title";
 
 
 export default function ComunicacionRiesgo () {

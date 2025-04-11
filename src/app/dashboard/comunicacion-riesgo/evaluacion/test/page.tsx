@@ -2,7 +2,7 @@
 import { useSearchParams } from 'next/navigation';
 import Test from "@/components/comunication-components/test-component/test";
 import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/skeletons/skeleton';
 
 function EvaluationPageContent() {
     const searchParams = useSearchParams();

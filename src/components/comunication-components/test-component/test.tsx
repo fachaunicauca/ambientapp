@@ -1,9 +1,9 @@
 'use client'
 import { useState, useEffect } from "react";
-import { fetchQuestionsData } from '@/lib/query';
+import { fetchQuestionsData } from '../../../lib/query';
 import QuestionCard, { Question } from './question-card';
 import PaginationControls from './pagination-control';
-import ScoreCircle from "@/components/ui/score-circle";
+import ScoreCircle from "@/components/ui/feedback/score-circle";
 
 interface Answers {
     [key: string]: string;

@@ -6,7 +6,7 @@ import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/layout/collapsible"
 import {
     SidebarGroup,
     SidebarMenu,
@@ -15,7 +15,7 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/navigation/sidebar"
 
 export function NavMain({
     items,

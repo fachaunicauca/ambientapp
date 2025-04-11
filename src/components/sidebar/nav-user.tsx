@@ -10,7 +10,7 @@ import {
     Avatar,
     AvatarFallback,
     AvatarImage,
-} from "@/components/ui/avatar"
+} from "@/components/ui/avatar/avatar"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,15 +19,15 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/navigation/dropdown-menu"
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/navigation/sidebar"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/buttons/button";
 
 import { logoutAction } from "@/actions/authAction"
 import { useRouter } from "next/navigation"
@@ -40,7 +40,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogFooter
-} from "@/components/ui/dialog"
+} from "@/components/ui/modals/dialog"
 
 export function NavUser({
     user,
@@ -95,7 +95,7 @@ export function NavUser({
                             >
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage src={user.avatar} alt={user.name} />
-                                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                    <AvatarFallback className="rounded-lg"></AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
                                     <span className="truncate font-semibold">{user.name}</span>

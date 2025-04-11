@@ -8,6 +8,7 @@ import {
     BookText,
     Siren,
     GraduationCap,
+    TableProperties,
 } from "lucide-react"
 
 import { NavMain } from "@/components/sidebar/nav-main"
@@ -19,14 +20,14 @@ import {
     SidebarFooter,
     SidebarHeader,
     SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/navigation/sidebar"
 import Image from "next/image"
 
 const data = {
     user: {
         name: "Mario Perdomo",
         email: "cmperdomo@unicauca.edu.co",
-        avatar: "/user.png",
+        avatar: "/user.webp"
     },
     navMain: [
         {
@@ -66,6 +67,17 @@ const data = {
                     title: "Resultados test",
                     url: "/dashboard/docente/resultados-test",
                 }
+            ],
+        },
+        {
+            title: "Inventario",
+            url: '/dashboard/inventario',
+            icon: TableProperties,
+            items: [
+                {
+                    title: "Agregar un reactivo",
+                    url: "/dashboard/inventario/agregar-reactivo",
+                },
             ],
         },
         {
@@ -170,8 +182,8 @@ export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.Com
                 <Image
                     src={"/u.png"}
                     alt="Logo"
-                    width={150}
-                    height={150}
+                    width={120}
+                    height={120}
                     className="group-data-[collapsible=icon]:w-0 uni-logo"
                     priority
                 />

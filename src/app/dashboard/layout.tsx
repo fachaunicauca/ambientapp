@@ -1,5 +1,9 @@
-import MainLayout from "@/components/mainLayout/mainLayout";
+import MainLayout from "@/components/layout/mainLayout";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    return <MainLayout>{children}</MainLayout>;
+    return (
+        <MainLayout>
+            {children}
+        </MainLayout>
+    );
 }

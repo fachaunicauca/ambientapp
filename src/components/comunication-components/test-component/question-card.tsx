@@ -1,4 +1,4 @@
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/form/checkbox";
 
 export interface Question {
     id: string;

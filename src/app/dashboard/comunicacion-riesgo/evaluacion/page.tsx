@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react';
-import { fetchStudentData } from '@/lib/query';
+import { fetchStudentData } from '../../../../lib/query';
 import { useRouter } from 'next/navigation'; 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Title from '@/components/ui/title';
+import { Button } from "@/components/ui/buttons/button";
+import { Input } from "@/components/ui/form/input";
+import Title from '@/components/ui/typography/title';
 
 export default function LoginTest() {
     const [studentInfo, setStudentInfo] = useState({ code: "", subject: "", teacher: "" });
