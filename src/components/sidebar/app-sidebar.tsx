@@ -118,7 +118,7 @@ const data = {
                 },
                 {
                     title: "Capacitación",
-                    url: "#",
+                    url: "/dashboard/comunicacion-riesgo/capacitacion",
                 },
                 {
                     title: "Evaluacion",
