@@ -18,14 +18,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/navigation/dropdown-menu"
-import {
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    useDisclosure,
-} from "@heroui/modal";
 
 import {
     SidebarMenu,
@@ -34,11 +26,8 @@ import {
     useSidebar,
 } from "@/components/ui/navigation/sidebar"
 
-import { Button } from "@/components/ui/buttons/button";
-
 import { logoutAction } from "@/actions/authAction"
 import { useRouter } from "next/navigation"
-import { useState } from "react";
 
 export function NavUser({
     user,
@@ -51,31 +40,23 @@ export function NavUser({
     }
 }) {
     const router = useRouter();
-    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-    const [isLoading, setIsLoading] = useState(false);
     const { isMobile } = useSidebar()
 
     const handleLogout = async () => {
         try {
-            setIsLoading(true);
             const res = await logoutAction();
 
             if (res.success) {
                 setTimeout(() => {
-                    onClose();
                     router.push('/');
                     router.refresh();
                 }, 100);
             } else {
-                onClose();
                 router.push('/');
             }
         } catch (error) {
             console.error("Error al cerrar sesión:", error);
-            onClose();
             router.push('/');
-        } finally {
-            setIsLoading(false);
         }
     }
 
@@ -115,10 +96,7 @@ export function NavUser({
                                 </span>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-blue font-semibold" onSelect={(e) => {
-                                e.preventDefault();
-                                onOpen();
-                            }}>
+                            <DropdownMenuItem className="text-blue font-semibold" onClick={handleLogout}>
                                 <LogOut />
                                 Cerrar sesión
                             </DropdownMenuItem>
@@ -126,49 +104,6 @@ export function NavUser({
                     </DropdownMenu>
                 </SidebarMenuItem>
             </SidebarMenu>
-
-            <Modal
-                backdrop="opaque"
-                isOpen={isOpen}
-                onOpenChange={onOpenChange}
-                classNames={{
-                    backdrop: "z-50",
-                    base: "z-50",
-                    wrapper: "z-50"
-                }}
-            >
-                <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader className="flex flex-col gap-1">
-                                Cerrar sesión
-                            </ModalHeader>
-                            <ModalBody>
-                                <p>
-                                    ¿Confirma que quiere cerrar sesión?
-                                </p>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    variant="secondaryWithoutHover"
-                                    onClick={() => onClose()}
-                                    className="relative z-50 cursor-pointer pointer-events-auto"
-                                >
-                                    No
-                                </Button>
-                                <Button
-                                    variant="delete"
-                                    onClick={handleLogout}
-                                    disabled={isLoading}
-                                    className="relative z-50 cursor-pointer pointer-events-auto"
-                                >
-                                    {isLoading ? "Cerrando..." : "Si"}
-                                </Button>
-                            </ModalFooter>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
         </>
     )
 }

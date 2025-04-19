@@ -76,17 +76,6 @@ const data = {
             ],
         },
         {
-            title: "Inventario",
-            url: '/dashboard/inventario',
-            icon: TableProperties,
-            items: [
-                {
-                    title: "Agregar un reactivo",
-                    url: "/dashboard/inventario/agregar-reactivo",
-                },
-            ],
-        },
-        {
             title: "Sistema de gestión ambiental",
             url: "#",
             icon: Sprout,

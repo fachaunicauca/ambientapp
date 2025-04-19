@@ -10,7 +10,7 @@ import { useSidebar } from "@/components/ui/navigation/sidebar";
 
 export default function Header() {
     const { isMobile } = useSidebar()
-    
+
     const user = {
         name: "Mario Perdomo",
         email: "cmperdomo@unicauca.edu.co",
