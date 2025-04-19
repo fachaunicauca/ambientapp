@@ -14,11 +14,10 @@ export interface PracticeEducator {
     }[];
     reactives: {
         sustanceName: string;
-        code: string;
         unity: string;
         amount: number;
         concentration: number;
-        reactiveID: number;
+        type: string;
     }[];
     wastes: {
         wasteType: string;

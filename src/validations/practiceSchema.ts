@@ -23,11 +23,11 @@ export const practiceSchema = z.object({
     reactives: z.array(
         z.object({
             sustanceName: z.string().min(1, "El nombre de la sustancia es requerido"),
-            code: z.string().min(1, "El código del reactivo es requerido"),
             unity: z.string().min(1, "La unidad de medida es requerida"),
             amount: z.number().positive("La cantidad debe ser un número positivo"),
             concentration: z.number().positive("La concentración debe ser un número positivo"),
-            reactiveID: z.number().int().positive("El ID del reactivo debe ser un número positivo"),
+            type: z.enum(["Reactivo", "Solución"]),
+            concentrationType: z.enum(["Molar", "Porcentaje en peso", "Porcentaje en volumen", "Normal" ])
         })
     ).min(1, "Debe especificar al menos un reactivo"),
     wastes: z.array(
@@ -49,11 +49,9 @@ export const normalizedPracticeSchema = practiceSchema.transform(data => {
         ...data,
         reactives: data.reactives.map(reactive => ({
             sustanceName: reactive.sustanceName,
-            code: reactive.code,
             unity: reactive.unity,
             amount: reactive.amount,
             concentration: reactive.concentration,
-            reactiveID: reactive.reactiveID,
         })),
     };
 });
