@@ -33,9 +33,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/navigation/sidebar"
-} from "@/components/ui/navigation/sidebar"
 
-import { Button } from "@/components/ui/buttons/button";
 import { Button } from "@/components/ui/buttons/button";
 
 import { logoutAction } from "@/actions/authAction"

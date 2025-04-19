@@ -125,7 +125,6 @@ const data = {
                 {
                     title: "Capacitación",
                     url: "/dashboard/comunicacion-riesgo/capacitacion",
-                    url: "/dashboard/comunicacion-riesgo/capacitacion",
                 },
                 {
                     title: "Evaluacion",
