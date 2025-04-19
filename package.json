@@ -32,6 +32,7 @@
     "axios": "^1.8.4",
     "badge": "^1.0.3",
     "card": "^2.5.4",
+    "card": "^2.5.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dialog": "^0.3.1",

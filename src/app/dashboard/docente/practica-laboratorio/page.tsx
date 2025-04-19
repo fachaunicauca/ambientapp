@@ -41,3 +41,6 @@ export default function Practices() {
         </div>
     );
 }
+
+
+

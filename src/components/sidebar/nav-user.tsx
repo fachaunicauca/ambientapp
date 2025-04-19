@@ -33,7 +33,9 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/navigation/sidebar"
+} from "@/components/ui/navigation/sidebar"
 
+import { Button } from "@/components/ui/buttons/button";
 import { Button } from "@/components/ui/buttons/button";
 
 import { logoutAction } from "@/actions/authAction"
@@ -91,6 +93,7 @@ export function NavUser({
                             >
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage src={user.avatar} alt={user.name} />
+                                    <AvatarFallback className="rounded-lg"></AvatarFallback>
                                     <AvatarFallback className="rounded-lg"></AvatarFallback>
                                 </Avatar>
                                 {!isMobile && (
