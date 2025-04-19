@@ -117,7 +117,10 @@ export default function PracticeForm({ initialValues }: PracticeFormProps) {
                 </CardHeader>
 
                 <CardContent className="pt-6 px-8">
-                    <form className="space-y-8" onSubmit={handleSubmit(handleCreatePractice)}>
+                    <form className="space-y-8" onSubmit={handleSubmit((data) => {
+                        console.log("Datos enviados:", data);
+                        handleCreatePractice(data);
+                    })}>
                         {/* Información básica de la práctica */}
                         <div className="bg-gray-50 p-4 rounded-lg">
                             <h3 className="text-lg font-medium text-blueDark flex items-center gap-2 mb-4">
@@ -607,7 +610,7 @@ export default function PracticeForm({ initialValues }: PracticeFormProps) {
                                 type="button"
                                 variant="outline"
                                 className="w-full md:w-auto md:min-w-[200px]"
-                                onClick={() => (window.location.href = "/")}
+                                onClick={() => (window.location.href = "/dashboard")}
                             >
                                 Cancelar
                             </Button>

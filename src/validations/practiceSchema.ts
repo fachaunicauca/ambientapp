@@ -3,8 +3,6 @@ import { z } from 'zod';
 export const practiceSchema = z.object({
     user: z.object({
         name: z.string().min(1, "El nombre del usuario es requerido"),
-        code: z.string().min(1, "El código del usuario es requerido"),
-        id: z.number().int().positive("El ID del usuario debe ser un número positivo"),
         email: z.string().email("Formato de correo electrónico inválido"),
     }),
     numberOfEstudents: z.number().int().positive("El número de estudiantes debe ser positivo")
@@ -27,7 +25,7 @@ export const practiceSchema = z.object({
             amount: z.number().positive("La cantidad debe ser un número positivo"),
             concentration: z.number().positive("La concentración debe ser un número positivo"),
             type: z.enum(["Reactivo", "Solución"]),
-            concentrationType: z.enum(["Molar", "Porcentaje en peso", "Porcentaje en volumen", "Normal" ])
+            concentrationType: z.enum(["Molar", "Porcentaje en peso", "Porcentaje en volumen", "Normal"])
         })
     ).min(1, "Debe especificar al menos un reactivo"),
     wastes: z.array(
@@ -38,7 +36,8 @@ export const practiceSchema = z.object({
             wasteGenerationDate: z.string()
                 .refine(date => !isNaN(Date.parse(date)), "La fecha de generación debe tener un formato válido"),
             wasteHourGenration: z.string()
-                .refine(date => !isNaN(Date.parse(date)), "La hora de generación debe tener un formato válido"),
+                .refine(time => /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time),
+                    "La hora debe tener un formato válido (HH:MM)")
         })
     ).min(1, "Debe especificar al menos un residuo"),
 });

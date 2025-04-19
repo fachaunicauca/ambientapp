@@ -1,8 +1,6 @@
 export interface PracticeEducator {
     user: {
         name: string;
-        code: string;
-        id: number;
         email: string;
     };
     numberOfEstudents: number;
