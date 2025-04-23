@@ -112,7 +112,7 @@ export default function InventaryForm({ editedReactive }: ReactiveFormProps) {
 
   return (
     <div className="container">
-      <Card className="w-full border-l-4 border-l-blue border-r-0 border-t-0 border-b-0 rounded-l-none shadow-md">
+      <Card className="max-w-2xl border-l-4 border-l-blue border-r-0 border-t-0 border-b-0 rounded-l-none shadow-md">
         <CardHeader className="bg-gradient-to-r from-blue/10 to-transparent pb-6">
           <div className="flex items-center gap-3">
             <FlaskConical className="h-6 w-6 text-blue" />
@@ -262,9 +262,8 @@ export default function InventaryForm({ editedReactive }: ReactiveFormProps) {
             <div className="pt-4 flex gap-4 justify-center">
               <Button type="submit" variant={"default"} disabled={isSubmitting}>
                 <ClipboardCheck className="h-4 w-4 mr-2" />
-                {isSubmitting ? "Creando..." : "Crear convenio"}
+                {isSubmitting ? editedReactive ? "Editando..." : "Agregando..." : editedReactive ? "Editar reactivo" : "Crear reactivo"}
               </Button>
-
               <Button
                 type="button"
                 variant={"delete"}
