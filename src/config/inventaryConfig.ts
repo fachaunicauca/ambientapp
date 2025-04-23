@@ -1,14 +1,15 @@
 import { Column } from "@/types/inventaryTypes";
 
 export const columns: Column[] = [
-    { key: "reactiveName", header: "Compuesto" },
-    { key: "reactiveFormula", header: "Formula" },
-    { key: "reactiveCode", header: "Codigo" },
-    { key: "reactiveType", header: "Tipo" },
-    { key: "reactiveQuantity", header: "Cantidad" },
-    { key: "reactiveRisk", header: "Riesgo" },
-    { key: "reactiveParentHouse", header: "Casa Matriz" },
-    { key: "reactiveStatus", header: "Estado" }
+    { key: "name", header: "Compuesto" },
+    { key: "formula", header: "Formula" },
+    { key: "code", header: "Codigo" },
+    { key: "type", header: "Tipo" },
+    { key: "quantity", header: "Cantidad" },
+    { key: "riskTypes", header: "Riesgo" },
+    { key: "house", header: "Casa Matriz" },
+    { key: "safetySheet", header: "Hoja de Seguridad" },
+    { key: "status", header: "Estado" },
 ]
 
 export const ReactiveTypes = [
@@ -65,35 +66,20 @@ export const StatusTypes = [
     { value: "DESECHADO", label: "DESECHADO" }
 ]
 
-// export enum RiskTypesEnum {
-//     INFLAMABLE = "INFLAMABLE",
-//     NOCIVO = "NOCIVO",
-//     TOXICO = "TÓXICO",
-//     FRAGMENTOS = "FRAGMENTOS",
-//     CORROSIVO = "CORROSIVO",
-//     IRRITANTE = "IRRITANTE",
-//     VENENO = "VENENO",
-//     COMBUSTIBLE = "COMBUSTIBLE",
-//     CARCINOGENO = "CARCINÓGENO",
-//     CANCERIGENO = "CANCERÍGENO",
-//     DANIO_POR_EXPOSICION = "DAÑO POR EXPOSICIÓN",
-//     PELIGROSO = "PELIGROSO",
-//     OXIDANTE_FUERTE = "OXIDANTE FUERTE",
-//     COMBURENTE = "COMBURENTE",
-//     EXPLOSIVO = "EXPLOSIVO",
-//     QUEMADURAS = "QUEMADURAS",
-//     PRECAUCION = "PRECAUCIÓN",
-//     PERJUDICIAL = "PERJUDICIAL",
-//     ADVERTENCIA = "ADVERTENCIA"
-// }
-
-// export enum StatusEnum {
-//     DISPONIBLE = "DISPONIBLE",
-//     BAJO_STOCK = "BAJO STOCK",
-//     AGOTADO = "AGOTADO",
-//     VENCIDO = "VENCIDO",
-//     DESECHADO = "DESECHADO"
-// }
-
-
+export const getStatusColor = (status: string | undefined) => {
+    switch (status) {
+        case "DISPONIBLE":
+            return "bg-green";
+        case "BAJO_STOCK":
+            return "bg-orange";
+        case "AGOTADO":
+            return "bg-red";
+        case "VENCIDO":
+            return "bg-purple-700";
+        case "DESECHADO":
+            return "bg-black";
+        default:
+            return "bg-gray-300";
+    }
+};
 

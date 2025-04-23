@@ -25,6 +25,7 @@ interface SelectFieldProps {
   label: string;
   tooltipText: string;
   options: SelectOption[];
+  value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   error?: string;
@@ -37,6 +38,7 @@ export default function SelectField({
   label,
   tooltipText,
   options,
+  value,
   defaultValue,
   onValueChange,
   error,
@@ -59,7 +61,7 @@ export default function SelectField({
         </TooltipProvider>
       </div>
 
-      <Select defaultValue={defaultValue} onValueChange={onValueChange}>
+      <Select defaultValue={defaultValue} value={value} onValueChange={onValueChange}>
         <SelectTrigger className={error ? "border-error" : ""}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

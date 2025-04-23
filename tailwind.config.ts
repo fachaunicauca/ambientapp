@@ -8,6 +8,7 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+	"./src/config/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@heroui/theme/dist/components/(chip|input|form).js"
   ],
 	theme: {
@@ -29,6 +30,8 @@ export default {
 				red: '#9D0311',
 				redLight: '#DB141C',
 				redDark: '#690007',
+				orange: '#F8AE15',
+				green: '#249337',
 				tertiary: '#1D72D3',
 				error: '#FF6D0A',
 				accesibility: '#249300',

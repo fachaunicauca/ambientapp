@@ -1,14 +1,21 @@
 import { Label } from "../ui/label";
 import { Info } from "lucide-react";
 import { Input } from "../ui/input";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { UseFormRegisterReturn } from "react-hook-form";
+import ErrorMessage from "../ui/error-message";
 
 interface FormFieldProps {
   id: string;
   label: string;
   tooltipText: string;
   placeholder: string;
-  //register: UseFormRegisterReturn;
+  register: UseFormRegisterReturn;
   error?: string;
   type?: string;
 }
@@ -19,9 +26,9 @@ export default function FormField({
   tooltipText,
   placeholder,
   type,
-}: //   register,
-//   error,
-FormFieldProps) {
+  register,
+  error,
+}: FormFieldProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
@@ -41,10 +48,11 @@ FormFieldProps) {
         id={id}
         type={type}
         placeholder={placeholder}
-        min={0}
-        step={100}
-        // className={error ? "border-error" : ""}
+        {...register}
+        className={error ? "border-error" : ""}
+        step="any"
       ></Input>
+      <ErrorMessage message={error} />
     </div>
   );
 }

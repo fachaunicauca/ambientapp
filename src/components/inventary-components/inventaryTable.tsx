@@ -1,16 +1,31 @@
-import { QuantityUnits, ReactiveTypes, RiskTypes, StatusTypes } from "@/config/inventaryConfig";
-import { InventaryTableProps } from "@/types/inventaryTypes";
+import {
+  getStatusColor,
+  QuantityUnits,
+  ReactiveTypes,
+  RiskTypes,
+  StatusTypes,
+} from "@/config/inventaryConfig";
+import { InventaryTableProps, ReactiveProps } from "@/types/inventaryTypes";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chip } from "@heroui/chip";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 export default function InventaryTable({
   reactives,
+  parentHouses,
   isLoading,
   emptyMessage,
   columns,
 }: InventaryTableProps) {
+  const router = useRouter();
+  const [localReactives, setLocalReactives] = useState<ReactiveProps[]>([]);
+
+  useEffect(() => {
+    setLocalReactives(reactives);
+  }, [reactives]);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-10">
@@ -40,7 +55,7 @@ export default function InventaryTable({
 
         <tbody className="divide-y text-center">
           {/* CASO DONDE NO HAY REACTIVOS */}
-          {reactives.length === 0 ? (
+          {localReactives.length === 0 ? (
             <tr>
               <td colSpan={columns.length + 1} className="text-center py-4">
                 {emptyMessage}
@@ -48,16 +63,21 @@ export default function InventaryTable({
             </tr>
           ) : (
             // CASO DONDE HAY REACTIVOS
-            reactives.map((reactive) => (
-              <tr key={reactive.reactiveId} className="hover:bg-muted/50 divide-x">
+            localReactives.map((reactive) => (
+              <tr
+                key={reactive.reactiveId}
+                className="hover:bg-muted/50 divide-x"
+              >
                 {columns.map((column) => {
                   let content;
                   //SE VERIFICAN LOS TIPOS DE REACTIVOS
-                  if(column.key === "reactiveType") {	
-                    content = ReactiveTypes.find((t) => t.value === reactive[column.key])?.label;
+                  if (column.key === "type") {
+                    content = ReactiveTypes.find(
+                      (t) => t.value === reactive[column.key]
+                    )?.label;
                   }
                   //SE VERIFICAN LOS RIESGOS PARA MOSTRARLOS
-                  else if (column.key === "reactiveRisk") {
+                  else if (column.key === "riskTypes") {
                     content = (
                       <div className="flex flex-wrap gap-1 justify-center">
                         {reactive[column.key].map((risk) => (
@@ -71,13 +91,41 @@ export default function InventaryTable({
                       </div>
                     );
                     //LA CANTIDAD SE MUESTRA JUNTO A SU UNIDAD
-                  } else if (column.key === "reactiveQuantity") {
+                  } else if (column.key === "quantity") {
                     content = `${reactive[column.key]} ${
-                      QuantityUnits.find((u) => u.value === reactive.reactiveUnit)?.label
+                      QuantityUnits.find(
+                        (u) => u.value === reactive.measureUnit
+                      )?.label
                     }`;
-                    //SE MUESTRA EL CONTENIDO DE LA COLUMNA
-                  } else if (column.key === "reactiveStatus") {
-                    content = StatusTypes.find((s) => s.value === reactive[column.key])?.label;
+                    //SE ASIGNA EL NOMBRE DE LA CASA MATRIZ CON TENIENDO EN CUENTA EL ID
+                  } else if (column.key === "house") {
+                    content = parentHouses.find(
+                      (h) => h.parentHouseId === reactive[column.key]
+                    )?.name;
+                    //SE ASIGNA EL ESTADO DEL REACTIVO
+                  } else if (column.key === "status") {
+                    const status = StatusTypes.find(
+                      (s) => s.value === reactive[column.key]
+                    );
+                    content = (
+                      <Chip
+                        className={`${getStatusColor(status?.value)} text-white rounded-full text-xs`}
+                      > 
+                        {status?.label}
+                      </Chip>
+                    );
+                    // SE MUESTRA LA HOJA DE SEGURIDAD COMO ENLACE
+                  } else if (column.key === "safetySheet") {
+                    content = (
+                      <a
+                        href={reactive.safetySheet}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue underline"
+                      >
+                        Enlace
+                      </a>
+                    );
                   } else {
                     content = reactive[column.key];
                   }
@@ -90,6 +138,11 @@ export default function InventaryTable({
                 <td className="px-4 py-3 justify-items-center">
                   <div className="flex space-x-2">
                     <Button
+                      onClick={() =>
+                        router.push(
+                          `/dashboard/inventario/editar-reactivo/${reactive.reactiveId}`
+                        )
+                      }
                       variant="outline"
                       size="sm"
                       className="bg-accesibility/40 text-accesibility hover:text-white hover:bg-accesibility border-none"
