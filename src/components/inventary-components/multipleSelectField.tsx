@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Label } from "../ui/label";
+import { Label } from "../ui/typography/label";
 import { Info, CircleX, ChevronUp, ChevronDown } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+} from "../ui/navigation/tooltip";
 import { Chip } from "@heroui/chip";
-import ErrorMessage from "../ui/error-message";
+import ErrorMessage from "../ui/feedback/error-message";
 
 interface SelectOption {
   value: string;

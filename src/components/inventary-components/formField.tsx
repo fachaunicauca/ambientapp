@@ -8,7 +8,8 @@ import {
   TooltipTrigger,
 } from "../ui/navigation/tooltip";
 import { UseFormRegisterReturn } from "react-hook-form";
-import ErrorMessage from "../ui/error-message";
+import ErrorMessage from "../ui/feedback/error-message";
+
 
 interface FormFieldProps {
   id: string;

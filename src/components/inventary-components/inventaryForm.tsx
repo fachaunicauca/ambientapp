@@ -26,7 +26,7 @@ import {
 } from "@/validations/reactiveSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useReactiveFormHandlers } from "@/handlers/reactiveHandlers";
-import { Button } from "../ui/button";
+import { Button } from "../ui/buttons/button";
 import {
   ReactiveProps,
   ReactiveType,
