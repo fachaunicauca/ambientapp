@@ -1,8 +1,7 @@
 "use client"
 
 import {
-    Bell,
-    ChevronsUpDown,
+    ChevronDown,
     LogOut,
 } from "lucide-react"
 
@@ -10,37 +9,25 @@ import {
     Avatar,
     AvatarFallback,
     AvatarImage,
-} from "@/components/ui/avatar"
+} from "@/components/ui/avatar/avatar"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/navigation/dropdown-menu"
+
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from "@/components/ui/sidebar"
-
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/navigation/sidebar"
 
 import { logoutAction } from "@/actions/authAction"
 import { useRouter } from "next/navigation"
-import { useState } from "react";
-
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter
-} from "@/components/ui/dialog"
 
 export function NavUser({
     user,
@@ -49,37 +36,27 @@ export function NavUser({
         name: string
         email: string
         avatar: string
+        role: string
     }
 }) {
-    const { isMobile } = useSidebar()
     const router = useRouter();
-    const [isOpen, setIsOpen] = useState(false);
-
-    const onOpen = () => setIsOpen(true);
-    const onClose = () => setIsOpen(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const { isMobile } = useSidebar()
 
     const handleLogout = async () => {
         try {
-            setIsLoading(true);
             const res = await logoutAction();
 
             if (res.success) {
                 setTimeout(() => {
-                    onClose();
                     router.push('/');
                     router.refresh();
                 }, 100);
             } else {
-                onClose();
                 router.push('/');
             }
         } catch (error) {
             console.error("Error al cerrar sesión:", error);
-            onClose();
             router.push('/');
-        } finally {
-            setIsLoading(false);
         }
     }
 
@@ -96,44 +73,30 @@ export function NavUser({
                                 <Avatar className="h-8 w-8 rounded-lg">
                                     <AvatarImage src={user.avatar} alt={user.name} />
                                     <AvatarFallback className="rounded-lg"></AvatarFallback>
+                                    <AvatarFallback className="rounded-lg"></AvatarFallback>
                                 </Avatar>
-                                <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-semibold">{user.name}</span>
-                                    <span className="truncate text-xs">{user.email}</span>
-                                </div>
-                                <ChevronsUpDown className="ml-auto size-4" />
+                                {!isMobile && (
+                                    <div className="grid flex-1 text-left text-sm leading-tight">
+                                        <span className="truncate font-semibold text-blue">{user.name}</span>
+                                        <span className="truncate text-xs text-blue">{user.role}</span>
+                                    </div>
+                                )}
+                                <ChevronDown className="size-4" />
                             </SidebarMenuButton>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
                             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                            side={isMobile ? "bottom" : "right"}
+                            side="bottom"
                             align="end"
                             sideOffset={4}
                         >
-                            <DropdownMenuLabel className="p-0 font-normal">
-                                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                    <Avatar className="h-8 w-8 rounded-lg">
-                                        <AvatarImage src={user.avatar} alt={user.name} />
-                                        <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                                    </Avatar>
-                                    <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-semibold">{user.name}</span>
-                                        <span className="truncate text-xs">{user.email}</span>
-                                    </div>
-                                </div>
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem>
-                                    <Bell />
-                                    Notificaciones
-                                </DropdownMenuItem>
+                                <span className="mx-2 mb-2 mt-1 text-blue text-xs md:text-sm">
+                                    {user.email}
+                                </span>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onSelect={(e) => {
-                                e.preventDefault();
-                                onOpen();
-                            }}>
+                            <DropdownMenuItem className="text-blue font-semibold" onClick={handleLogout}>
                                 <LogOut />
                                 Cerrar sesión
                             </DropdownMenuItem>
@@ -141,34 +104,6 @@ export function NavUser({
                     </DropdownMenu>
                 </SidebarMenuItem>
             </SidebarMenu>
-
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Cerrar sesión</DialogTitle>
-                        <DialogDescription>
-                            ¿Confirma que quiere cerrar sesión?
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="flex gap-3 flex-col-reverse">
-                        <Button
-                            variant="secondaryWithoutHover"
-                            onClick={onClose}
-                            className="relative z-50 cursor-pointer pointer-events-auto"
-                        >
-                            No
-                        </Button>
-                        <Button
-                            variant="delete"
-                            onClick={handleLogout}
-                            disabled={isLoading}
-                            className="relative z-50 cursor-pointer pointer-events-auto"
-                        >
-                            {isLoading ? "Cerrando..." : "Sí"}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     )
 }

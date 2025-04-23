@@ -1,12 +1,12 @@
-import { Label } from "../ui/label";
+import { Label } from "../ui/typography/label";
 import { Info } from "lucide-react";
-import { Input } from "../ui/input";
+import { Input } from "../ui/form/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+} from "../ui/navigation/tooltip";
 import { UseFormRegisterReturn } from "react-hook-form";
 import ErrorMessage from "../ui/error-message";
 

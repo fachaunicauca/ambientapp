@@ -9,7 +9,7 @@ import { InventaryTableProps, ReactiveProps } from "@/types/inventaryTypes";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Chip } from "@heroui/chip";
-import { Button } from "../ui/button";
+import { Button } from "../ui/buttons/button";
 import { useRouter } from "next/navigation";
 
 export default function InventaryTable({

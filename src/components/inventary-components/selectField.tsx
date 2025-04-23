@@ -1,19 +1,19 @@
 import { Info } from "lucide-react";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/typography/label";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+} from "@/components/ui/navigation/tooltip";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import ErrorMessage from "../ui/error-message";
+} from "@/components/ui/form/select";
+import ErrorMessage from "@/components/ui/feedback/error-message";
 
 interface SelectOption {
   value: string;

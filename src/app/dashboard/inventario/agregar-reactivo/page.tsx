@@ -2,7 +2,7 @@
 
 import { getReactiveAction } from "@/actions/reactiveAction";
 import InventaryForm from "@/components/inventary-components/inventaryForm";
-import Title from "@/components/ui/title";
+import Title from "@/components/ui/typography/title";
 import { ReactiveProps } from "@/types/inventaryTypes";
 import { Loader2 } from "lucide-react";
 import { useParams } from "next/navigation";

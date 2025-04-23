@@ -1,9 +1,10 @@
 import { Search, Filter, ArrowUpFromLine, Eye, Pencil, Trash2, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import Title from "@/components/ui/title";
+import { Button } from "@/components/ui/buttons/button"
+import { Input } from "@/components/ui/form/input"
+import { Badge } from "@/components/ui/typography/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/layout/table"
+import Title from "@/components/ui/typography/title";
+import Link from "next/link"
 
 export default function PracticaLaboratorio() {
     return (
@@ -19,10 +20,12 @@ export default function PracticaLaboratorio() {
                             <h1 className="text-2xl font-bold text-blue mb-1">Lista de solicitudes del docente</h1>
                             <p className="text-gray-500">Gestione sus solicitudes de prácticas de laboratorio</p>
                         </div>
-                        <Button className="bg-blue hover:bg-blue/90 text-white mt-4 md:mt-0 w-1/5">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Nueva Solicitud
-                        </Button>
+                        <Link href={"/dashboard/docente/practica-laboratorio/solicitud-practica"} className="mt-4 md:mt-0 w-1/5">
+                            <Button className="bg-blue hover:bg-blue/90 text-white ">
+                                <Plus className="h-4 w-4 mr-2" />
+                                Nueva Solicitud
+                            </Button>
+                        </Link>
                     </div>
 
                     {/* Search and Filters */}
@@ -173,4 +176,3 @@ export default function PracticaLaboratorio() {
 
     )
 }
-

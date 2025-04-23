@@ -1,10 +1,10 @@
 import Link from "next/link"
 import { FileText, Search, Filter, Download, Share2, Upload, ArrowUpFromLine, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import Title from "@/components/ui/title";
+import { Button } from "@/components/ui/buttons/button"
+import { Input } from "@/components/ui/form/input"
+import { Badge } from "@/components/ui/typography/badge"
+import { Card, CardContent } from "@/components/ui/layout/card"
+import Title from "@/components/ui/typography/title";
 
 export default function GuiaLaboratorio() {
     return (
@@ -169,4 +169,3 @@ function DocumentItem({ title, size, date, author }: DocumentItemProps) {
         </Card>
     )
 }
-

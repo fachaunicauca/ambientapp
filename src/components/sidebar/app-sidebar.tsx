@@ -9,26 +9,21 @@ import {
     Siren,
     GraduationCap,
     TableProperties,
+    X,
 } from "lucide-react"
 
 import { NavMain } from "@/components/sidebar/nav-main"
-import { NavUser } from "@/components/sidebar/nav-user"
 
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarHeader,
     SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/navigation/sidebar"
 import Image from "next/image"
+import { SidebarTrigger, useSidebar } from "@/components/ui/navigation/sidebar";
 
 const data = {
-    user: {
-        name: "Mario Perdomo",
-        email: "cmperdomo@unicauca.edu.co",
-        avatar: "/user.webp"
-    },
     navMain: [
         {
             title: "Inicio",
@@ -118,7 +113,7 @@ const data = {
                 },
                 {
                     title: "Capacitación",
-                    url: "#",
+                    url: "/dashboard/comunicacion-riesgo/capacitacion",
                 },
                 {
                     title: "Evaluacion",
@@ -176,25 +171,35 @@ const data = {
 }
 
 export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { isMobile } = useSidebar();
+    const { toggleSidebar } = useSidebar()
+
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader className="bg-blueDark text-white p-4 items-start">
-                <Image
-                    src={"/u.png"}
-                    alt="Logo"
-                    width={120}
-                    height={120}
-                    className="group-data-[collapsible=icon]:w-0 uni-logo"
-                    priority
-                />
+                <div className="flex justify-between w-full">
+                    <Image
+                        src={"/u.png"}
+                        alt="Logo"
+                        width={120}
+                        height={120}
+                        className="group-data-[collapsible=icon]:w-0 uni-logo"
+                        priority
+                    />
+                    {isMobile ? (
+                        <button onClick={toggleSidebar}>
+                            <X className="text-white size-4 hover:bg-transparent hover:text-white" />
+                        </button>
+                    ) :
+                        <SidebarTrigger className="text-white size-4 hover:bg-transparent hover:text-white" />
+                    }
+                </div>
             </SidebarHeader>
             <SidebarContent className="bg-blueDark text-white pt-8">
                 <NavMain items={data.navMain} />
             </SidebarContent>
-            <SidebarFooter className="bg-blueDark text-white">
-                <NavUser user={data.user} />
-            </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     )
 });
+

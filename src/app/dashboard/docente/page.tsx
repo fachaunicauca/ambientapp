@@ -1,9 +1,9 @@
-import Title from "@/components/ui/title";
+import Title from "@/components/ui/typography/title";
 import Link from "next/link";
 import { Bell, FileText, CalendarClock, Recycle, ClipboardList } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/layout/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/navigation/tabs";
+import { Badge } from "@/components/ui/typography/badge";
 
 export default function Docente() {
     return (

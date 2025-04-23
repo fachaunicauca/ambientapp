@@ -1,17 +1,17 @@
-import LoginForm from "@/components/auth/loginForm/loginForm";
-import InfoSection from "@/components/auth/infoSection/infoSection";
-import MultiColorBar from "@/components/ui/multiColorBar";
-import Footer from "@/components/footer/topFooter/topFooter";
+import MultiColorBar from "@/components/ui/layout/multiColorBar";
+import Background from "@/components/login/layout/background";
+import Login from "@/components/login/login/login";
+import FooterInfo from "@/components/layout/footer/footerInfo";
 
 export default function Home() {
   return (
     <>
       <div className="flex gap-2 w-full h-full md:h-screen">
-        <LoginForm />
-        <InfoSection />
+        <Login />
+        <Background />
       </div>
       <MultiColorBar />
-      <Footer />
+      <FooterInfo />
     </>
   );
 }

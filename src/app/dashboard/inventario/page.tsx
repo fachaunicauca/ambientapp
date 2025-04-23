@@ -1,14 +1,14 @@
 "use client";
 
 import InventaryTable from "@/components/inventary-components/inventaryTable";
-import Title from "@/components/ui/title";
+import Title from "@/components/ui/typography/title";
 import { columns } from "@/config/inventaryConfig";
 import { ParentHouseProps, ReactiveProps } from "@/types/inventaryTypes";
 import React, { useEffect, useState } from "react";
 import { Filter, Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/buttons/button";
+import { Input } from "@/components/ui/form/input";
 import { getReactivesAction } from "@/actions/reactiveAction";
 import { getParentHousesAction } from "@/actions/parentHouseAction";
 
