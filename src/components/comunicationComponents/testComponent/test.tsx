@@ -144,9 +144,10 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
                         currentPage={currentPage}
                         totalPages={Math.ceil(questions.length / questionsPerPage)}
                         onPageChange={setCurrentPage}
-                        onSubmit={handleSubmit}
-                        allAnswered={allAnswered}
+                        onAction={handleSubmit}
+                        actionText="Enviar respuestas"
                         isSubmitting={isSubmitting}
+                        disableNext={!paginatedQuestions.every(q => answers[q.question_id])}
                     />
                 </>
             )}

@@ -4,12 +4,21 @@ interface PaginationControlsProps {
     currentPage: number;
     totalPages: number;
     onPageChange: (newPage: number) => void;
-    onSubmit: () => void;
-    allAnswered: boolean;
-    isSubmitting: boolean;
+    onAction?: () => void; 
+    actionText?: string; 
+    isSubmitting?: boolean; 
+    disableNext?: boolean; 
 }
 
-export default function PaginationControls({ currentPage, totalPages, onPageChange, onSubmit, allAnswered, isSubmitting }: PaginationControlsProps) {
+export default function PaginationControls({
+    currentPage,
+    totalPages,
+    onPageChange,
+    onAction,
+    actionText = "Finalizar",
+    isSubmitting = false,
+    disableNext = false,
+}: PaginationControlsProps) {
     const isLastPage = currentPage >= totalPages - 1;
 
     return (
@@ -18,17 +27,17 @@ export default function PaginationControls({ currentPage, totalPages, onPageChan
                 onClick={() => onPageChange(Math.max(currentPage - 1, 0))}
                 disabled={currentPage === 0}
                 variant="secondary"
-                className={`w-md rounded-full mr-2 ${currentPage === 0 ? 'cursor-not-allowed' : ''}`}
+                className={`w-md rounded-full mr-2 ${currentPage === 0 ? "cursor-not-allowed" : ""}`}
             >
                 Anterior
             </Button>
             <Button
-                onClick={isLastPage ? onSubmit : () => onPageChange(Math.min(currentPage + 1, totalPages - 1))}
-                disabled={isSubmitting || (!allAnswered && isLastPage)}
+                onClick={isLastPage ? onAction : () => onPageChange(Math.min(currentPage + 1, totalPages - 1))}
+                disabled={isSubmitting || disableNext}
                 variant="default"
-                className={`w-md rounded-full mt-0  ${isSubmitting || (!allAnswered && isLastPage) ? 'cursor-not-allowed' : ''}`}
+                className={`w-md rounded-full mt-0 ${isSubmitting || disableNext ? "cursor-not-allowed" : ""}`}
             >
-                {isSubmitting ? "Enviando..." : isLastPage ? "Finalizar Test" : "Siguiente"}
+                {isSubmitting ? "Procesando..." : isLastPage ? actionText : "Siguiente"}
             </Button>
         </div>
     );

@@ -8,6 +8,7 @@ export const routeList: Record<string, string> = {
     "/dashboard/comunicacion-riesgo": "Comunicacion de Riesgo",
     "/dashboard/comunicacion-riesgo/evaluacion": "Iniciar Evaluación",
     "/dashboard/comunicacion-riesgo/evaluacion/test": "Evaluación",
-    "/dashboard/comunicacion-riesgo/capacitacion": "Capacitación", 
+    "/dashboard/comunicacion-riesgo/capacitacion": "Capacitación",
+    "/dashboard/comunicacion-riesgo/capacitacion/visualizar": "Vizualizar",
     // ...
 };
