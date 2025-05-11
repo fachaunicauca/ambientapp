@@ -5,7 +5,8 @@ import { submitTest } from "@/api/apiEvaluation/services/evaluation-services";
 import { useState, useEffect, useCallback } from "react";
 import QuestionCard from "./questionCard";
 import PaginationControls from "./paginationControl";
-import ScoreCircle from "@/components/ui/feedback/score-circle";
+import ScoreCircle from "@/components/ui/score-circle";
+import { Button } from "@/components/ui/button";
 
 interface EvaluationProps {
     studentCode: string;
@@ -20,8 +21,8 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [score, setScore] = useState<number | null>(null);
-    const [timeLeft, setTimeLeft] = useState(10 * 60);
-
+    const [timeLeft, setTimeLeft] = useState(10 * 60); 
+    const [attempt, setAttempt] = useState(3); 
     const questionsPerPage = 4;
 
     const handleSubmit = useCallback(async () => {
@@ -43,8 +44,9 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
 
         try {
             const returnedScore = await submitTest(payload);
-            setScore(returnedScore * 100);
+            setScore(returnedScore * 100); 
             setSubmitSuccess(true);
+            setAttempt((prev) => prev - 1); 
             setTimeLeft(0);
         } catch (error) {
             console.error("Error al enviar las respuestas:", error);
@@ -85,11 +87,17 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
         }));
     };
 
+    const restartEvaluation = () => {
+        setCurrentPage(0); 
+        setAnswers({}); 
+        setSubmitSuccess(false); 
+        setScore(null); 
+        setTimeLeft(10 * 60); 
+    };
+
     const startIndex = currentPage * questionsPerPage;
     const endIndex = startIndex + questionsPerPage;
     const paginatedQuestions = questions.slice(startIndex, endIndex);
-
-    const allAnswered = Object.keys(answers).length === questions.length;
 
     return (
         <div className="p-6">
@@ -105,6 +113,16 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
                         Puntuación
                     </p>
                     {score !== null && <ScoreCircle score={score} maxScore={100} />}
+                    {score !== null && score < 70 && attempt > 0 ? (
+                        <Button
+                            className="w-md rounded-full mt-2"
+                            onClick={restartEvaluation}
+                        >
+                            Intentar Nuevamente ({attempt}/3)
+                        </Button>
+                    ) : (
+                        <p className="text-center text-neutro">Haz completado la evaluación!!</p>
+                    )}
                 </div>
             ) : (
                 <>
@@ -124,9 +142,10 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
                         currentPage={currentPage}
                         totalPages={Math.ceil(questions.length / questionsPerPage)}
                         onPageChange={setCurrentPage}
-                        onSubmit={handleSubmit}
-                        allAnswered={allAnswered}
+                        onAction={handleSubmit}
+                        actionText="Enviar respuestas"
                         isSubmitting={isSubmitting}
+                        disableNext={!paginatedQuestions.every(q => answers[q.question_id])}
                     />
                 </>
             )}

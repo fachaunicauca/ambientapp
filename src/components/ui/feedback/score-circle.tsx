@@ -25,7 +25,7 @@ export default function ScoreCircle({ score, maxScore }: ScoreCircleProps) {
                 value={percentage}
                 text={`${score} / ${maxScore}`}
                 styles={buildStyles({
-                    textColor: pathColor,
+                    textColor: 'black',
                     pathColor: pathColor,
                     trailColor: "#d6d6d6",
                     
