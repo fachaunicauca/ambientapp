@@ -4,8 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import FileItem from "@/components/comunicationComponents/preparationComponent/fileItem";
 import SearchBar from "@/components/comunicationComponents/preparationComponent/searchBar";
-import Title from "@/components/ui/title";
+
 import PaginationControls from "@/components/comunicationComponents/testComponent/paginationControl";
+import Title from "@/components/ui/typography/title";
 
 const files = [
     { name: "Manual de Seguridad para el Laboratorio", type: "pdf", url: "/Mini Manual de Seguridad para el Laboratorio de Química Universitario.pdf" },

@@ -1,7 +1,8 @@
 
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
+
 import { Search } from "lucide-react";
+import { Input } from "@/components/ui/form/input";
 
 export default function SearchBar({
     onSearch,
