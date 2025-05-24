@@ -52,7 +52,11 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
             setScore(returnedScore * 100); 
             setSubmitSuccess(true);
             const attempts = await getTries(infoTryStudent)
-            setAttempt((prev) => prev - attempts);
+            if(attempts === -1) {
+                setAttempt(0)
+            }else {
+                setAttempt((prev) => prev - attempts);
+            }
             setTimeLeft(0);
         } catch (error) {
             console.error("Error al enviar las respuestas:", error);

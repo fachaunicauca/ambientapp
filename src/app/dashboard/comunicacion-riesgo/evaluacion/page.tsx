@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { fetchQuestionsData } from '@/api/apiEvaluation/services/evaluation-services';
+import { fetchQuestionsData, getTries } from '@/api/apiEvaluation/services/evaluation-services';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/buttons/button";
 import { Input } from "@/components/ui/form/input";
 import Title from '@/components/ui/typography/title';
+import { toast } from 'sonner';
 
 export default function LoginTest() {
     const [evaluacionInfo, setEvaluacionInfo] = useState({ code: "", subject: "", teacher: "" });
@@ -16,9 +17,27 @@ export default function LoginTest() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+
+        if (!evaluacionInfo.code || !evaluacionInfo.subject || !evaluacionInfo.teacher) {
+            setError("Por favor completa todos los campos.");
+            return;
+        }
+
         setLoading(true);
 
+        const infoTryStudent = {
+            actual_date: new Date().toISOString().split('T')[0],
+            student_code: parseInt(evaluacionInfo.code, 10)
+        };
+
         try {
+            const attempts = await getTries(infoTryStudent)
+            //  quitar o colocar || attempts > 3 , en el caso que un
+            //estudiante ha hecho 3 veces la evaluacion o ya la paso , no necesita hacerla de nuevo
+            if(attempts === -1 || attempts > 3){
+                toast.info("Ya has completado la prueba para este semestre")
+                return
+            }
             const result = await fetchQuestionsData(evaluacionInfo);
 
             if (result.error) {
@@ -68,7 +87,16 @@ export default function LoginTest() {
                             />
                         </div>
                         <div className="flex justify-center mt-4">
-                            <Button type="submit" className="rounded-full w-full md:w-4xl" disabled={loading}>
+                            <Button
+                                type="submit"
+                                className="rounded-full w-full md:w-4xl"
+                                disabled={
+                                    loading ||
+                                    !evaluacionInfo.code.trim() ||
+                                    !evaluacionInfo.subject.trim() ||
+                                    !evaluacionInfo.teacher.trim()
+                                }
+                            >
                                 {loading ? (
                                     <div className="flex items-center justify-center">
                                         <svg
