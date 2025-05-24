@@ -30,3 +30,8 @@ export interface StudentTestResponse {
     student_code: number;
     student_response: StudentAnswer[];
 }
+
+export interface TryInfo{
+    actual_date: string;
+    student_code: number
+}

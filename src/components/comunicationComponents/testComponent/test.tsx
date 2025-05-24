@@ -1,13 +1,12 @@
 'use client';
 
-import { Question } from "@/api/apiEvaluation/interfaces/interfaces";
-import { submitTest } from "@/api/apiEvaluation/services/evaluation-services";
+import { Question } from "@/api/apiEvaluation/interfaces/evaluation-interfaces";
+import { getTries, submitTest } from "@/api/apiEvaluation/services/evaluation-services";
 import { useState, useEffect, useCallback } from "react";
 import QuestionCard from "./questionCard";
 import PaginationControls from "./paginationControl";
 import ScoreCircle from "@/components/ui/feedback/score-circle";
 import { Button } from "@/components/ui/buttons/button";
-
 
 interface EvaluationProps {
     studentCode: string;
@@ -43,11 +42,17 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
             })),
         };
 
+        const infoTryStudent = {
+            actual_date: new Date().toISOString().split('T')[0],
+            student_code: parseInt(studentCode, 10)
+        };
+
         try {
             const returnedScore = await submitTest(payload);
             setScore(returnedScore * 100); 
             setSubmitSuccess(true);
-            setAttempt((prev) => prev - 1); 
+            const attempts = await getTries(infoTryStudent)
+            setAttempt((prev) => prev - attempts);
             setTimeLeft(0);
         } catch (error) {
             console.error("Error al enviar las respuestas:", error);
@@ -114,7 +119,9 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
                         Puntuación
                     </p>
                     {score !== null && <ScoreCircle score={score} maxScore={100} />}
-                    {score !== null && score < 70 && attempt > 0 ? (
+                    {score !== null && score < 70 && attempt <= 0 ? (
+                        <p className="text-center text-neutro mt-2">Haz agotado todos tus intentos !!</p>
+                    ) : score !== null && score < 70 && attempt > 0 ? (
                         <Button
                             className="w-md rounded-full mt-2"
                             onClick={restartEvaluation}
@@ -122,7 +129,7 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
                             Intentar Nuevamente ({attempt}/3)
                         </Button>
                     ) : (
-                        <p className="text-center text-neutro">Haz completado la evaluación!!</p>
+                        <p className="text-center text-neutro mt-2">Haz completado la evaluación!!</p>
                     )}
                 </div>
             ) : (
