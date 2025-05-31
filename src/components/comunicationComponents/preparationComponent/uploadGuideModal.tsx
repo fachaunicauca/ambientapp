@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/buttons/button";
 import { uploadFile } from "@/api/apiEvaluation/services/guide-services";
 import { Input } from "@/components/ui/form/input";
+import { toast } from "sonner";
 
 interface UploadGuideModalProps {
     isOpen: boolean;
@@ -28,7 +29,7 @@ export default function UploadGuideModal({ isOpen, onClose, onUploadSuccess }: U
 
     const handleUpload = async () => {
         if (!file || !fileName) {
-            alert("Por favor, selecciona un archivo.");
+            toast.error("Por favor, selecciona un archivo.");
             return;
         }
 
