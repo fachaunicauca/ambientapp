@@ -10,14 +10,13 @@ function CapacitationViewerContent(){
     const router = useRouter();
 
     const fileUrl = searchParams.get("url");
-    const fileType = searchParams.get("type");
 
     return (
         <section className="p-6">
             <Button onClick={() => router.back()} className="w-75 mb-2" variant='secondary'>
                 Volver
             </Button>
-            {fileUrl && fileType === "pdf" ? (
+            {fileUrl ? (
                 <iframe src={fileUrl} width="100%" height="600px" className="border"></iframe>
             ):(
                 <p>Archivo no encontrado.</p>
