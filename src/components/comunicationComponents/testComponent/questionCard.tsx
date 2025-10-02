@@ -9,21 +9,21 @@ interface QuestionCardProps {
 
 export default function QuestionCard({ question, selectedAnswer, onAnswerChange }: QuestionCardProps) {
     const handleChange = (answerId: number) => {
-        onAnswerChange(question.question_id, answerId); 
+        onAnswerChange(question.questionId, answerId); 
     };
 
     return (
         <div className="mb-4">
-            <p className="font-semibold tracking-wide leading-26 text-base">{question.question_text}</p>
+            <p className="font-semibold tracking-wide leading-26 text-base">{question.questionText}</p>
             {question.answers.map((answer) => (
-                <div key={answer.answer_id} className="flex items-center gap-2 m-1">
+                <div key={answer.answerId} className="flex items-center gap-2 m-1">
                     <Checkbox
-                        name={`question-${question.question_id}`}
-                        value={answer.answer_id.toString()} 
-                        onCheckedChange={() => handleChange(answer.answer_id)}
-                        checked={selectedAnswer === answer.answer_id} 
+                        name={`question-${question.questionId}`}
+                        value={answer.answerId.toString()} 
+                        onCheckedChange={() => handleChange(answer.answerId)}
+                        checked={selectedAnswer === answer.answerId} 
                     />
-                    <label htmlFor={`question-${question.question_id}-${answer.answer_id}`}>{answer.answer_text}</label>
+                    <label htmlFor={`question-${question.questionId}-${answer.answerId}`}>{answer.answerText}</label>
                 </div>
             ))}
         </div>

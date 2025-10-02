@@ -1,14 +1,14 @@
 //interfaces de peticion  de la api
 export interface Answer {
-    answer_id: number;
-    answer_text: string;
+    answerId: number;
+    answerText: string;
 }
 
 export interface Question {
-    question_id: number;
-    question_title: string | null;
-    question_text: string;
-    question_image: string | null;
+    questionId: number;
+    questionTitle: string | null;
+    questionText: string;
+    questionImage: string | null;
     answers: Answer[];
 }
 
@@ -19,19 +19,19 @@ export interface QuestionList {
 
 //interfaces de envio a la api
 export interface StudentAnswer {
-    question_id: number;
-    answers_ids: number[]; 
+    questionId: number;
+    answersIds: number[]; 
 }
 
 export interface StudentTestResponse {
-    subject_name: string;
-    teacher_name: string;
-    test_date: Date;
-    student_code: number;
-    student_response: StudentAnswer[];
+    subjectName: string;
+    teacherName: string;
+    testDate: Date;
+    studentCode: number;
+    studentResponse: StudentAnswer[];
 }
 
 export interface TryInfo{
-    actual_date: string;
-    student_code: number
+    actualDate: string;
+    studentCode: number
 }

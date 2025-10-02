@@ -1,35 +1,19 @@
+"use server";
+
 import { StudentTestResponse } from "../interfaces/evaluation-interfaces";
 import { TryInfo } from "../interfaces/evaluation-interfaces";
+import microsApi from "@/lib/axios";
 
-
-const baseUrl = process.env.NEXT_PUBLIC_API_TEST_BASE_URL
-
-export const fetchQuestionsData = async (evaluacionInfo: { code: string; subject: string; teacher: string }) => {
+export const fetchQuestionsData = async (evaluacionInfo: { code: number; subject: string; teacher: string }) => {
     try {
+
+        const response = await microsApi.get(`/takeTest?subject_name=${evaluacionInfo.subject}&student_code=${evaluacionInfo.code}&teacher_name=${evaluacionInfo.teacher }`);
         
-        if (!baseUrl) {
-            throw new Error("La URL base no está definida en las variables de entorno.");
-        }
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            throw new Error("Token no disponible");
-        }
-
-        const response = await fetch(`${baseUrl}/takeTest?subject_name=${evaluacionInfo.subject}&student_code=${evaluacionInfo.code}&teacher_name=${evaluacionInfo.teacher }` ,
-            {method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },}
-        );
-        
-        if (!response.ok) {
+        if (!response.status || response.status !== 200) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
         
-        const data = await response.json();
+        const data = response.data;
         
         if (!data || !data.questions) {
             return { error: "No se encontraron preguntas." };
@@ -45,27 +29,19 @@ export const fetchQuestionsData = async (evaluacionInfo: { code: string; subject
 
 export async function submitTest(payload: StudentTestResponse): Promise<number> {
     try {
-        if (!baseUrl) {
-            throw new Error("La URL base no está definida en las variables de entorno.");
-        }
+        
+        const response = await microsApi.post(`/takeTest`, payload);
 
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            throw new Error("Token no disponible");
-        }
-        const response = await fetch(`${baseUrl}/takeTest`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(payload),
-        });
-        if (!response.ok) {
+        if (!response.status || response.status !== 200) {
             throw new Error('Error al enviar las respuestas.');
         }
-        const score = await response.json();
+
+        const score = await response.data;
+        
+        if(!score) {
+            throw new Error('Respuesta inválida del servidor.');
+        }
+
         return score;
     } catch (error) {
         console.error('Error al enviar el test:', error);
@@ -75,28 +51,14 @@ export async function submitTest(payload: StudentTestResponse): Promise<number> 
 
 export async function getTries(infoTryStudent: TryInfo): Promise<number> {
     try {
-        if (!baseUrl) {
-            throw new Error("La URL base no está definida en las variables de entorno.");
-        }
 
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-            throw new Error("Token no disponible");
-        }
+        const response = await microsApi.get(`/takeTest/getTries?actual_date=${infoTryStudent.actualDate}&student_code=${infoTryStudent.studentCode}`);
         
-        const response = await fetch(`${baseUrl}/takeTest/getTries?actual_date=${infoTryStudent.actual_date}&student_code=${infoTryStudent.student_code}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Error al enviar las respuestas.');
+        if (!response.status || response.status !== 200) {
+            throw new Error('Error al obtener los intentos.');
         }
-        const score = await response.json();
-        return score;
+
+        return response.data;
     } catch (error) {
         console.error('Error al obtener los intentos:', error);
         throw error;

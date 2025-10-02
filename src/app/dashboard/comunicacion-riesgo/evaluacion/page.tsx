@@ -9,7 +9,7 @@ import Title from '@/components/ui/typography/title';
 import { toast } from 'sonner';
 
 export default function LoginTest() {
-    const [evaluacionInfo, setEvaluacionInfo] = useState({ code: "", subject: "", teacher: "" });
+    const [evaluacionInfo, setEvaluacionInfo] = useState({ code: 0, subject: "", teacher: "" });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -26,8 +26,8 @@ export default function LoginTest() {
         setLoading(true);
 
         const infoTryStudent = {
-            actual_date: new Date().toISOString().split('T')[0],
-            student_code: parseInt(evaluacionInfo.code, 10)
+            actualDate: new Date().toISOString().split('T')[0],
+            studentCode: evaluacionInfo.code
         };
 
         try {
@@ -65,10 +65,10 @@ export default function LoginTest() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="flex flex-col md:flex-row flex-wrap gap-4">
                             <Input
-                                type="text"
+                                type="number"
                                 placeholder="Código de estudiante"
                                 value={evaluacionInfo.code}
-                                onChange={(e) => setEvaluacionInfo({ ...evaluacionInfo, code: e.target.value })}
+                                onChange={(e) => setEvaluacionInfo({ ...evaluacionInfo, code: parseInt(e.target.value, 10) })}
                                 className="flex-1 w-full md:w-1/3 rounded-lg"
                             />
                             <Input
@@ -92,7 +92,7 @@ export default function LoginTest() {
                                 className="rounded-full w-full md:w-4xl"
                                 disabled={
                                     loading ||
-                                    !evaluacionInfo.code.trim() ||
+                                    evaluacionInfo.code == 0||
                                     !evaluacionInfo.subject.trim() ||
                                     !evaluacionInfo.teacher.trim()
                                 }

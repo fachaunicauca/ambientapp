@@ -9,7 +9,7 @@ import ScoreCircle from "@/components/ui/feedback/score-circle";
 import { Button } from "@/components/ui/buttons/button";
 
 interface EvaluationProps {
-    studentCode: string;
+    studentCode: number;
     subjectName: string;
     teacherName: string;
     questions: Question[];
@@ -32,19 +32,19 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
         setSubmitSuccess(false);
 
         const payload = {
-            subject_name: subjectName,
-            teacher_name: teacherName,
-            test_date: new Date(),
-            student_code: parseInt(studentCode, 10),
-            student_response: Object.keys(answers).map((questionId) => ({
-                question_id: parseInt(questionId, 10),
-                answers_ids: [answers[parseInt(questionId, 10)]],
+            subjectName: subjectName,
+            teacherName: teacherName,
+            testDate: new Date(),
+            studentCode: studentCode,
+            studentResponse: Object.keys(answers).map((questionId) => ({
+                questionId: parseInt(questionId, 10),
+                answersIds: [answers[parseInt(questionId, 10)]],
             })),
         };
 
         const infoTryStudent = {
-            actual_date: new Date().toISOString().split('T')[0],
-            student_code: parseInt(studentCode, 10)
+            actualDate: new Date().toISOString().split('T')[0],
+            studentCode: studentCode
         };
 
         try {
@@ -141,9 +141,9 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
                     {paginatedQuestions.length > 0 ? (
                         paginatedQuestions.map((q) => (
                             <QuestionCard
-                                key={q.question_id}
+                                key={q.questionId}
                                 question={q}
-                                selectedAnswer={answers[q.question_id]}
+                                selectedAnswer={answers[q.questionId]}
                                 onAnswerChange={handleAnswer}
                             />
                         ))
@@ -157,7 +157,7 @@ export default function Evaluation({ studentCode, subjectName, teacherName, ques
                         onAction={handleSubmit}
                         actionText="Enviar respuestas"
                         isSubmitting={isSubmitting}
-                        disableNext={!paginatedQuestions.every(q => answers[q.question_id])}
+                        disableNext={!paginatedQuestions.every(q => answers[q.questionId])}
                     />
                 </>
             )}

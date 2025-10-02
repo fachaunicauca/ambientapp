@@ -3,8 +3,20 @@
 import { cookies } from "next/headers";
 import axios, { AxiosError } from "axios";
 import { ErrorResponse, LoginResponse } from "./responseType";
+import { useAuthStore } from "@/store/authStore";
 
 const API_URL = process.env.NEXT_PUBLIC_API_AUTH_BASE_URL;
+
+export interface LoginData {
+  userId: string,
+  username: string,
+  email: string,
+  fullName: string,
+  roles: string[],
+  access_token: string,
+  refresh_token: string,
+  expires_in: number
+}
 
 export async function loginAction(data: {
   email: string;
@@ -28,10 +40,7 @@ export async function loginAction(data: {
       password: data.password,
     });
 
-    // Obtener el token de la respuesta
-    const apiToken = apiResponse.data.token || apiResponse.data.access_token;
-
-    if (!apiToken) {
+    if (apiResponse.status == 401) {
       return {
         success: false,
         action: "login",
@@ -40,10 +49,23 @@ export async function loginAction(data: {
       };
     }
 
-    // Establecer la cookie usando la API de cookies de Next.js
+    // Obtener el token de la respuesta
+    const access_token = apiResponse.data.access_token;
+    const refresh_token = apiResponse.data.refresh_token;
+
+    const authStore = useAuthStore.getState();
+    authStore.setToken(access_token); // guardar en Zustand
+    authStore.setProfile({
+      _id: apiResponse.data.userId,
+      email: apiResponse.data.email,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      __v: 0
+    });
+
     (await cookies()).set({
-      name: "auth-token",
-      value: apiToken,
+      name: "refresh-token",
+      value: refresh_token,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -56,8 +78,13 @@ export async function loginAction(data: {
       success: true,
       action: "login",
       data: {
-        ...apiResponse.data,
-        token: apiToken,
+        user: {
+          id: apiResponse.data.userId,
+          email: apiResponse.data.email,
+          name: apiResponse.data.fullName,
+        },
+        token: access_token,
+        roles: apiResponse.data.roles,
       },
     };
   } catch (error) {
@@ -101,6 +128,30 @@ export async function logoutAction(): Promise<{
   error?: string;
 }> {
   try {
+    const cookieStore = await cookies();
+    const cookie = cookieStore.get("auth-token")?.value;
+    const refreshToken = cookie ? JSON.parse(cookie).refresh_token : null;
+
+    if (!API_URL) {
+      return {
+        success: false,
+        error: "API_URL no está definida en el entorno",
+      };
+    }
+
+    if (refreshToken) {
+      // Enviar la solicitud de cierre de sesión a la API
+      await axios.post(
+        `${API_URL}/auth/logout`,
+        { refresh_token: refreshToken },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+    
     // Eliminar la cookie
     (await cookies()).delete("auth-token");
 

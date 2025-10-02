@@ -5,14 +5,14 @@ import { fetchQuestionsData } from "@/api/apiEvaluation/services/evaluation-serv
 import { useState, useEffect } from "react";
 
 export default function EvaluationPageContent() {
-    const [params, setParams] = useState<{ code?: string; subject?: string; teacher?: string }>({});
+    const [params, setParams] = useState<{ code?: number; subject?: string; teacher?: string }>({});
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
         setParams({
-            code: searchParams.get('code') || undefined,
+            code: parseInt(searchParams.get('code') ?? '0') || undefined,
             subject: searchParams.get('subject') || undefined,
             teacher: searchParams.get('teacher') || undefined,
         });
