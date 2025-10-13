@@ -64,6 +64,16 @@ export async function loginAction(data: {
     });
 
     (await cookies()).set({
+      name: "auth-token",
+      value: access_token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 días
+      path: "/",
+    });
+
+    (await cookies()).set({
       name: "refresh-token",
       value: refresh_token,
       httpOnly: true,
