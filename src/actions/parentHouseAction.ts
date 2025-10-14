@@ -1,13 +1,11 @@
-'use server'
+"use server";
 
 import { ParentHouseProps } from "@/types/inventaryTypes";
-import axios from "axios";
-
-const apiUrl = process.env.INVENTORY_API_URL;
+import microsApi from '@/lib/axios';
 
 export async function getParentHousesAction(): Promise<ParentHouseProps[]> {
     try {
-        const response = await axios.get(`${apiUrl}/parent-house`);
+        const response = await microsApi.get(`/parent-house`);
         return response.data;
     } catch (error) {
         console.log("Error al obtener las casas matrices: ", error);

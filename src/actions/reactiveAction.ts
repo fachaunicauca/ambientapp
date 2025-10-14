@@ -1,10 +1,8 @@
-'use server'
+"use server";
 
 import { ReactiveProps } from "@/types/inventaryTypes";
 import { ReactiveFormValues } from "@/validations/reactiveSchema";
-import axios from "axios";
-
-const apiUrl = process.env.INVENTORY_API_URL;
+import microsApi from '@/lib/axios';
 
 interface PromiseSuccess {
     success: boolean;
@@ -14,7 +12,7 @@ interface PromiseSuccess {
 
 export async function getReactivesAction(): Promise<ReactiveProps[]> {
     try {
-        const response = await axios.get(`${apiUrl}/reactive`);
+        const response = await microsApi.get(`/reactive`);
         return response.data;
     } catch (error) {
         console.log("Error al obtener los reactivos: ", error);
@@ -24,7 +22,7 @@ export async function getReactivesAction(): Promise<ReactiveProps[]> {
 
 export async function getReactiveAction(id: string): Promise<ReactiveProps> {
     try {
-        const response = await axios.get(`${apiUrl}/reactive/${id}`)
+        const response = await microsApi.get(`/reactive/${id}`)
         return response.data;
     } catch (error) {
         console.log("Error al obtener el reactivo con: ", error)
@@ -35,7 +33,7 @@ export async function getReactiveAction(id: string): Promise<ReactiveProps> {
 export async function postReactiveAction(data: ReactiveFormValues): Promise<PromiseSuccess> {
     try {
         console.log("Datos enviados:", JSON.stringify(data, null, 2));
-        await axios.post(`${apiUrl}/reactive`, data);
+        await microsApi.post(`/reactive`, data);
         return {
             success: true,
         };
