@@ -1,7 +1,7 @@
 "use server";
 
 import { User } from "@/interface/user";
-import axios from "@/lib/axios";
+import axios from "axios";
 
 export const loginRequest = async (email: string, password: string) => {
   try {

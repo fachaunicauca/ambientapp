@@ -1,20 +1,17 @@
+import { cookies } from "next/headers";
 import axios from "axios";
-import { useAuthStore } from "@/store/authStore";
 
 const baseURL = process.env.NEXT_PUBLIC_API_TEST_BASE_URL;
 
-const microsApi = axios.create({
-  baseURL,
-  withCredentials: true,
-});
+export const microsApiServer = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth-token")?.value;
 
-microsApi.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
-  if (token) {
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+  const instance = axios.create({
+    baseURL,
+    withCredentials: true,
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
 
-export default microsApi;
+  return instance;
+};

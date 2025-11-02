@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { loadCredentials, saveCredentials, clearCredentials } from "@/utils/rememberMe";
 import { loginAction } from "@/actions/authAction";
 import { LoginResponse } from "@/actions/responseType";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Login() {
     const router = useRouter();
@@ -47,10 +48,16 @@ export default function Login() {
         try {
             // Usar el Server Action
             const res = await loginAction(data);
-            console.log("Resultado de la acción:", res);
             
-
             if (res.success) {
+                useAuthStore.getState().setProfile(
+                    {
+                        _id: res.data?.user.id || "DefaultId",
+                        email: res.data?.user.email || "DefaultEmail",
+                        name: res.data?.user.name || "Default Name",
+                        roles: res.data?.roles || []
+                    }
+                );
                 handleSuccessfulLogin(data);
                 return;
             }

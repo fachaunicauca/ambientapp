@@ -1,111 +1,61 @@
-import { TestGuideRequest } from "../interfaces/guide-interfaces";
+"use server";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_TEST_BASE_URL
+import { microsApiServer } from "@/lib/axios";
+import { TestGuideRequest } from "../interfaces/guide-interfaces";
+import { AxiosError } from "axios";
 
 export const fetchFileData = async () => {
-    try {
-        
-        if (!baseUrl) {
-            throw new Error("La URL base no está definida en las variables de entorno.");
-        }
+  try {
+    const microsApi = await microsApiServer();
+    const response = await microsApi.get("/guides");
 
-        const token = localStorage.getItem("token");
+    const data = response.data;
 
-        if (!token) {
-            throw new Error("Token no disponible");
-        }
+    return { success: true, files: data.testGuideList };
+  } catch (error) {
+    const axiosError = AxiosError.from(error);
 
-        const response = await fetch(`${baseUrl}/guides` ,
-            {method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },}
-        );
-        
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (!data || !data.test_guide_list) {
-            return { error: "No se encontraron preguntas." };
-        }
-
-        return { success: true, files: data.test_guide_list}
-
-    } catch (error) {
-        console.error("Error fetching file: ", error);
-        return { error: "Error al obtener los datos del servidor." };
+    if (!axiosError.status || axiosError.status !== 404) {
+      throw new Error(`Error HTTP: ${axiosError.status}`);
     }
+    if (axiosError.status === 404) {
+      return { error: "No se encontraron archivos" };
+    }
+    return { error: "Error al obtener los datos del servidor." };
+  }
 };
-
 
 export const uploadFile = async (guide: TestGuideRequest) => {
-    try {
-        if (!baseUrl) {
-            throw new Error("La URL base no está definida.");
-        }
+  try {
+    const microsApi = await microsApiServer();
+    
+    const response = await microsApi.post("/guides", guide);
 
-        const token = localStorage.getItem("token");
-        if (!token) {
-            throw new Error("Token no disponible.");
-        }
-
-        const formData = new FormData();
-        formData.append("test_guide_id", guide.test_guide_id);
-        formData.append("test_guide_archive", guide.test_guide_archive);
-
-        const response = await fetch(`${baseUrl}/guides`, {
-            method: 'POST',
-            headers: {
-                "Authorization": `Bearer ${token}`
-            },
-            body: formData,
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-
-        return { success: true };
-
-    } catch (error) {
-        console.error("Error en uploadFile:", error);
-        return { error: "Error al subir la guía al servidor." };
+    if (!response.status || response.status !== 200) {
+      throw new Error(`Error: ${response.status}`);
     }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error en uploadFile:", error);
+    return { error: "Error al subir la guía al servidor." };
+  }
 };
 
-
 export const deleteFile = async (fileName: string) => {
-    try {
-        if (!baseUrl) {
-            throw new Error("La URL base no está definida.");
-        }
+  try {
+    const microsApi = await microsApiServer();
+    const response = await microsApi.delete(
+      `/guides?test_guide_id=${fileName}`
+    );
 
-        const token = localStorage.getItem("token");
-        if (!token) {
-            throw new Error("Token no disponible.");
-        }
-
-
-        const response = await fetch(`${baseUrl}/guides?test_guide_id=${fileName}`, {
-            method: 'DELETE',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
-
-        return { success: true };
-
-    } catch (error) {
-        console.error("Error en uploadFile:", error);
-        return { error: "Error al subir la guía al servidor." };
+    if (!response.status || response.status !== 200) {
+      throw new Error(`Error HTTP: ${response.status}`);
     }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error en deleteFile:", error);
+    return { error: "Error al borrar la guía en el servidor." };
+  }
 };

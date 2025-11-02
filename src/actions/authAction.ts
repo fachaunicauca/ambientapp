@@ -3,11 +3,10 @@
 import { cookies } from "next/headers";
 import axios, { AxiosError } from "axios";
 import { ErrorResponse, LoginResponse } from "./responseType";
-import { useAuthStore } from "@/store/authStore";
 
 const API_URL = process.env.NEXT_PUBLIC_API_AUTH_BASE_URL;
 
-export interface LoginData {
+/*export interface LoginData {
   userId: string,
   username: string,
   email: string,
@@ -16,7 +15,7 @@ export interface LoginData {
   access_token: string,
   refresh_token: string,
   expires_in: number
-}
+}*/
 
 export async function loginAction(data: {
   email: string;
@@ -53,15 +52,17 @@ export async function loginAction(data: {
     const access_token = apiResponse.data.access_token;
     const refresh_token = apiResponse.data.refresh_token;
 
-    const authStore = useAuthStore.getState();
+    /*const authStore = useAuthStore.getState();
     authStore.setToken(access_token); // guardar en Zustand
     authStore.setProfile({
       _id: apiResponse.data.userId,
       email: apiResponse.data.email,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      __v: 0
-    });
+      name: apiResponse.data.fullName,
+      roles: apiResponse.data.roles,
+      //createdAt: new Date(),
+      //updatedAt: new Date(),
+      //__v: 0
+    });*/
 
     (await cookies()).set({
       name: "auth-token",
@@ -139,8 +140,7 @@ export async function logoutAction(): Promise<{
 }> {
   try {
     const cookieStore = await cookies();
-    const cookie = cookieStore.get("auth-token")?.value;
-    const refreshToken = cookie ? JSON.parse(cookie).refresh_token : null;
+    const refreshToken = cookieStore.get("auth-token")?.value;
 
     if (!API_URL) {
       return {
@@ -164,6 +164,7 @@ export async function logoutAction(): Promise<{
     
     // Eliminar la cookie
     (await cookies()).delete("auth-token");
+    (await cookies()).delete("refresh-token");
 
     return {
       success: true,

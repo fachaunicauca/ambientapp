@@ -2,11 +2,11 @@
 
 import { StudentTestResponse } from "../interfaces/evaluation-interfaces";
 import { TryInfo } from "../interfaces/evaluation-interfaces";
-import microsApi from "@/lib/axios";
+import { microsApiServer} from "@/lib/axios";
 
 export const fetchQuestionsData = async (evaluacionInfo: { code: number; subject: string; teacher: string }) => {
     try {
-
+        const microsApi = await microsApiServer();
         const response = await microsApi.get(`/takeTest?subject_name=${evaluacionInfo.subject}&student_code=${evaluacionInfo.code}&teacher_name=${evaluacionInfo.teacher }`);
         
         if (!response.status || response.status !== 200) {
@@ -29,7 +29,7 @@ export const fetchQuestionsData = async (evaluacionInfo: { code: number; subject
 
 export async function submitTest(payload: StudentTestResponse): Promise<number> {
     try {
-        
+        const microsApi = await microsApiServer();
         const response = await microsApi.post(`/takeTest`, payload);
 
         if (!response.status || response.status !== 200) {
@@ -51,7 +51,7 @@ export async function submitTest(payload: StudentTestResponse): Promise<number> 
 
 export async function getTries(infoTryStudent: TryInfo): Promise<number> {
     try {
-
+        const microsApi = await microsApiServer();
         const response = await microsApi.get(`/takeTest/getTries?actual_date=${infoTryStudent.actualDate}&student_code=${infoTryStudent.studentCode}`);
         
         if (!response.status || response.status !== 200) {

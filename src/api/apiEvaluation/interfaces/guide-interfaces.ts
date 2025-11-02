@@ -1,13 +1,13 @@
 export interface TestGuide{
-    test_guide_id : string
-    test_guide_url : string
+    testGuideId : string
+    testGuideUrl : string
 }
 
 export interface TestGuideList{
-    test_guide_list : TestGuide []
+    testGuideList : TestGuide []
 }
 
 export interface TestGuideRequest{
-    test_guide_id : string
-    test_guide_archive : File
+    testGuideId : string
+    testGuideArchive : File
 }
