@@ -53,7 +53,6 @@ export default function InventaryTable({
 
   useEffect(() => {
     setLocalReactives(reactives);
-    console.log(reactives);
   }, [reactives]);
 
   if (isLoading) {
@@ -67,7 +66,7 @@ export default function InventaryTable({
   
 
   return (
-    <div className="overflow-x-auto rounded-lg borderzz">
+    <div className="overflow-x-auto rounded-lg border">
       <table className="table-auto w-full">
         <thead className="bg-muted">
           <tr className="divide-x">

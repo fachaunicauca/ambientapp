@@ -13,7 +13,7 @@ function ensureSafetyExpirationFormat(date?: string): string | undefined {
   if (date.includes("T")) return date;
   // Agregamos fin de día por defecto
   return `${date}T23:59:59`;
-}
+};
 
 interface PromiseSuccess {
   success: boolean;
@@ -97,7 +97,7 @@ export async function postReactiveAction(
     return {
       success: false,
       error: "No se pudo conectar con el servidor.",
-    }
+    };
   }
 }
 

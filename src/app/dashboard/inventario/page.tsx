@@ -136,7 +136,7 @@ export default function Inventario() {
         reactives={sortedReactives}
         parentHouses={parentHouses}
         isLoading={isLoading}
-        emptyMessage={debouncedTerm ? `No se encontraron reactivos para "${debouncedTerm}"` : "No se encontraron reactivos"}
+        emptyMessage={debouncedTerm ? `No se encontraron reactivos para \"${debouncedTerm}\"` : "No se encontraron reactivos"}
         columns={columns}
       />
     </div>

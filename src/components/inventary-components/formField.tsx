@@ -1,5 +1,5 @@
 import { Label } from "../ui/typography/label";
-import { Info, Upload, File} from "lucide-react";
+import { Info, Upload, File } from "lucide-react";
 import { Input } from "../ui/form/input";
 import {
   Tooltip,
@@ -83,7 +83,7 @@ export default function FormField({
               error && "border-error",
             )}
           >
-            {fileInputRef.current?.files?.[0]? <File className="h-4 w-4" /> : <Upload className="h-4 w-4"/>}	
+            {fileInputRef.current?.files?.[0] ? <File className="h-4 w-4" /> : <Upload className="h-4 w-4" />}
             <span className="truncate">{fileInputRef.current?.files?.[0]?.name || placeholder}</span>
           </Button>
         </div>

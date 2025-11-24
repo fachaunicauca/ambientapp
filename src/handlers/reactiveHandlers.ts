@@ -15,10 +15,7 @@ export function useReactiveFormHandlers() {
     // Crear reactivo
     const handleCreateReactive = async (data: ReactiveFormValues) => {
         setIsSubmitting(true);
-        console.log("Contenido del formulario antes de enviar:");
-        Object.entries(data).forEach(([key, value]) => {
-            console.log(key, value);
-        });
+        // Debug logs removed for production
 
         try {
             const res = await postReactiveAction(data);
