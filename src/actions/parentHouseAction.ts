@@ -1,10 +1,11 @@
 "use server";
 
 import { ParentHouseProps } from "@/types/inventaryTypes";
-import microsApi from '@/lib/axios';
+import { microsApiServer } from '@/lib/axios';
 
 export async function getParentHousesAction(): Promise<ParentHouseProps[]> {
     try {
+        const microsApi = await microsApiServer();
         const response = await microsApi.get(`/parent-house`);
         return response.data;
     } catch (error) {

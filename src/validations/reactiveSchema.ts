@@ -1,9 +1,10 @@
 import { reactiveTypes, riskTypes, statusTypes, units } from '@/types/inventaryTypes';
-import { z } from 'zod'
+import { z } from 'zod';
 
-const riskTypesEnum = z.enum(riskTypes)
+const riskTypesEnum = z.enum(riskTypes);
 
-export const reactiveSchema = z.object({
+// Campos comunes (sin safetySheet para poder hacerlo condicional)
+const commonFields = {
     type: z.enum(reactiveTypes, {
         errorMap: () => ({ message: "Seleccione un tipo de reactivo" })
     }),
@@ -19,10 +20,20 @@ export const reactiveSchema = z.object({
         errorMap: () => ({ message: "Seleecione una unidad de medida" })
     }),
     status: z.enum(statusTypes, {
-        errorMap: () => ({ message: "Seleecione una unidad de medida" })
+        errorMap: () => ({ message: "Seleccione una unidad de medida" })
     }),
-    safetySheet: z.string().trim().min(1, "La hoja de seguridad es requerida"),
+    safetySheetExpiration: z.string().min(1, "La fecha de expiración es requerida"),
     riskTypes: z.array(riskTypesEnum, { required_error: "Debe seleccionar al menos un tipo riesgo" }).min(1, "Seleccione al menos un tipo de riesgo")
-});
+};
 
-export type ReactiveFormValues = z.infer<typeof reactiveSchema>;
+// Fábrica: si es edición -> safetySheet opcional, si es creación -> obligatorio
+export function reactiveSchemaFactory() {
+    // safetySheet obligatorio siempre (creación y edición requieren nuevo archivo)
+    return z.object({
+        ...commonFields,
+        safetySheet: z.instanceof(File, { message: "Debe adjuntar la hoja de seguridad" })
+    });
+}
+
+// Tipo común para el formulario (safetySheet opcional porque en edición puede no estar)
+export type ReactiveFormValues = z.infer<ReturnType<typeof reactiveSchemaFactory>>;

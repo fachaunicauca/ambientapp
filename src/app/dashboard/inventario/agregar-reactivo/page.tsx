@@ -10,41 +10,44 @@ import { useEffect, useState } from "react";
 
 export default function AgregarReactivo() {
   const params = useParams();
-  const [editedReactive, setEditedReactive] = useState<ReactiveProps>();
   const editedReactiveId = params?.reactiveId?.toString();
-  const [isLoadingEdit, setIsLoadingEdit] = useState(false);
+  const [editedReactive, setEditedReactive] = useState<ReactiveProps | null>(null);
+  const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false);
 
   useEffect(() => {
-    if (editedReactiveId) {
-      const loadReactive = async () => {
+    if (!editedReactiveId) return;
+
+    const loadReactive = async () => {
+      try {
         setIsLoadingEdit(true);
         const data = await getReactiveAction(editedReactiveId);
-        console.log(data);
         setEditedReactive(data);
+      } catch (error) {
+        console.error("Error al cargar el reactivo:", error);
+      } finally {
         setIsLoadingEdit(false);
-      };
+      }
+    };
 
-      loadReactive();
-    }
+    loadReactive();
   }, [editedReactiveId]);
 
   return (
-    <>
-      <div className="mb-8 mx-10">
-        <Title title={editedReactiveId ? "Editar reactivo" : "Agregar reactivo"} />
-        <p className="text-muted-foreground mt-3 mb-5">
-          {editedReactiveId
-            ? "A continuación podrá modificar el reactivo seleccionado. Por favor verifique que la información ingresada es correcta e ingrese todos los campos."
-            : "A continuación podrá agregar un reactivo en el sistema. Por favor verifique que la información ingresada es correcta e ingrese todos los campos."}
-        </p>
-        {isLoadingEdit === true ? (
-          <div className="flex justify-center items-center py-10">
-            <Loader2 className="h-10 w-10 animate-spin text-blue" />
-          </div>
-        ) : (
-          <InventaryForm editedReactive={editedReactive}></InventaryForm>
-        )}
-      </div>
-    </>
+    <div className="mb-8 mx-10">
+      <Title title={editedReactiveId ? "Editar reactivo" : "Agregar reactivo"} />
+      <p className="text-muted-foreground mt-3 mb-5">
+        {editedReactiveId
+          ? "A continuación podrá modificar el reactivo seleccionado. Por favor verifique que la información ingresada es correcta e ingrese todos los campos."
+          : "A continuación podrá agregar un reactivo en el sistema. Por favor verifique que la información ingresada es correcta e ingrese todos los campos."}
+      </p>
+
+      {isLoadingEdit ? (
+        <div className="flex justify-center items-center py-10">
+          <Loader2 className="h-10 w-10 animate-spin text-blue" />
+        </div>
+      ) : (
+        <InventaryForm editedReactive={editedReactive ?? undefined} />
+      )}
+    </div>
   );
 }

@@ -11,6 +11,7 @@ import {
 } from "../ui/navigation/tooltip";
 import { Chip } from "@heroui/chip";
 import ErrorMessage from "../ui/feedback/error-message";
+import { cn } from "@/utils/utils";
 
 interface SelectOption {
   value: string;
@@ -26,6 +27,7 @@ interface MultipleSelectorFieldProps {
   placeholder?: string;
   onValueChange?: (value: string[]) => void;
   error?: string;
+  classname?: string;
 }
 
 export default function MultipleSelectField({
@@ -37,6 +39,7 @@ export default function MultipleSelectField({
   placeholder,
   onValueChange,
   error,
+  classname,
 }: MultipleSelectorFieldProps) {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -81,7 +84,7 @@ export default function MultipleSelectField({
   }, [options, selectedValues]);
 
   return (
-    <div className="space-y-2 w-full">
+    <div className={cn(classname, "space-y-2 w-full")}>
       <div className="flex items-center gap-2">
         <Label htmlFor={id}>{label}</Label>
         <TooltipProvider>

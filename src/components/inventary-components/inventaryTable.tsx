@@ -7,10 +7,21 @@ import {
 } from "@/config/inventaryConfig";
 import { InventaryTableProps, ReactiveProps } from "@/types/inventaryTypes";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Chip } from "@heroui/chip";
 import { Button } from "../ui/buttons/button";
+import { deleteReactiveAction } from "@/actions/reactiveAction";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/modals/dialog";
 
 export default function InventaryTable({
   reactives,
@@ -22,8 +33,27 @@ export default function InventaryTable({
   const router = useRouter();
   const [localReactives, setLocalReactives] = useState<ReactiveProps[]>([]);
 
+  const formatDate = (iso?: string) => {
+    if (!iso) return "-";
+    const datePart = iso.split("T")[0]; // YYYY-MM-DD
+    const [year, month, day] = datePart.split("-");
+    if (!year || !month || !day) return iso; // fallback
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleDelete = useCallback(async (id: number, name: string) => {
+    const res = await deleteReactiveAction(id);
+    if (res.success) {
+      setLocalReactives((prev) => prev.filter((r) => r.reactiveId !== id));
+      toast.success(`Reactivo "${name}" eliminado`);
+    } else {
+      toast.error(res.error || "No se pudo eliminar el reactivo");
+    }
+  }, []);
+
   useEffect(() => {
     setLocalReactives(reactives);
+    console.log(reactives);
   }, [reactives]);
 
   if (isLoading) {
@@ -34,8 +64,10 @@ export default function InventaryTable({
     );
   }
 
+  
+
   return (
-    <div className="overflow-hidden overflow-x-auto rounded-lg border">
+    <div className="overflow-x-auto rounded-lg borderzz">
       <table className="table-auto w-full">
         <thead className="bg-muted">
           <tr className="divide-x">
@@ -97,6 +129,13 @@ export default function InventaryTable({
                         (u) => u.value === reactive.measureUnit
                       )?.label
                     }`;
+                    //LA CANTIDAD MÍNIMA SE MUESTRA JUNTO A SU UNIDAD
+                  } else if (column.key === "minimumQuantity") {
+                    content = `${reactive[column.key]} ${
+                      QuantityUnits.find( 
+                        (u) => u.value === reactive.measureUnit
+                      )?.label
+                    }`;
                     //SE ASIGNA EL NOMBRE DE LA CASA MATRIZ CON TENIENDO EN CUENTA EL ID
                   } else if (column.key === "house") {
                     content = parentHouses.find(
@@ -109,22 +148,32 @@ export default function InventaryTable({
                     );
                     content = (
                       <Chip
-                        className={`${getStatusColor(status?.value)} text-white rounded-full text-xs`}
-                      > 
+                        className={`${getStatusColor(
+                          status?.value
+                        )} text-white rounded-full text-xs`}
+                      >
                         {status?.label}
                       </Chip>
                     );
                     // SE MUESTRA LA HOJA DE SEGURIDAD COMO ENLACE
                   } else if (column.key === "safetySheet") {
                     content = (
-                      <a
-                        href={reactive.safetySheet}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue underline"
-                      >
-                        Enlace
-                      </a>
+                      <div className="flex flex-col items-center gap-1">
+                        <a
+                          href={reactive.safetySheet}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue underline"
+                        >
+                          {reactive.safetySheet.split("/").pop()}
+                        </a>
+                        <div className="text-xs text-muted-foreground">
+                          Vence:{" "}
+                          <span className="font-medium">
+                            {formatDate(reactive.safetySheetExpiration)}
+                          </span>
+                        </div>
+                      </div>
                     );
                   } else {
                     content = reactive[column.key];
@@ -149,13 +198,43 @@ export default function InventaryTable({
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-redLight/40 text-redLight hover:text-white hover:bg-redLight border-none"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        {
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="bg-redLight/40 text-redLight hover:text-white hover:bg-redLight border-none"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        }
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>¿Eliminar reactivo?</DialogTitle>
+                        </DialogHeader>
+                        <p>
+                          ¿Estás seguro de que deseas eliminar el reactivo &quot;{reactive.name}&quot;?
+                          <br />
+                          <strong className="text-redLight">Esta acción no se puede deshacer.</strong>
+                        </p>
+                        <DialogFooter className="mt-4">
+                          <DialogClose asChild>
+                            <Button variant="secondary">Cancelar</Button>
+                          </DialogClose>
+                          <Button
+                            className="w-full rounded-2xl"
+                            variant="destructive"
+                            onClick={() =>
+                              handleDelete(reactive.reactiveId, reactive.name)
+                            }
+                          >
+                            Eliminar
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </td>
               </tr>

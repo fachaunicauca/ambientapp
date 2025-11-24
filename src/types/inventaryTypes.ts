@@ -11,6 +11,7 @@ export interface ReactiveProps {
     status: Status;
     house: number;
     safetySheet: string;
+    safetySheetExpiration: string;
 }
 
 export const reactiveTypes = [

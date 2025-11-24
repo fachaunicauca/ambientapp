@@ -1,5 +1,5 @@
-import * as React from "react"
-import { cn } from "@/utils/utils"
+import * as React from "react";
+import { cn } from "@/utils/utils";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
   ({ className, type, ...props }, ref) => {
@@ -7,15 +7,19 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <input
         type={type}
         className={cn(
-          "flex h-9 w-full rounded-2xl border border-blueDark/20 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-blueDark placeholder:text-blueDark/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "flex h-9 w-full rounded-2xl border border-blueDark/20 bg-transparent px-3 py-1 text-base shadow-sm transition-colors",
+          "file:border-0 file:bg-transparent file:text-blueDark/70",
+          "date:text-red",
+          "placeholder:text-blueDark/70 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          type === "date" && "pr-10 input-date",
           className
         )}
         ref={ref}
         {...props}
       />
-    )
+    );
   }
-)
-Input.displayName = "Input"
+);
+Input.displayName = "Input";
 
-export { Input }
+export { Input };
