@@ -6,6 +6,7 @@ export const columns: Column[] = [
     { key: "code", header: "Codigo" },
     { key: "type", header: "Tipo" },
     { key: "quantity", header: "Cantidad" },
+    { key: "minimumQuantity", header: "Cantidad mínima" },
     { key: "riskTypes", header: "Riesgo" },
     { key: "house", header: "Casa Matriz" },
     { key: "safetySheet", header: "Hoja de Seguridad" },

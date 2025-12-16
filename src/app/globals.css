@@ -15,6 +15,17 @@ body {
   @apply w-auto h-auto;
 }
 
+.input-date::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.input-date-wrapper {
+  position: relative;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
