@@ -10,6 +10,7 @@ import {
     GraduationCap,
     TableProperties,
     X,
+    ClipboardCheck
 } from "lucide-react"
 
 import { NavMain } from "@/components/sidebar/nav-main"
@@ -22,10 +23,14 @@ import {
 } from "@/components/ui/navigation/sidebar"
 import Image from "next/image"
 import { SidebarTrigger, useSidebar } from "@/components/ui/navigation/sidebar";
+import { useAuthStore } from "@/store/authStore"
+import { title } from "process"
+import { url } from "inspector"
 
 const data = {
     navMain: [
         {
+            id: 1,
             title: "Inicio",
             url: "/dashboard/home",
             icon: Home,
@@ -42,6 +47,7 @@ const data = {
             ],
         },
         {
+            id: 2,
             title: "Docente",
             url: '/dashboard/docente',
             icon: GraduationCap,
@@ -65,6 +71,23 @@ const data = {
             ],
         },
         {
+            id: 3,
+            title: "Evaluaciones",
+            url: '/dashboard/evaluaciones',
+            icon: ClipboardCheck,
+            items: [
+                {
+                    title: "Evaluación General",
+                    url: "/dashboard/evaluaciones/evaluacion-general",
+                },
+                {
+                    title: "Evaluaciones Específicas",
+                    url: "/dashboard/evaluaciones/evaluaciones-especificas",
+                }
+            ],
+        },
+        {
+            id: 4,
             title: "Inventario",
             url: '/dashboard/inventario',
             icon: TableProperties,
@@ -76,6 +99,7 @@ const data = {
             ],
         },
         {
+            id: 5,
             title: "Sistema de gestión ambiental",
             url: "#",
             icon: Sprout,
@@ -99,6 +123,7 @@ const data = {
             ],
         },
         {
+            id: 6,
             title: "Comunicación de riesgo",
             url: "/dashboard/comunicacion-riesgo",
             icon: Skull,
@@ -122,6 +147,7 @@ const data = {
             ],
         },
         {
+            id: 7,
             title: "Guías de laboratorio",
             url: "#",
             icon: BookText,
@@ -157,6 +183,7 @@ const data = {
             ],
         },
         {
+            id: 8,
             title: "Plan de emergencia",
             url: "#",
             icon: Siren,
@@ -170,9 +197,32 @@ const data = {
     ]
 }
 
+
+const ROLE_ACCESS_MAP = {
+    "ADMIN": [1, 2, 3, 4, 5, 6, 7, 8],
+    "TEACHER": [1, 2, 3, 4, 5, 6, 7, 8],
+    "STUDENT": [1, 5, 6, 7, 8],
+    "LABORATORY_WORKER": [1, 4, 5, 6, 7, 8],
+};
+
+const filterNavItemsByRole = (items: typeof data.navMain, roles: string[]) => {
+    const allowedIds = new Set<number>();
+    roles.forEach(role => {
+        const accessIds = ROLE_ACCESS_MAP[role as keyof typeof ROLE_ACCESS_MAP];
+        if (accessIds) {
+            accessIds.forEach(id => allowedIds.add(id));
+        }
+    });
+
+    return items.filter(item => allowedIds.has(item.id));
+}
+
 export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { isMobile } = useSidebar();
     const { toggleSidebar } = useSidebar()
+    const userRoles = useAuthStore((state: { profile: { roles: any } }) => state.profile?.roles || []);
+
+    const filteredNavItems = filterNavItemsByRole(data.navMain, userRoles);
 
     return (
         <Sidebar collapsible="icon" {...props}>
@@ -196,7 +246,7 @@ export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.Com
                 </div>
             </SidebarHeader>
             <SidebarContent className="bg-blueDark text-white pt-8">
-                <NavMain items={data.navMain} />
+                <NavMain items={filteredNavItems} />
             </SidebarContent>
             <SidebarRail />
         </Sidebar>

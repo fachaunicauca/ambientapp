@@ -52,18 +52,6 @@ export async function loginAction(data: {
     const access_token = apiResponse.data.access_token;
     const refresh_token = apiResponse.data.refresh_token;
 
-    /*const authStore = useAuthStore.getState();
-    authStore.setToken(access_token); // guardar en Zustand
-    authStore.setProfile({
-      _id: apiResponse.data.userId,
-      email: apiResponse.data.email,
-      name: apiResponse.data.fullName,
-      roles: apiResponse.data.roles,
-      //createdAt: new Date(),
-      //updatedAt: new Date(),
-      //__v: 0
-    });*/
-
     (await cookies()).set({
       name: "auth-token",
       value: access_token,
@@ -140,7 +128,7 @@ export async function logoutAction(): Promise<{
 }> {
   try {
     const cookieStore = await cookies();
-    const refreshToken = cookieStore.get("auth-token")?.value;
+    const refreshToken = cookieStore.get("refresh-token")?.value;
 
     if (!API_URL) {
       return {
@@ -153,7 +141,7 @@ export async function logoutAction(): Promise<{
       // Enviar la solicitud de cierre de sesión a la API
       await axios.post(
         `${API_URL}/auth/logout`,
-        { refresh_token: refreshToken },
+        { refreshToken: refreshToken},
         {
           headers: {
             "Content-Type": "application/json",
