@@ -207,21 +207,28 @@ const ROLE_ACCESS_MAP = {
 
 const filterNavItemsByRole = (items: typeof data.navMain, roles: string[]) => {
     const allowedIds = new Set<number>();
-    roles.forEach(role => {
+
+    for (const role of roles) {
+
         const accessIds = ROLE_ACCESS_MAP[role as keyof typeof ROLE_ACCESS_MAP];
+
         if (accessIds) {
-            accessIds.forEach(id => allowedIds.add(id));
+            for (const id of accessIds) {
+                allowedIds.add(id);
+            }
         }
-    });
+    }
 
     return items.filter(item => allowedIds.has(item.id));
 }
 
 export const AppSidebar = React.memo(function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { isMobile } = useSidebar();
-    const { toggleSidebar } = useSidebar()
-    const userRoles = useAuthStore((state: { profile: { roles: any } }) => state.profile?.roles || []);
+    const { toggleSidebar } = useSidebar();
 
+    const userRoles = useAuthStore.getState().profile?.roles || [];
+
+    // En este punto, 'userRoles' está GARANTIZADO de ser un array iterable.
     const filteredNavItems = filterNavItemsByRole(data.navMain, userRoles);
 
     return (

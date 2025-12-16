@@ -3,10 +3,14 @@
 import dynamic from "next/dynamic";
 import React, { ReactNode } from 'react';
 import Footer from '@/components/layout/footer/footer';
-import LayoutSidebar from "@/components/sidebar/layout-sidebar";
 
 const Header = dynamic(
     () => import('@/components/layout/header/header'),
+    { ssr: false }
+);
+
+const LayoutSidebar = dynamic(
+    () => import('@/components/sidebar/layout-sidebar'),
     { ssr: false }
 );
 
