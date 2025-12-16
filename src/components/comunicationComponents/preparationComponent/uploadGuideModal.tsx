@@ -34,7 +34,7 @@ export default function UploadGuideModal({ isOpen, onClose, onUploadSuccess }: U
         }
 
         try {
-            const guideData = { test_guide_id: fileName, test_guide_archive: file };
+            const guideData = { testGuideId: fileName, testGuideArchive: file };
             const response = await uploadFile(guideData);
 
             if (response.success) {

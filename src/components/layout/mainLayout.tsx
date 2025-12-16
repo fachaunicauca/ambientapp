@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import React, { ReactNode } from 'react';
 import Footer from '@/components/layout/footer/footer';
-//import Header from "@/components/layout/header/header";
 import LayoutSidebar from "@/components/sidebar/layout-sidebar";
 
 const Header = dynamic(

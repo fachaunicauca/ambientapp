@@ -3,6 +3,7 @@
 import { microsApiServer } from "@/lib/axios";
 import { TestGuideRequest } from "../interfaces/guide-interfaces";
 import { AxiosError } from "axios";
+import { form } from "@heroui/theme";
 
 export const fetchFileData = async () => {
   try {
@@ -29,11 +30,15 @@ export const uploadFile = async (guide: TestGuideRequest) => {
   try {
     const microsApi = await microsApiServer();
     
-    const response = await microsApi.post("/guides", guide);
+    const formData = new FormData();
+    formData.append("testGuideId", guide.testGuideId);
+    formData.append("testGuideArchive", guide.testGuideArchive);
 
-    if (!response.status || response.status !== 200) {
-      throw new Error(`Error: ${response.status}`);
-    }
+    await microsApi.post("/guides", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     return { success: true };
   } catch (error) {
