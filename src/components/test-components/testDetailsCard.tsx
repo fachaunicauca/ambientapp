@@ -1,4 +1,11 @@
 import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "../ui/navigation/tooltip";
+import { Info } from "lucide-react";
 
 export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
     return (
@@ -33,9 +40,27 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
 
                 {/* Número de Preguntas */}
                 <div className="flex flex-col">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                        Número de Preguntas
-                    </dt>
+                    <div className="flex items-center gap-2">
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Número de Preguntas
+                        </dt>
+
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>
+                                        Cantidad de preguntas que se
+                                        seleccionarán aleatoriamente para cada
+                                        intento de la evaluación.
+                                    </p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+
                     <dd className="text-lg font-semibold text-gray-900 dark:text-white">
                         {testInfo.testNumberOfQuestions}
                     </dd>
@@ -51,11 +76,27 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
                     </dd>
                 </div>
 
-                {/* Periódico */}
                 <div className="flex flex-col">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                        Evaluación Periódica
-                    </dt>
+                    <div className="flex items-center gap-2">
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Evaluación Periódica
+                        </dt>
+
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>
+                                        Indica si la evaluación puede
+                                        presentarse nuevamente en un semestre distinto.
+                                    </p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+
                     <dd className="text-lg font-semibold text-gray-900 dark:text-white">
                         {testInfo.isPeriodic ? "Sí" : "No"}
                     </dd>

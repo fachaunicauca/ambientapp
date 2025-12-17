@@ -2,31 +2,21 @@ import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../ui/buttons/button";
 import { Input } from "../ui/form/input";
+import { saveTestInfo } from "@/api/apiEvaluation/services/test-services";
+import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
 
 interface TestFormModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (testData: Partial<TestInfo>) => void;
+    onSuccess: () => void;
     initialData?: TestInfo | null;
     teacherEmail: string;
-}
-
-interface TestInfo {
-    testId: number;
-    teacherEmail: string;
-    testTitle: string;
-    testDescription: string | null;
-    testDurationMinutes: number;
-    testNumberOfQuestions: number;
-    testAttemptLimit: number;
-    testState: number;
-    isPeriodic: boolean;
 }
 
 export default function TestFormModal({
     isOpen,
     onClose,
-    onSubmit,
+    onSuccess,
     initialData,
     teacherEmail,
 }: TestFormModalProps) {
@@ -54,7 +44,6 @@ export default function TestFormModal({
                 isPeriodic: initialData.isPeriodic,
             });
         } else {
-            // Reset form when opening for creation
             setFormData({
                 testTitle: "",
                 testDescription: "",
@@ -70,42 +59,9 @@ export default function TestFormModal({
 
     const handleChange = (field: string, value: any) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
-        // Clear error for this field
-        if (errors[field]) {
-            setErrors((prev) => {
-                const newErrors = { ...prev };
-                delete newErrors[field];
-                return newErrors;
-            });
-        }
     };
 
-    const validate = () => {
-        const newErrors: Record<string, string> = {};
-
-        if (!formData.testTitle.trim()) {
-            newErrors.testTitle = "El título es obligatorio";
-        }
-
-        if (formData.testDurationMinutes <= 0) {
-            newErrors.testDurationMinutes = "La duración debe ser mayor a 0";
-        }
-
-        if (formData.testNumberOfQuestions <= 0) {
-            newErrors.testNumberOfQuestions = "Debe tener al menos 1 pregunta";
-        }
-
-        if (formData.testAttemptLimit <= 0) {
-            newErrors.testAttemptLimit = "Debe permitir al menos 1 intento";
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = () => {
-        if (!validate()) return;
-
+    const handleSubmit = async () => {
         const submitData: any = {
             ...formData,
             teacherEmail,
@@ -116,19 +72,18 @@ export default function TestFormModal({
             submitData.testId = initialData.testId;
         }
 
-        onSubmit(submitData);
+        const result = await saveTestInfo(submitData);
+
+        if (result === true) {
+            onSuccess();
+            handleClose();
+            return;
+        }
+
+        setErrors(result as Record<string, string>);
     };
 
     const handleClose = () => {
-        setFormData({
-            testTitle: "",
-            testDescription: "",
-            testDurationMinutes: 60,
-            testNumberOfQuestions: 10,
-            testAttemptLimit: 1,
-            testState: 1,
-            isPeriodic: false,
-        });
         setErrors({});
         onClose();
     };
@@ -165,11 +120,13 @@ export default function TestFormModal({
                                         )
                                     }
                                     className={
-                                        errors.testTitle ? "border-red-500" : ""
+                                        errors.testTitle
+                                            ? "border-redLight"
+                                            : ""
                                     }
                                 />
                                 {errors.testTitle && (
-                                    <p className="mt-1 text-xs text-red-500">
+                                    <p className="mt-1 text-xs text-redLight">
                                         {errors.testTitle}
                                     </p>
                                 )}
@@ -201,22 +158,22 @@ export default function TestFormModal({
                                 </label>
                                 <Input
                                     type="number"
-                                    min="1"
+                                    min="0"
                                     value={formData.testDurationMinutes}
                                     onChange={(e) =>
                                         handleChange(
                                             "testDurationMinutes",
-                                            parseInt(e.target.value) || 0
+                                            e.target.value
                                         )
                                     }
                                     className={
                                         errors.testDurationMinutes
-                                            ? "border-red-500"
+                                            ? "border-redLight"
                                             : ""
                                     }
                                 />
                                 {errors.testDurationMinutes && (
-                                    <p className="mt-1 text-xs text-red-500">
+                                    <p className="mt-1 text-xs text-redLight">
                                         {errors.testDurationMinutes}
                                     </p>
                                 )}
@@ -229,22 +186,22 @@ export default function TestFormModal({
                                 </label>
                                 <Input
                                     type="number"
-                                    min="1"
+                                    min="0"
                                     value={formData.testNumberOfQuestions}
                                     onChange={(e) =>
                                         handleChange(
                                             "testNumberOfQuestions",
-                                            parseInt(e.target.value) || 0
+                                            e.target.value
                                         )
                                     }
                                     className={
                                         errors.testNumberOfQuestions
-                                            ? "border-red-500"
+                                            ? "border-redLight"
                                             : ""
                                     }
                                 />
                                 {errors.testNumberOfQuestions && (
-                                    <p className="mt-1 text-xs text-red-500">
+                                    <p className="mt-1 text-xs text-redLight">
                                         {errors.testNumberOfQuestions}
                                     </p>
                                 )}
@@ -262,17 +219,17 @@ export default function TestFormModal({
                                     onChange={(e) =>
                                         handleChange(
                                             "testAttemptLimit",
-                                            parseInt(e.target.value) || 0
+                                            e.target.value
                                         )
                                     }
                                     className={
                                         errors.testAttemptLimit
-                                            ? "border-red-500"
+                                            ? "border-redLight"
                                             : ""
                                     }
                                 />
                                 {errors.testAttemptLimit && (
-                                    <p className="mt-1 text-xs text-red-500">
+                                    <p className="mt-1 text-xs text-redLight">
                                         {errors.testAttemptLimit}
                                     </p>
                                 )}
@@ -288,7 +245,7 @@ export default function TestFormModal({
                                     onChange={(e) =>
                                         handleChange(
                                             "testState",
-                                            parseInt(e.target.value)
+                                            e.target.value
                                         )
                                     }
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -334,6 +291,12 @@ export default function TestFormModal({
                                 {initialData ? "Guardar Cambios" : "Crear Test"}
                             </Button>
                         </div>
+
+                        {errors.general && (
+                            <p className="mt-4 text-sm text-red-500">
+                                {errors.general}
+                            </p>
+                        )}
                     </div>
                 </Dialog.Content>
             </Dialog.Portal>
