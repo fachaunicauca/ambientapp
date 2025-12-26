@@ -14,23 +14,27 @@ import { Button } from "@/components/ui/buttons/button";
 interface DeleteConfirmDialogProps {
     trigger: React.ReactNode;
     onConfirm: () => void;
-    name : string
+    title: string;       // Nuevo: Título dinámico
+    description: string; // Nuevo: Descripción dinámica
 }
 
 export default function DeleteConfirmDialog({
     trigger,
     onConfirm,
-    name
+    title,
+    description
 }: DeleteConfirmDialogProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>¿Eliminar archivo?</DialogTitle>
+                    <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>
-                <p>¿Estás seguro de que deseas eliminar {name}? Esta acción no se puede deshacer.</p>
-                <DialogFooter className="mt-4">
+                <div className="py-2 text-sm text-gray-600">
+                    <p>{description}</p>
+                </div>
+                <DialogFooter className="mt-4 gap-2">
                     <DialogClose asChild>
                         <Button variant="secondary">Cancelar</Button>
                     </DialogClose>

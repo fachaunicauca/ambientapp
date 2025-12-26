@@ -2,7 +2,7 @@ export interface QuestionInfo{
     questionId: number;
     questionText: string;
     questionTitle: string | null;
-    questionImage: string | null;
+    questionImageUrl: string | null;
     questionType: string;
     questionStructure: string;
 }

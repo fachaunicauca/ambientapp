@@ -18,5 +18,6 @@ export const routeList: Record<string, string> = {
     "/dashboard/evaluaciones": "Evaluaciones",
     "/dashboard/evaluaciones/evaluacion-general": "Evaluación General",
     "/dashboard/evaluaciones/evaluaciones-especificas": "Evaluaciones Específicas",
+    "/dashboard/evaluaciones/evaluaciones-especificas/evaluacion": "Evaluación",
     // ...
 };

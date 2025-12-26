@@ -7,19 +7,19 @@ import {
 } from "@/api/apiEvaluation/interfaces/question-interfaces";
 
 import { TestDetailsCard } from "@/components/test-components/testDetailsCard";
-import QuestionDetailsCard from "./questionDetailsCard";
+import QuestionDetailsCard from "./question-components/questionDetailsCard";
 import TestFormModal from "@/components/test-components/testFormModal";
 import { Button } from "@/components/ui/buttons/button";
 import Title from "@/components/ui/typography/title";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
-import QuestionsPaginationList from "./questionsPaginationList";
+import QuestionsPaginationList from "./question-components/questionsPaginationList";
 
-interface EvaluacionGeneralProps {
+interface TestInfoPageProps {
     testId: number;
 }
 
-export default function TestInfoPage({ testId }: EvaluacionGeneralProps) {
+export default function TestInfoPage({ testId }: TestInfoPageProps) {
     const [testInfo, setTestInfo] = useState<TestInfo>();
     const [error, setError] = useState<string>();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);

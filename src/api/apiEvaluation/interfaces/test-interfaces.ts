@@ -9,3 +9,15 @@ export interface TestInfo {
     testState: number;
     isPeriodic: boolean;
 }
+
+export interface PagedTests {
+    content: TestInfo[];
+    totalPages: number;
+    totalElements: number;
+    size: number;
+    number: number;
+    last: boolean;
+    first: boolean;
+    numberOfElements: number;
+    empty: boolean;
+}

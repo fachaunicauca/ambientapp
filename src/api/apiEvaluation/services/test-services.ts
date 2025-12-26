@@ -1,7 +1,7 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { TestInfo } from "../interfaces/test-interfaces";
+import { PagedTests, TestInfo } from "../interfaces/test-interfaces";
 import { AxiosError } from "axios";
 
 export const getTestInfo = async (
@@ -22,13 +22,53 @@ export const getTestInfo = async (
 
         if (axiosError.response) {
             if (axiosError.response.status === 404) {
-                return axiosError.response.data as string ||"Test no encontrado (404).";
+                return (
+                    (axiosError.response.data as string) ||
+                    "Test no encontrado (404)."
+                );
             }
-            return`Error ${axiosError.response.status}: ${
-                    axiosError.response.data || "Error del servidor."
-                }`;
+            return `Error ${axiosError.response.status}: ${
+                axiosError.response.data || "Error del servidor."
+            }`;
         }
         return `Error desconocido al obtener la información del test con id ${testId}.`;
+    }
+};
+
+export const getTestsPaged = async (
+    page: number,
+    size: number
+): Promise<PagedTests | string> => {
+    try {
+        const microsApi = await microsApiServer();
+        const response = await microsApi.get(`/tests`, {
+            params: { page, size },
+        });
+
+        if (response.status === 200) {
+            const data: PagedTests = response.data;
+            return data;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            if (axiosError.response.status === 404) {
+                return (
+                    (axiosError.response.data as string) ||
+                    "No hay evaluaciones almacenadas."
+                );
+            }
+
+            return `Error ${axiosError.response.status}: ${
+                axiosError.response.data ||
+                "Error al obtener la lista de evaluaciones."
+            }`;
+        }
+
+        return "Error desconocido al intentar obtener las evaluaciones.";
     }
 };
 
@@ -44,11 +84,16 @@ export const saveTestInfo = async (
         }
 
         if (response.status === 206) {
-            throw new AxiosError("Partial Content", undefined, undefined, undefined, response);
+            throw new AxiosError(
+                "Partial Content",
+                undefined,
+                undefined,
+                undefined,
+                response
+            );
         }
 
         throw new Error();
-
     } catch (error) {
         const axiosError = error as AxiosError<any>;
 
@@ -66,28 +111,60 @@ export const saveTestInfo = async (
         // 400 y string: error de numero de preguntas
         if (status === 400 && typeof data === "string") {
             return {
-                testNumberOfQuestions: data
+                testNumberOfQuestions: data,
             };
         }
 
         //409: título duplicado
         if (status === 409 && typeof data === "string") {
             return {
-                testTitle: data
+                testTitle: data,
             };
         }
 
         //404: no encontrado
         if (status === 404 && typeof data === "string") {
             return {
-                general: data
+                general: data,
             };
         }
-
+        
+        console.log(error);
         return {
-            general: "Ocurrió un error inesperado al guardar la evaluación."
+            general: "Ocurrió un error inesperado al guardar la evaluación.",
         };
     }
 };
 
+export const deleteTest = async (id: number): Promise<boolean | string> => {
+    try {
+        const microsApi = await microsApiServer();
+        const response = await microsApi.delete(`/tests/${id}`);
 
+        if (response.status === 200) {
+            return true;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            const status = axiosError.response.status;
+
+            if (status === 404) {
+                return (axiosError.response.data as string) || "No se encontró la evaluación que se quiere eliminar.";
+            }
+
+            if (status === 403) {
+                return (axiosError.response.data as string) || "No se puede eliminar la evaluación general.";
+            }
+
+            return `Error ${status}: ${
+                axiosError.response.data || "No se pudo eliminar la evaluación."
+            }`;
+        }
+
+        return `Error desconocido al intentar eliminar la evaluación con id ${id}.`;
+    }
+};

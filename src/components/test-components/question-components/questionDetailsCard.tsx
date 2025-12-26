@@ -88,14 +88,14 @@ export default function QuestionDetailsCard({
                 </div>
 
                 {/* Imagen de la Pregunta */}
-                {question.questionImage && (
+                {question.questionImageUrl && (
                     <div className="flex flex-col">
                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                             Imagen
                         </dt>
                         <dd className="text-lg font-semibold text-gray-900 dark:text-white">
                             <img
-                                src={question.questionImage}
+                                src={question.questionImageUrl}
                                 alt="Imagen de la Pregunta"
                                 className="max-w-full h-auto rounded-md"
                             />

@@ -154,7 +154,8 @@ export default function Capacitacion() {
                         </Button>
                       }
                       onConfirm={() => handleDeleteFile(guide.testGuideId)}
-                      name={guide.testGuideId}
+                      title="¿Eliminar archivo?"
+                      description={`¿Estás seguro de que deseas eliminar "${guide.testGuideId}"? Esta acción no se puede deshacer.`}
                     />
                   }
                 />

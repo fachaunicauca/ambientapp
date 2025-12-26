@@ -50,7 +50,7 @@ export default function TestFormModal({
                 testDurationMinutes: 60,
                 testNumberOfQuestions: 10,
                 testAttemptLimit: 1,
-                testState: 1,
+                testState: 0,
                 isPeriodic: false,
             });
         }
@@ -238,17 +238,27 @@ export default function TestFormModal({
                             {/* Estado */}
                             <div>
                                 <label className="block mb-1 text-sm font-medium text-gray-700">
-                                    Estado
+                                    Estado{" "}
+                                    {!initialData && (
+                                        <span className="text-xs font-normal text-gray-400 font-italic">
+                                            (Se podra activar tras agregar el numero de preguntas especificado.)
+                                        </span>
+                                    )}
                                 </label>
                                 <select
                                     value={formData.testState}
                                     onChange={(e) =>
                                         handleChange(
                                             "testState",
-                                            e.target.value
+                                            parseInt(e.target.value)
                                         )
                                     }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    disabled={!initialData} // Si se esta creando el test, no se puede cambiar el estado
+                                    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                        !initialData
+                                            ? "bg-gray-100 cursor-not-allowed text-gray-500"
+                                            : ""
+                                    }`}
                                 >
                                     <option value={0}>Inactivo</option>
                                     <option value={1}>Activo</option>
