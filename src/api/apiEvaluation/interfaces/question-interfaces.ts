@@ -3,8 +3,10 @@ export interface QuestionInfo{
     questionText: string;
     questionTitle: string | null;
     questionImageUrl: string | null;
+    questionImage: File | null;
     questionType: string;
     questionStructure: string;
+    testId: number;
 }
 
 export interface PagedQuestions {

@@ -12,3 +12,7 @@ export interface MultipleChoiceStructure{
 export interface OpenEndedStructure{
     maxResponseSize: number;
 }
+
+export type QuestionMode = 'viewer' | 'builder' | 'player';
+export type QuestionType = 'MULTIPLE_CHOICE' | 'OPEN_ENDED';
+

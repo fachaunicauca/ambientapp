@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/buttons/button";
 import { Eye, Trash2, ClipboardCheck } from "lucide-react";
-import DeleteConfirmDialog from "../ui/modals/confirmDeleteModal";
+import DeleteConfirmDialog from "@/components/ui/modals/confirmDeleteModal";
 import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
 
 interface TestListItemProps {
@@ -22,7 +22,9 @@ export const TestListItem = ({
                     <ClipboardCheck size={20} />
                 </div>
                 <div>
-                    <h3 className="text-md font-bold text-gray-900">{testInfo.testTitle}</h3>
+                    <h3 className="text-md font-bold text-gray-900">
+                        {testInfo.testTitle}
+                    </h3>
                     <p className="text-sm text-gray-500 line-clamp-1">
                         {testInfo.testDescription || "Sin descripción"}
                     </p>

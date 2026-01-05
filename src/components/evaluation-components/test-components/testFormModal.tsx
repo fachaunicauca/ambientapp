@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Button } from "../ui/buttons/button";
-import { Input } from "../ui/form/input";
+import { Button } from "@/components/ui/buttons/button";
+import { Input } from "@/components/ui/form/input";
 import { saveTestInfo } from "@/api/apiEvaluation/services/test-services";
 import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
+import { TEST_STATE_LABELS } from "@/config/testConfig";
 
 interface TestFormModalProps {
     isOpen: boolean;
@@ -241,7 +242,8 @@ export default function TestFormModal({
                                     Estado{" "}
                                     {!initialData && (
                                         <span className="text-xs font-normal text-gray-400 font-italic">
-                                            (Se podra activar tras agregar el numero de preguntas especificado.)
+                                            (Se podra activar tras agregar el
+                                            numero de preguntas especificado.)
                                         </span>
                                     )}
                                 </label>
@@ -260,8 +262,13 @@ export default function TestFormModal({
                                             : ""
                                     }`}
                                 >
-                                    <option value={0}>Inactivo</option>
-                                    <option value={1}>Activo</option>
+                                    {Object.entries(TEST_STATE_LABELS).map(
+                                        ([type, label]) => (
+                                            <option key={type} value={type}>
+                                                {label}
+                                            </option>
+                                        )
+                                    )}
                                 </select>
                             </div>
 

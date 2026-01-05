@@ -1,7 +1,7 @@
-"use server"
+"use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { PagedQuestions } from "../interfaces/question-interfaces";
+import { PagedQuestions, QuestionInfo } from "../interfaces/question-interfaces";
 import { AxiosError } from "axios";
 
 export const getTestQuestionsPaged = async (
@@ -16,8 +16,8 @@ export const getTestQuestionsPaged = async (
             params: {
                 testId,
                 page,
-                size
-            }
+                size,
+            },
         });
 
         if (response.status === 200) {
@@ -35,10 +35,84 @@ export const getTestQuestionsPaged = async (
         if (axiosError.response) {
             const status = axiosError.response.status;
             const message = axiosError.response.data as string;
-            
-            return `Error ${status}: ${message || "Error al obtener las preguntas."}`;
+
+            return `Error ${status}: ${
+                message || "Error al obtener las preguntas."
+            }`;
         }
 
         return `Error desconocido al obtener preguntas del test ${testId}.`;
+    }
+};
+
+export const saveQuestion = async (
+    questionData: QuestionInfo
+): Promise<boolean | Record<string, string>> => {
+    try {
+        const microsApi = await microsApiServer();
+        console.log(questionData);
+        const response = await microsApi.post(`/questions`, questionData);
+
+        if (response.status === 201) {
+            return true;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError<any>;
+
+        if (!axiosError.response) {
+            return { general: "No se pudo conectar con el servidor." };
+        }
+
+        const { status, data } = axiosError.response;
+
+        // 400 y objeto: errores de campo
+        if (status === 400 && typeof data === "object") {
+            return data;
+        }
+
+        // 400 y string: error de estructura
+        if (status === 400 && typeof data === "string") {
+            return { questionStructure: data as string };
+        }
+
+        // 404: no se encontro el test asociado o no se encontro el algoritmo de validacion
+        if (status === 404) {
+            return {
+                general: data as string,
+            };
+        }
+
+        return { general: `Error desconocido al guardar la pregunta.` };
+    }
+};
+
+export const deleteQuestionById = async (
+    questionId: number
+): Promise<boolean | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const response = await microsApi.delete(`/questions/${questionId}`);
+
+        if (response.status === 200) {
+            return true;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            const status = axiosError.response.status;
+            const message = axiosError.response.data as string;
+
+            if (status === 404) {
+                return `Pregunta con ID ${questionId} no encontrada.`;
+            }
+        }
+
+        return `Error desconocido al eliminar la pregunta con ID ${questionId}.`;
     }
 };

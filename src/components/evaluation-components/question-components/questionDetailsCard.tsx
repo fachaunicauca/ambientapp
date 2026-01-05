@@ -1,62 +1,12 @@
 import { QuestionInfo } from "@/api/apiEvaluation/interfaces/question-interfaces";
-import { MultipleChoiceView } from "./question-structures-views/MultipleChoiceView";
-import { OpenEndedView } from "./question-structures-views/OpenEndedView";
-import {
-    MultipleChoiceStructure,
-    OpenEndedStructure,
-} from "@/types/questionTypes";
 import React from "react";
+import { QUESTION_TYPE_LABELS } from "@/config/testConfig";
+import { QuestionStructureRenderer } from "./questionStructureRenderer";
+import { QuestionType } from "@/types/questionTypes";
 
 interface QuestionDetailsCardProps {
     question: QuestionInfo;
 }
-
-const QuestionStructureDispatcher = ({
-    question,
-}: {
-    question: QuestionInfo;
-}) => {
-    const structureData = React.useMemo(() => {
-        try {
-            return typeof question.questionStructure === "string"
-                ? JSON.parse(question.questionStructure)
-                : question.questionStructure;
-        } catch (e) {
-            console.error("Error parsing structure", e);
-            return null;
-        }
-    }, [question.questionStructure]);
-
-    if (!structureData) return <p>Error al cargar estructura</p>;
-
-    switch (question.questionType) {
-        case "MULTIPLE_CHOICE":
-            return (
-                <MultipleChoiceView
-                    structure={structureData as MultipleChoiceStructure}
-                />
-            );
-
-        case "OPEN_ENDED":
-            return (
-                <OpenEndedView
-                    structure={structureData as OpenEndedStructure}
-                />
-            );
-
-        default:
-            return (
-                <div className="text-gray-400 italic">
-                    Tipo de pregunta "{question.questionType}" no implementado.
-                </div>
-            );
-    }
-};
-
-const QUESTION_TYPE_LABELS: { [key: string]: string } = {
-    MULTIPLE_CHOICE: "Opción Múltiple",
-    OPEN_ENDED: "Respuesta Abierta",
-};
 
 export default function QuestionDetailsCard({
     question,
@@ -109,7 +59,8 @@ export default function QuestionDetailsCard({
                         Tipo de Pregunta
                     </dt>
                     <dd className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {QUESTION_TYPE_LABELS[question.questionType] || question.questionType}
+                        {QUESTION_TYPE_LABELS[question.questionType] ||
+                            question.questionType}
                     </dd>
                 </div>
 
@@ -119,7 +70,11 @@ export default function QuestionDetailsCard({
                         Estructura de la pregunta
                     </dt>
                     <dd>
-                        <QuestionStructureDispatcher question={question} />
+                        <QuestionStructureRenderer
+                            mode="viewer"
+                            questionType={question.questionType as QuestionType}
+                            structure={question.questionStructure}
+                        ></QuestionStructureRenderer>
                     </dd>
                 </div>
             </dl>

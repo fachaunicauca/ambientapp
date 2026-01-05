@@ -1,19 +1,13 @@
 import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
 import { getTestInfo } from "@/api/apiEvaluation/services/test-services";
-import { getTestQuestionsPaged } from "@/api/apiEvaluation/services/question-services";
-import {
-    PagedQuestions,
-    QuestionInfo,
-} from "@/api/apiEvaluation/interfaces/question-interfaces";
 
-import { TestDetailsCard } from "@/components/test-components/testDetailsCard";
-import QuestionDetailsCard from "./question-components/questionDetailsCard";
-import TestFormModal from "@/components/test-components/testFormModal";
 import { Button } from "@/components/ui/buttons/button";
 import Title from "@/components/ui/typography/title";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
-import QuestionsPaginationList from "./question-components/questionsPaginationList";
+import { TestDetailsCard } from "./testDetailsCard";
+import QuestionsPaginationList from "../question-components/questionsPaginationList";
+import TestFormModal from "./testFormModal";
 
 interface TestInfoPageProps {
     testId: number;

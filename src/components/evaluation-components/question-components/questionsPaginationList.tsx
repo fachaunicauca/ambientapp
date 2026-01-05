@@ -1,27 +1,25 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import {
-    getTestsPaged,
-    deleteTest,
-} from "@/api/apiEvaluation/services/test-services"; 
-import { PagedTests } from "@/api/apiEvaluation/interfaces/test-interfaces";
+import { getTestQuestionsPaged } from "@/api/apiEvaluation/services/question-services";
+import { PagedQuestions } from "@/api/apiEvaluation/interfaces/question-interfaces";
 import { Button } from "@/components/ui/buttons/button";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { TestListItem } from "@/components/test-components/testListItem";
-import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight, Loader2, Plus } from "lucide-react";
+import QuestionDetailsCard from "./questionDetailsCard";
+import QuestionFormModal from "./questionFormModal";
 
-export default function TestsPaginationList() {
-    const router = useRouter();
-    const [data, setData] = useState<PagedTests | null>(null);
+interface Props {
+    testId: number;
+}
+
+export default function QuestionsPaginationList({ testId }: Props) {
+    const [data, setData] = useState<PagedQuestions | null>(null);
     const [error, setError] = useState<string>();
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const fetchTestsPage = async (page: number) => {
+    const fetchQuestionsPage = async (page: number) => {
         setLoading(true);
-        const result = await getTestsPaged(page, 5);
-
+        const result = await getTestQuestionsPaged(testId, page, 6);
         if (typeof result !== "string") {
             setData(result);
             setCurrentPage(page);
@@ -31,33 +29,23 @@ export default function TestsPaginationList() {
         setLoading(false);
     };
 
-    const handleDelete = async (id: number) => {
-        setLoading(true);
-        const result = await deleteTest(id);
-        if (typeof result === "string") {
-            setError(result);
-        } else {
-            fetchTestsPage(currentPage);
-        }
-        setLoading(false);
+    const handleQuestionSuccess = () => {
+        setIsModalOpen(false);
+        fetchQuestionsPage(currentPage);
     };
 
     useEffect(() => {
-        fetchTestsPage(0);
-    }, []);
+        fetchQuestionsPage(0);
+    }, [testId]);
 
     if (error) {
-        return (
-            <div className="text-redLight font-medium p-4 border border-red-100 rounded-lg">
-                {error}
-            </div>
-        );
+        return <div className="text-redLight font-medium">{error}</div>;
     }
 
     if (!data || data.content.length === 0) {
         return (
-            <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400 mx-2">
-                No hay evaluaciones registradas.
+            <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">
+                No hay preguntas registradas.
             </div>
         );
     }
@@ -67,26 +55,29 @@ export default function TestsPaginationList() {
             {/* Header */}
             <div className="flex items-center justify-between px-2">
                 <h3 className="font-bold text-lg text-gray-700">
-                    Evaluaciones Disponibles
+                    Preguntas almacenadas
                 </h3>
+                <Button
+                    variant={"default"}
+                    onClick={() => setIsModalOpen(true)}
+                    className="w-min gap-2"
+                >
+                    <Plus size={20} />
+                    Agregar Pregunta
+                </Button>
                 <span className="text-sm text-gray-500 font-medium">
                     Total: {data.totalElements}
                 </span>
             </div>
 
-            {/* Lista de Tests */}
+            {/* Grid de Preguntas */}
             <div
-                className={`flex flex-col gap-4 transition-opacity duration-300 ${
+                className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition-opacity duration-300 ${
                     loading ? "opacity-40 pointer-events-none" : "opacity-100"
                 }`}
             >
-                {data.content.map((test) => (
-                    <TestListItem
-                        key={test.testId}
-                        testInfo={test}
-                        onView={(id) => router.push(`/dashboard/evaluaciones/evaluaciones-especificas/evaluacion?id=${id}`)}
-                        onDelete={handleDelete}
-                    />
+                {data.content.map((q) => (
+                    <QuestionDetailsCard key={q.questionId} question={q} />
                 ))}
             </div>
 
@@ -104,7 +95,7 @@ export default function TestsPaginationList() {
                     <Button
                         variant="outline"
                         onClick={() => {
-                            fetchTestsPage(currentPage - 1);
+                            fetchQuestionsPage(currentPage - 1);
                             window.scrollTo({ top: 0, behavior: "smooth" });
                         }}
                         disabled={data.first || loading}
@@ -117,7 +108,7 @@ export default function TestsPaginationList() {
                     <Button
                         variant="outline"
                         onClick={() => {
-                            fetchTestsPage(currentPage + 1);
+                            fetchQuestionsPage(currentPage + 1);
                             window.scrollTo({ top: 0, behavior: "smooth" });
                         }}
                         disabled={data.last || loading}
@@ -129,11 +120,19 @@ export default function TestsPaginationList() {
                 </div>
             </div>
 
+            {/* Loader */}
             {loading && (
-                <div className="fixed inset-0 bg-white/20 backdrop-blur-[1px] flex justify-center items-center z-50">
-                    <Loader2 className="animate-spin text-blue-600" size={40} />
+                <div className="flex justify-center items-center py-4">
+                    <Loader2 className="animate-spin text-blue-600" size={32} />
                 </div>
             )}
+
+            <QuestionFormModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={handleQuestionSuccess}
+                testId={testId}
+            />
         </div>
     );
 }

@@ -4,7 +4,8 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "../ui/navigation/tooltip";
+} from "@/components/ui/navigation/tooltip";
+
 import { Info } from "lucide-react";
 
 export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
@@ -90,7 +91,8 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
                                 <TooltipContent>
                                     <p>
                                         Indica si la evaluación puede
-                                        presentarse nuevamente en un semestre distinto.
+                                        presentarse nuevamente en un semestre
+                                        distinto.
                                     </p>
                                 </TooltipContent>
                             </Tooltip>
