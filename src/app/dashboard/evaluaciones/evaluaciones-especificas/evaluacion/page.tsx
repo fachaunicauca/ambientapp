@@ -1,5 +1,5 @@
 "use client";
-import TestInfoPage from "@/components/test-components/testInfoPage";
+import TestInfoPage from "@/components/evaluation-components/test-components/testInfoPage";
 import { Button } from "@/components/ui/buttons/button";
 import { useSearchParams, useRouter } from "next/navigation";
 

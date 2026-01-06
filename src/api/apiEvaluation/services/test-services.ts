@@ -111,7 +111,7 @@ export const saveTestInfo = async (
         // 400 y string: error de numero de preguntas
         if (status === 400 && typeof data === "string") {
             return {
-                testNumberOfQuestions: data,
+                testState: data,
             };
         }
 
@@ -128,7 +128,7 @@ export const saveTestInfo = async (
                 general: data,
             };
         }
-        
+
         console.log(error);
         return {
             general: "Ocurrió un error inesperado al guardar la evaluación.",
@@ -153,11 +153,17 @@ export const deleteTest = async (id: number): Promise<boolean | string> => {
             const status = axiosError.response.status;
 
             if (status === 404) {
-                return (axiosError.response.data as string) || "No se encontró la evaluación que se quiere eliminar.";
+                return (
+                    (axiosError.response.data as string) ||
+                    "No se encontró la evaluación que se quiere eliminar."
+                );
             }
 
             if (status === 403) {
-                return (axiosError.response.data as string) || "No se puede eliminar la evaluación general.";
+                return (
+                    (axiosError.response.data as string) ||
+                    "No se puede eliminar la evaluación general."
+                );
             }
 
             return `Error ${status}: ${

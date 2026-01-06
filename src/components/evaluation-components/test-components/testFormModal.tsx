@@ -260,6 +260,10 @@ export default function TestFormModal({
                                         !initialData
                                             ? "bg-gray-100 cursor-not-allowed text-gray-500"
                                             : ""
+                                    } ${
+                                        errors.testState
+                                            ? "border-redLight"
+                                            : ""
                                     }`}
                                 >
                                     {Object.entries(TEST_STATE_LABELS).map(
@@ -270,6 +274,12 @@ export default function TestFormModal({
                                         )
                                     )}
                                 </select>
+
+                                {errors.testState && (
+                                    <p className="mt-1 text-xs text-redLight">
+                                        {errors.testState}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Test periódico */}

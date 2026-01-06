@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/buttons/button";
 interface DeleteConfirmDialogProps {
     trigger: React.ReactNode;
     onConfirm: () => void;
-    title: string;       // Nuevo: Título dinámico
-    description: string; // Nuevo: Descripción dinámica
+    title: string;       
+    description: string; 
 }
 
 export default function DeleteConfirmDialog({
