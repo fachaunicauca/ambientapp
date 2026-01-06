@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
-import { getTestQuestionsPaged } from "@/api/apiEvaluation/services/question-services";
-import { PagedQuestions } from "@/api/apiEvaluation/interfaces/question-interfaces";
+import {
+    deleteQuestionById,
+    getTestQuestionsPaged,
+} from "@/api/apiEvaluation/services/question-services";
+import {
+    PagedQuestions,
+    QuestionInfo,
+} from "@/api/apiEvaluation/interfaces/question-interfaces";
 import { Button } from "@/components/ui/buttons/button";
 import { ChevronLeft, ChevronRight, Loader2, Plus } from "lucide-react";
 import QuestionDetailsCard from "./questionDetailsCard";
 import QuestionFormModal from "./questionFormModal";
+import { toast } from "sonner";
 
 interface Props {
     testId: number;
@@ -16,6 +23,9 @@ export default function QuestionsPaginationList({ testId }: Props) {
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedQuestion, setSelectedQuestion] =
+        useState<QuestionInfo | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const fetchQuestionsPage = async (page: number) => {
         setLoading(true);
@@ -32,6 +42,25 @@ export default function QuestionsPaginationList({ testId }: Props) {
     const handleQuestionSuccess = () => {
         setIsModalOpen(false);
         fetchQuestionsPage(currentPage);
+    };
+
+    const handleDeleteQuestion = async (id: number) => {
+        setLoading(true);
+
+        const result = await deleteQuestionById(id);
+
+        if (typeof result === "string") {
+            toast.error(result as string);
+        } else {
+            fetchQuestionsPage(currentPage);
+        }
+
+        setLoading(false);
+    };
+
+    const handleEditQuestion = (question: QuestionInfo) => {
+        setSelectedQuestion(question);
+        setIsEditModalOpen(true);
     };
 
     useEffect(() => {
@@ -77,7 +106,12 @@ export default function QuestionsPaginationList({ testId }: Props) {
                 }`}
             >
                 {data.content.map((q) => (
-                    <QuestionDetailsCard key={q.questionId} question={q} />
+                    <QuestionDetailsCard
+                        key={q.questionId}
+                        question={q}
+                        onEdit={handleEditQuestion}
+                        onDelete={handleDeleteQuestion}
+                    />
                 ))}
             </div>
 
@@ -133,6 +167,23 @@ export default function QuestionsPaginationList({ testId }: Props) {
                 onSuccess={handleQuestionSuccess}
                 testId={testId}
             />
+
+            {selectedQuestion && (
+                <QuestionFormModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => {
+                        setIsEditModalOpen(false);
+                        setSelectedQuestion(null);
+                    }}
+                    onSuccess={() => {
+                        setIsEditModalOpen(false);
+                        setSelectedQuestion(null);
+                        fetchQuestionsPage(currentPage);
+                    }}
+                    initialData={selectedQuestion}
+                    testId={testId}
+                />
+            )}
         </div>
     );
 }

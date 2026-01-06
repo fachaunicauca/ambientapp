@@ -3,13 +3,20 @@ import React from "react";
 import { QUESTION_TYPE_LABELS } from "@/config/testConfig";
 import { QuestionStructureRenderer } from "./questionStructureRenderer";
 import { QuestionType } from "@/types/questionTypes";
+import DeleteConfirmDialog from "@/components/ui/modals/confirmDeleteModal";
+import { Button } from "@/components/ui/buttons/button";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface QuestionDetailsCardProps {
     question: QuestionInfo;
+    onEdit: (question: QuestionInfo) => void;
+    onDelete: (id: number) => void;
 }
 
 export default function QuestionDetailsCard({
     question,
+    onEdit,
+    onDelete,
 }: QuestionDetailsCardProps) {
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700">
@@ -76,6 +83,35 @@ export default function QuestionDetailsCard({
                             structure={question.questionStructure}
                         ></QuestionStructureRenderer>
                     </dd>
+                </div>
+
+                {/* ACCIONES */}
+                <div className="mt-6 flex justify-end gap-3">
+                    {/* ELIMINAR */}
+                    <DeleteConfirmDialog
+                        title="¿Eliminar pregunta?"
+                        description="¿Estás seguro de que deseas eliminar esta pregunta? Esta acción no se puede deshacer."
+                        onConfirm={() => onDelete(question.questionId)}
+                        trigger={
+                            <Button
+                                variant="secondary"
+                                className="bg-redLight text-white border-0 hover:bg-red"
+                            >
+                                <Trash2 size={16} />
+                                Eliminar
+                            </Button>
+                        }
+                    />
+
+                    {/* EDITAR */}
+                    <Button
+                        variant="default"
+                        className="flex items-center gap-2"
+                        onClick={() => onEdit(question)}
+                    >
+                        <Pencil size={16} />
+                        Editar
+                    </Button>
                 </div>
             </dl>
         </div>
