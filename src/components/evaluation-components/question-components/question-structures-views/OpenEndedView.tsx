@@ -1,8 +1,11 @@
 import { OpenEndedStructure } from "@/types/questionTypes";
-import { parseStructure } from "@/utils/parseStructure";
+import { parseJson } from "@/utils/parseJson";
+import { QuestionStructureComponentProps } from "../questionStructureRenderer";
 
-export const OpenEndedView = ({ structure }: { structure: string }) => {
-    const parsedStructure = parseStructure<OpenEndedStructure>(structure);
+export const OpenEndedView = ({
+    structure,
+}: QuestionStructureComponentProps) => {
+    const parsedStructure = parseJson<OpenEndedStructure>(structure);
 
     if (!parsedStructure) {
         return (

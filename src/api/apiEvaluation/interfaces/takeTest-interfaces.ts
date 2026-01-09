@@ -16,3 +16,21 @@ export interface PagedTestsBasicInfo {
     numberOfElements: number;
     empty: boolean;
 }
+
+export interface TakeTestQuestion {
+    questionId: number;
+    questionText: string;
+    questionTitle: string | null;
+    questionImageUrl: string | null;
+    questionType: string;
+    questionStructure: string;
+}
+
+export interface TakeTestInfo {
+    testId: number;
+    testTitle: string;
+    testDurationMinutes: number;
+    testNumberOfQuestions: number;
+
+    questions: TakeTestQuestion[];
+}

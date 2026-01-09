@@ -11,7 +11,7 @@ export const routeList: Record<string, string> = {
     "/dashboard/inventario/agregar-reactivo": "Agregar reactivo",
     "/dashboard/comunicacion-riesgo": "Comunicacion de Riesgo",
     // Evaluación
-    "/dashboard/comunicacion-riesgo/evaluacion": "Iniciar Evaluación",
+    "/dashboard/comunicacion-riesgo/evaluacion": "Evaluaciones",
     "/dashboard/comunicacion-riesgo/evaluacion/test": "Evaluación",
     "/dashboard/comunicacion-riesgo/capacitacion": "Capacitación",
     "/dashboard/comunicacion-riesgo/capacitacion/visualizar": "Vizualizar",
@@ -19,5 +19,7 @@ export const routeList: Record<string, string> = {
     "/dashboard/evaluaciones/evaluacion-general": "Evaluación General",
     "/dashboard/evaluaciones/evaluaciones-especificas": "Evaluaciones Específicas",
     "/dashboard/evaluaciones/evaluaciones-especificas/evaluacion": "Evaluación",
+    "/dashboard/comunicacion-riesgo/evaluacion/presentar": "Presentar Evaluación",
+    "/dashboard/comunicacion-riesgo/evaluacion/presentar/resultados": "Resultados",
     // ...
 };

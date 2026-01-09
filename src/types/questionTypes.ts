@@ -9,6 +9,10 @@ export interface MultipleChoiceStructure{
     correctAnswerCount: number;
 }
 
+export interface ChoiceResponse{
+    selectedAnswerIds: number[];
+}
+
 export interface OpenEndedStructure{
     maxResponseSize: number;
 }

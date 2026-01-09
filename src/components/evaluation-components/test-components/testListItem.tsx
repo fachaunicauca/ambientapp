@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/buttons/button";
 import { Eye, Trash2, ClipboardCheck } from "lucide-react";
-import DeleteConfirmDialog from "@/components/ui/modals/confirmDeleteModal";
+import ConfirmDialog from "@/components/ui/modals/confirmDialog";
 import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
 
 interface TestListItemProps {
@@ -42,19 +42,21 @@ export const TestListItem = ({
                     Detalles
                 </Button>
 
-                <DeleteConfirmDialog
+                <ConfirmDialog
                     title="¿Eliminar evaluación?"
                     description={`¿Estás seguro de que deseas eliminar "${testInfo.testTitle}"? Todos los datos asociados se perderán permanentemente.`}
                     onConfirm={() => onDelete(testInfo.testId)}
                     trigger={
                         <Button
                             variant="outline"
-                            className="flex-1 md:flex-none gap-2 text-red-600 border-red-100 hover:bg-red-50 hover:text-red-700 hover:border-red-200"
+                            className="flex-1 md:flex-none gap-2 bg-redLight text-white border-0 hover:bg-red hover:text-white"
                         >
                             <Trash2 size={16} />
                             Eliminar
                         </Button>
                     }
+                    confirmText="Eliminar"
+                    confirmVariant="destructive"
                 />
             </div>
         </div>

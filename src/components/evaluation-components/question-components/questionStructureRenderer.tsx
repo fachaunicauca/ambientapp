@@ -2,17 +2,24 @@ import { QuestionMode, QuestionType } from "@/types/questionTypes";
 import { MultipleChoiceView } from "./question-structures-views/MultipleChoiceView";
 import { OpenEndedView } from "./question-structures-views/OpenEndedView";
 import MultipleChoiceBuilder from "./question-structures-builders/MultipleChoiceBuilder";
+import { MultipleChoicePlayer } from "./question-structures-players/multipleChoicePlayer";
 
-interface QuestionStructureComponentProps {
+export interface QuestionStructureComponentProps {
     structure: string;
-    onChange?: (newStructure: string) => void;
+    onChange?: (newStructure: string) => void; // Para builders
+    // Para players
+    onAnswer?: (answer: string) => void; 
+    storedResponse?: string;
 }
 
 interface QuestionStructureRendererProps {
     mode: QuestionMode;
     questionType: QuestionType;
     structure: string;
-    onChange?: (newStructure: string) => void;
+    onChange?: (newStructure: string) => void; // Para builders
+    // Para players
+    onAnswer?: (answer: string) => void; 
+    storedResponse?: string;
 }
 
 type ComponentMap = {
@@ -31,7 +38,7 @@ const QuestionComponentFactory: ComponentMap = {
         OPEN_ENDED: OpenEndedView,
     },
     player: {
-        MULTIPLE_CHOICE: MultipleChoiceView,
+        MULTIPLE_CHOICE: MultipleChoicePlayer,
         OPEN_ENDED: OpenEndedView,
     },
 };
@@ -48,7 +55,7 @@ const getQuestionComponent = (
 
 export const QuestionStructureRenderer: React.FC<
     QuestionStructureRendererProps
-> = ({ mode, questionType, structure, onChange }) => {
+> = ({ mode, questionType, structure, onChange, onAnswer, storedResponse }) => {
     const Component = getQuestionComponent(mode, questionType);
 
     if (!Component) {
@@ -61,5 +68,5 @@ export const QuestionStructureRenderer: React.FC<
         );
     }
 
-    return <Component structure={structure} onChange={onChange} />;
+    return <Component structure={structure} onChange={onChange} onAnswer={onAnswer} storedResponse={storedResponse}/>;
 };

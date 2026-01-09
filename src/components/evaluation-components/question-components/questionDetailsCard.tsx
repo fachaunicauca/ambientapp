@@ -3,7 +3,7 @@ import React from "react";
 import { QUESTION_TYPE_LABELS } from "@/config/testConfig";
 import { QuestionStructureRenderer } from "./questionStructureRenderer";
 import { QuestionType } from "@/types/questionTypes";
-import DeleteConfirmDialog from "@/components/ui/modals/confirmDeleteModal";
+import ConfirmDialog from "@/components/ui/modals/confirmDialog";
 import { Button } from "@/components/ui/buttons/button";
 import { Pencil, Trash2 } from "lucide-react";
 
@@ -88,7 +88,7 @@ export default function QuestionDetailsCard({
                 {/* ACCIONES */}
                 <div className="mt-6 flex justify-end gap-3">
                     {/* ELIMINAR */}
-                    <DeleteConfirmDialog
+                    <ConfirmDialog
                         title="¿Eliminar pregunta?"
                         description="¿Estás seguro de que deseas eliminar esta pregunta? Esta acción no se puede deshacer."
                         onConfirm={() => onDelete(question.questionId)}
@@ -101,6 +101,8 @@ export default function QuestionDetailsCard({
                                 Eliminar
                             </Button>
                         }
+                        confirmText="Eliminar"
+                        confirmVariant="destructive"
                     />
 
                     {/* EDITAR */}

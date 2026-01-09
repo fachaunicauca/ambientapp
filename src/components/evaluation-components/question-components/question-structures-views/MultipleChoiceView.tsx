@@ -1,8 +1,11 @@
 import { MultipleChoiceStructure } from "@/types/questionTypes";
-import { parseStructure } from "@/utils/parseStructure";
+import { parseJson } from "@/utils/parseJson";
+import { QuestionStructureComponentProps } from "../questionStructureRenderer";
 
-export const MultipleChoiceView = ({ structure }: { structure: string }) => {
-    const parsedStructure = parseStructure<MultipleChoiceStructure>(structure);
+export const MultipleChoiceView = ({
+    structure,
+}: QuestionStructureComponentProps) => {
+    const parsedStructure = parseJson<MultipleChoiceStructure>(structure);
 
     if (!parsedStructure) {
         return (

@@ -3,16 +3,13 @@ import { Trash2, Plus, Check } from "lucide-react";
 import { ChoiceAnswer, MultipleChoiceStructure } from "@/types/questionTypes";
 import { Button } from "@/components/ui/buttons/button";
 import { Textarea } from "@/components/ui/form/textarea";
-
-interface MultipleChoiceBuilderProps {
-    structure: string;
-    onChange?: (newStructure: string) => void;
-}
+import { QuestionStructureComponentProps } from "../questionStructureRenderer";
+import { parseJson } from "@/utils/parseJson";
 
 export default function MultipleChoiceBuilder({
     structure,
     onChange,
-}: MultipleChoiceBuilderProps) {
+}: QuestionStructureComponentProps) {
     const [answers, setAnswers] = useState<ChoiceAnswer[]>([]);
     const [nextId, setNextId] = useState(1);
     const [isInitialized, setIsInitialized] = useState(false);
@@ -20,8 +17,8 @@ export default function MultipleChoiceBuilder({
     // Parsear la estructura inicial SOLO UNA VEZ
     useEffect(() => {
         try {
-            const parsed: MultipleChoiceStructure = JSON.parse(structure);
-            if (parsed.answers && parsed.answers.length > 0) {
+            const parsed = parseJson<MultipleChoiceStructure>(structure);
+            if (parsed?.answers && parsed.answers.length > 0) {
                 setAnswers(parsed.answers);
                 const maxId = Math.max(...parsed.answers.map((a) => a.id));
                 setNextId(maxId + 1);

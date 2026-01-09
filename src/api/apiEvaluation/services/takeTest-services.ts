@@ -1,7 +1,7 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { PagedTestsBasicInfo, TestBasicInfo } from "../interfaces/takeTest-interfaces";
+import { PagedTestsBasicInfo, TakeTestInfo, TestBasicInfo } from "../interfaces/takeTest-interfaces";
 import { AxiosError } from "axios";
 
 export const getActiveTestsPaged = async (
@@ -67,5 +67,44 @@ export const getGeneralTest = async (): Promise<TestBasicInfo | string> => {
         }
 
         return `Error desconocido al obtener el test general.`;
+    }
+};
+
+export const startTestAttempt = async (
+    testId: number,
+    studentEmail: string
+): Promise<TakeTestInfo | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const response = await microsApi.get(
+            `/takeTest/${testId}`,
+            {
+                params: { studentEmail }
+            }
+        );
+
+        if (response.status === 200) {
+            return response.data as TakeTestInfo;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            const status = axiosError.response.status;
+            const message = axiosError.response.data as string;
+
+            if (status === 403 || status === 404 || status === 409) {
+                return message;
+            }
+
+            return `Error ${status}: ${
+                message || "Error al iniciar la evaluación."
+            }`;
+        }
+
+        return "Error desconocido al iniciar la evaluación.";
     }
 };
