@@ -1,4 +1,8 @@
-import { TakeTestInfo } from "@/api/apiEvaluation/interfaces/takeTest-interfaces";
+import {
+    StudentTestAttempt,
+    StudentTestAttemptResult,
+    TakeTestInfo,
+} from "@/api/apiEvaluation/interfaces/takeTest-interfaces";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -8,114 +12,109 @@ interface StudentTestAttemptState {
     testInfo: TakeTestInfo | null;
 
     // Tiempo
-    startTime: number | null; // timestamp
+    startTime: number | null;
     durationMinutes: number | null;
 
-    // Respuestas del estudiante
-    responses: Record<number, string>; // questionId -> response
+    // Respuestas
+    responses: Record<number, string>;
+
+    // Resultado de la evaluacion
+    testResult: StudentTestAttemptResult | null;
 
     // Acciones
-    startAttempt: (
-        studentEmail: string,
-        testInfo: TakeTestInfo
-    ) => void;
-
+    startAttempt: (studentEmail: string, testInfo: TakeTestInfo) => void;
     saveResponse: (questionId: number, response: string) => void;
 
+    setTestResult: (result: StudentTestAttemptResult) => void;
     clearAttempt: () => void;
 
     // Utiles
     isActive: () => boolean;
     getRemainingTimeSeconds: () => number;
-    buildAttemptPayload: () => {
-        studentEmail: string;
-        testId: number;
-        studentResponses: {
-            questionId: number;
-            response: string;
-        }[];
-    } | null;
+    buildAttemptPayload: () => StudentTestAttempt | null;
 }
 
-export const useStudentTestAttemptStore =
-    create<StudentTestAttemptState>()(
-        persist(
-            (set, get) => ({
-                studentEmail: null,
-                testInfo: null,
-                startTime: null,
-                durationMinutes: null,
-                responses: {},
+export const useStudentTestAttemptStore = create<StudentTestAttemptState>()(
+    persist(
+        (set, get) => ({
+            studentEmail: null,
+            testInfo: null,
+            startTime: null,
+            durationMinutes: null,
+            responses: {},
+            testResult: null,
 
-                /* Guardar datos al iniciar el intento */
-                startAttempt: (studentEmail, testInfo) => {
-                    set({
-                        studentEmail,
-                        testInfo,
-                        startTime: Date.now(),
-                        durationMinutes: testInfo.testDurationMinutes,
-                        responses: {},
-                    });
-                },
+            startAttempt: (studentEmail, testInfo) => {
+                set({
+                    studentEmail,
+                    testInfo,
+                    startTime: Date.now(),
+                    durationMinutes: testInfo.testDurationMinutes,
+                    responses: {},
+                    testResult: null,
+                });
+            },
 
-                /* Guardar respuestas del estudiante */
-                saveResponse: (questionId, response) =>
-                    set((state) => ({
-                        responses: {
-                            ...state.responses,
-                            [questionId]: response,
-                        },
-                    })),
+            saveResponse: (questionId, response) =>
+                set((state) => ({
+                    responses: {
+                        ...state.responses,
+                        [questionId]: response,
+                    },
+                })),
 
-                /* Limpiar store */
-                clearAttempt: () =>
-                    set({
-                        studentEmail: null,
-                        testInfo: null,
-                        startTime: null,
-                        durationMinutes: null,
-                        responses: {},
-                    }),
+            // Guardar resultado
+            setTestResult: (result) =>
+                set({
+                    testResult: result,
+                }),
 
-                /* Utiles */
-                isActive: () => {
-                    const { testInfo, startTime } = get();
-                    return Boolean(testInfo && startTime);
-                },
+            // Limpia intento (pero NO borra resultado)
+            clearAttempt: () =>
+                set({
+                    studentEmail: null,
+                    testInfo: null,
+                    startTime: null,
+                    durationMinutes: null,
+                    responses: {},
+                }),
 
-                getRemainingTimeSeconds: () => {
-                    const { startTime, durationMinutes } = get();
-                    if (!startTime || !durationMinutes) return 0;
+            isActive: () => {
+                const { testInfo, startTime } = get();
+                return Boolean(testInfo && startTime);
+            },
 
-                    const elapsedMs = Date.now() - startTime;
-                    const totalMs = durationMinutes * 60 * 1000;
+            getRemainingTimeSeconds: () => {
+                const { startTime, durationMinutes } = get();
+                if (!startTime || !durationMinutes) return 0;
 
-                    return Math.max(
-                        0,
-                        Math.floor((totalMs - elapsedMs) / 1000)
-                    );
-                },
+                const elapsedMs = Date.now() - startTime;
+                const totalMs = durationMinutes * 60 * 1000;
 
-                /* Payload para enviar al backend */
-                buildAttemptPayload: () => {
-                    const { studentEmail, testInfo, responses } = get();
-                    if (!studentEmail || !testInfo) return null;
+                return Math.max(0, Math.floor((totalMs - elapsedMs) / 1000));
+            },
 
-                    return {
-                        studentEmail,
-                        testId: testInfo.testId,
-                        studentResponses: Object.entries(responses).map(
-                            ([questionId, response]) => ({
-                                questionId: Number(questionId),
-                                response,
-                            })
-                        ),
-                    };
-                },
-            }),
-            {
-                name: "student-test-attempt",
-                storage: createJSONStorage(() => sessionStorage),
-            }
-        )
-    );
+            buildAttemptPayload: () => {
+                const { studentEmail, testInfo, responses } = get();
+                if (!studentEmail || !testInfo) return null;
+
+                return {
+                    studentEmail,
+                    testId: testInfo.testId,
+                    testAttemptNumberOfQuestions:
+                        testInfo.testNumberOfQuestions,
+                    studentResponses: Object.entries(responses).map(
+                        ([questionId, response]) => ({
+                            questionId: Number(questionId),
+                            response,
+                        })
+                    ),
+                };
+            },
+        }),
+        {
+            name: "student-test-attempt",
+            storage: createJSONStorage(() => sessionStorage),
+        }
+    )
+);

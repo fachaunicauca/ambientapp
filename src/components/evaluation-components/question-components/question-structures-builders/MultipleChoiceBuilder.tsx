@@ -29,7 +29,7 @@ export default function MultipleChoiceBuilder({
             initializeDefaultAnswers();
         }
         setIsInitialized(true);
-    }, []); // ← Sin dependencias, solo se ejecuta al montar
+    }, []);
 
     const initializeDefaultAnswers = () => {
         const defaultAnswers: ChoiceAnswer[] = [
@@ -50,7 +50,7 @@ export default function MultipleChoiceBuilder({
             };
             onChange(JSON.stringify(newStructure));
         }
-    }, [answers, isInitialized]); // ← Removido onChange de las dependencias
+    }, [answers, isInitialized]); 
 
     const addAnswer = () => {
         const newAnswer: ChoiceAnswer = {

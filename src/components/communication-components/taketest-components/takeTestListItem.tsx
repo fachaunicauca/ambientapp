@@ -15,8 +15,8 @@ export const TakeTestListItem = ({
         <div className="flex gap-4 items-start">
             {/* Información básica del Test */}
             <div className="flex gap-4 items-start mb-4 md:mb-0">
-                <div className="p-2 bg-green-50 rounded-lg text-green-600">
-                    <ClipboardCheck size={20} />
+                <div className="p-2 rounded-lg text-gray-600">
+                    <ClipboardCheck size={50}/>
                 </div>
 
                 <div className="space-y-1">

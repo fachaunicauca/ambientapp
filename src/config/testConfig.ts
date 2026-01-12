@@ -7,3 +7,5 @@ export const QUESTION_TYPE_LABELS: { [key: string]: string } = {
     MULTIPLE_CHOICE: "Opción Múltiple",
     OPEN_ENDED: "Respuesta Abierta",
 };
+
+export const MAX_TEST_SCORE = 5;

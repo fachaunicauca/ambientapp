@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import TakeTestQuestionCard from "./takeTestQuestionCard";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/authStore";
+import ConfirmDialog from "@/components/ui/modals/confirmDialog";
+import { Button } from "@/components/ui/buttons/button";
 
 interface TakeTestPageProps {
     testId: number;
@@ -153,6 +155,20 @@ export default function TakeTestPage({
                         />
                     </div>
                 </div>
+                <ConfirmDialog
+                    trigger={
+                        <Button className="w-full mt-6" disabled={isSubmitting}>
+                            Enviar
+                        </Button>
+                    }
+                    onConfirm={handleFinishTest}
+                    title="Enviar evaluación"
+                    description={
+                        "¿Estás seguro de que deseas enviar la evaluación? Revisa que hayas respondido todas las preguntas."
+                    }
+                    confirmText="Enviar"
+                    confirmVariant="default"
+                />
             </aside>
         </div>
     );

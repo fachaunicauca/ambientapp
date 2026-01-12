@@ -1,7 +1,13 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { PagedTestsBasicInfo, TakeTestInfo, TestBasicInfo } from "../interfaces/takeTest-interfaces";
+import {
+    PagedTestsBasicInfo,
+    StudentTestAttempt,
+    StudentTestAttemptResult,
+    TakeTestInfo,
+    TestBasicInfo,
+} from "../interfaces/takeTest-interfaces";
 import { AxiosError } from "axios";
 
 export const getActiveTestsPaged = async (
@@ -77,12 +83,9 @@ export const startTestAttempt = async (
     try {
         const microsApi = await microsApiServer();
 
-        const response = await microsApi.get(
-            `/takeTest/${testId}`,
-            {
-                params: { studentEmail }
-            }
-        );
+        const response = await microsApi.get(`/takeTest/${testId}`, {
+            params: { studentEmail },
+        });
 
         if (response.status === 200) {
             return response.data as TakeTestInfo;
@@ -106,5 +109,38 @@ export const startTestAttempt = async (
         }
 
         return "Error desconocido al iniciar la evaluación.";
+    }
+};
+
+export const scoreAndSaveStudentAttempt = async (
+    attempt: StudentTestAttempt
+): Promise<StudentTestAttemptResult | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const response = await microsApi.post(`/takeTest`, attempt);
+
+        if (response.status === 200) {
+            return response.data as StudentTestAttemptResult;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            const status = axiosError.response.status;
+            const message = axiosError.response.data as string;
+
+            if (status === 400 || status === 403 || status === 404) {
+                return message;
+            }
+
+            return `Error ${status}: ${
+                message || "Error al calificar y guardar el intento."
+            }`;
+        }
+
+        return "Error desconocido al calificar y guardar el intento.";
     }
 };

@@ -34,3 +34,23 @@ export interface TakeTestInfo {
 
     questions: TakeTestQuestion[];
 }
+
+export interface StudentResponses {
+    questionId: number;
+    response: string;
+}
+
+export interface StudentTestAttempt {
+    studentEmail: string;
+    testId: number;
+    testAttemptNumberOfQuestions: number;
+    studentResponses: StudentResponses[];
+}
+
+export interface StudentTestAttemptResult {
+    studentEmail: string;
+    testAttemptDate: string;
+    testAttemptNumberOfQuestions: number;
+    testAttemptScore: number;
+    fullyScored: boolean;
+}
