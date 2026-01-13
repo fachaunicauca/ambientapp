@@ -97,7 +97,7 @@ export const TakeTestResultsPage = () => {
                 <div className="flex justify-center my-8">
                     <div className="rounded-2xl border bg-gradient-to-br from-blue/10 to-white px-8 py-6 text-center shadow-sm">
                         <p className="text-sm text-gray-500 mb-1">
-                            Puntaje final
+                            Puntaje obtenido
                         </p>
                         <p className="text-5xl font-extrabold text-blue">
                             {(result.testAttemptScore * MAX_TEST_SCORE).toFixed(1)}

@@ -8,4 +8,4 @@ export const QUESTION_TYPE_LABELS: { [key: string]: string } = {
     OPEN_ENDED: "Respuesta Abierta",
 };
 
-export const MAX_TEST_SCORE = 5;
+export const MAX_TEST_SCORE: number = 5.0;

@@ -15,9 +15,10 @@ import { toast } from "sonner";
 
 interface Props {
     testId: number;
+    onDelete: () => void;
 }
 
-export default function QuestionsPaginationList({ testId }: Props) {
+export default function QuestionsPaginationList({ testId, onDelete }: Props) {
     const [data, setData] = useState<PagedQuestions | null>(null);
     const [error, setError] = useState<string>();
     const [currentPage, setCurrentPage] = useState(0);
@@ -53,7 +54,8 @@ export default function QuestionsPaginationList({ testId }: Props) {
         if (typeof result === "string") {
             toast.error(result);
         } else {
-            fetchQuestionsPage(currentPage);
+            await fetchQuestionsPage(currentPage);
+            onDelete();
         }
 
         setLoading(false);

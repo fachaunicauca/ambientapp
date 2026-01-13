@@ -58,7 +58,7 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
             {testInfo && <TestDetailsCard testInfo={testInfo} />}
 
             <section className="border-t pt-8">
-                <QuestionsPaginationList testId={testId} />
+                <QuestionsPaginationList testId={testId} onDelete={fetchData}/>
             </section>
 
             {testInfo && (

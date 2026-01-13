@@ -21,6 +21,7 @@ export const getTestQuestionsPaged = async (
         });
 
         if (response.status === 200) {
+            console.log(response.data as PagedQuestions); 
             return response.data as PagedQuestions;
         }
 
@@ -84,7 +85,7 @@ export const saveQuestion = async (
             };
         }
 
-        return { general: `Error desconocido al guardar la pregunta.` };
+        return { general: `Error desconocido al guardar la pregunta. ${error}` };
     }
 };
 
