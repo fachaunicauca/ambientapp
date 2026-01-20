@@ -49,7 +49,7 @@ export default function TestsPaginationList() {
 
     if (error) {
         return (
-            <div className="text-redLight font-medium p-4 border border-red-100 rounded-lg">
+            <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
                 {error}
             </div>
         );

@@ -8,6 +8,7 @@ import { QUESTION_TYPE_LABELS } from "@/config/testConfig";
 import { QuestionStructureRenderer } from "./questionStructureRenderer";
 import { QuestionType } from "@/types/questionTypes";
 import { Textarea } from "@/components/ui/form/textarea";
+import { Trash2, Upload } from "lucide-react";
 
 interface QuestionFormModalProps {
     isOpen: boolean;
@@ -31,6 +32,7 @@ export default function QuestionFormModal({
         questionStructure: JSON.stringify({
             message: "Estructura por defecto",
         }),
+        questionImageId: null as number | null,
         questionImageUrl: null as string | null,
     });
 
@@ -47,6 +49,7 @@ export default function QuestionFormModal({
                 questionTitle: initialData.questionTitle || "",
                 questionType: initialData.questionType,
                 questionStructure: initialData.questionStructure,
+                questionImageId: initialData.questionImageId,
                 questionImageUrl: initialData.questionImageUrl,
             });
             setPreviewUrl(initialData.questionImageUrl);
@@ -59,6 +62,7 @@ export default function QuestionFormModal({
                 questionStructure: JSON.stringify({
                     message: "Estructura por defecto",
                 }),
+                questionImageId: null,
                 questionImageUrl: null,
             });
             setPreviewUrl(null);
@@ -78,6 +82,27 @@ export default function QuestionFormModal({
         }
     };
 
+    const handleRemoveImage = () => {
+        setImageFile(null);
+
+        if (previewUrl && previewUrl.startsWith("blob:")) {
+            URL.revokeObjectURL(previewUrl);
+        }
+        setPreviewUrl(null);
+
+        // Limpiar los datos de imagen existente
+        setFormData((prev) => ({
+            ...prev,
+            questionImageId: null,
+            questionImageUrl: null,
+        }));
+
+        // Limpiar el input file
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
     const handleChange = (field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
@@ -89,6 +114,9 @@ export default function QuestionFormModal({
             questionType: formData.questionType,
             questionStructure: formData.questionStructure,
             testId,
+            questionImageId: null,
+            questionImageUrl: null,
+            questionImage: null,
         };
 
         if (initialData) {
@@ -97,12 +125,14 @@ export default function QuestionFormModal({
             if (imageFile) {
                 submitData.questionImage = imageFile;
             } else {
+                console.log("No new image file, keeping existing image info");
+                submitData.questionImageId = formData.questionImageId;
                 submitData.questionImageUrl = formData.questionImageUrl;
             }
         } else {
             submitData.questionImage = imageFile;
         }
-
+        console.log("Submitting data:", submitData);
         const result = await saveQuestion(submitData);
 
         if (result === true) {
@@ -189,33 +219,88 @@ export default function QuestionFormModal({
 
                             {/* Imagen de la Pregunta */}
                             <div>
-                                <label className="block mb-1 text-sm font-medium text-gray-700">
+                                <label className="block mb-2 text-sm font-medium text-gray-700">
                                     Imagen (Opcional)
                                 </label>
 
+                                {previewUrl ? (
+                                    <div className="space-y-3">
+                                        <div className="relative inline-block">
+                                            <img
+                                                src={previewUrl}
+                                                alt="Preview"
+                                                className="max-h-64 rounded-lg border-2 border-gray-200 shadow-sm"
+                                            />
+                                            <Button
+                                                variant={"destructive"}
+                                                onClick={handleRemoveImage}
+                                                className="absolute -top-2 -right-2 text-white rounded-full p-2 shadow-lg transition-colors"
+                                                title="Eliminar imagen"
+                                            >
+                                                <Trash2 size={16} />
+                                            </Button>
+                                        </div>
+
+                                        <div className="text-sm text-gray-600">
+                                            {imageFile ? (
+                                                <p>
+                                                    {imageFile.name} (
+                                                    {(
+                                                        imageFile.size / 1024
+                                                    ).toFixed(2)}{" "}
+                                                    KB)
+                                                </p>
+                                            ) : formData.questionImageId ? (
+                                                <p>
+                                                    Imagen actual (ID:{" "}
+                                                    {formData.questionImageId})
+                                                </p>
+                                            ) : null}
+                                        </div>
+
+                                        <Button
+                                            variant={"default"}
+                                            onClick={() =>
+                                                fileInputRef.current?.click()
+                                            }
+                                            className="text-sm font-medium"
+                                        >
+                                            Cambiar imagen
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <div
+                                        onClick={() =>
+                                            fileInputRef.current?.click()
+                                        }
+                                        className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-all"
+                                    >
+                                        <Upload
+                                            className="mx-auto mb-3 text-gray-400"
+                                            size={32}
+                                        />
+                                        <p className="text-sm text-gray-600 mb-1">
+                                            Haz clic para seleccionar una imagen
+                                        </p>
+                                    </div>
+                                )}
+
                                 <Input
+                                    ref={fileInputRef}
                                     type="file"
                                     accept="image/*"
-                                    ref={fileInputRef}
                                     onChange={(e) =>
                                         handleImageChange(
                                             e.target.files?.[0] || null
                                         )
                                     }
+                                    className="hidden"
                                 />
 
                                 {errors.questionImage && (
-                                    <p className="mt-1 text-xs text-redLight">
+                                    <p className="mt-2 text-sm text-red-600">
                                         {errors.questionImage}
                                     </p>
-                                )}
-
-                                {previewUrl && (
-                                    <img
-                                        src={previewUrl}
-                                        alt="Preview"
-                                        className="mt-2 max-h-40 rounded border"
-                                    />
                                 )}
                             </div>
 

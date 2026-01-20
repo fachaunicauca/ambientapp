@@ -46,7 +46,7 @@ export default function QuestionDetailsCard({
 
                 {/* Imagen de la Pregunta */}
                 {question.questionImageUrl && (
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                             Imagen
                         </dt>

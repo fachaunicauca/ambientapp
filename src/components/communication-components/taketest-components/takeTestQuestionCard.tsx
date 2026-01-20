@@ -18,7 +18,7 @@ export default function TakeTestQuestionCard({
     return (
         <div className="w-full bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
             {/* Número + título */}
-            <div className="mb-4">
+            <div className="mb-1">
                 <h2 className="text-sm text-gray-500 dark:text-gray-400">
                     Pregunta {index + 1}
                 </h2>
@@ -37,11 +37,11 @@ export default function TakeTestQuestionCard({
 
             {/* Imagen (si existe) */}
             {question.questionImageUrl && (
-                <div className="mb-6">
+                <div className="mb-6 flex justify-center">
                     <img
                         src={question.questionImageUrl}
                         alt="Imagen de la pregunta"
-                        className="max-w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                        className="w-4/12 rounded-lg border border-gray-200 dark:border-gray-700"
                     />
                 </div>
             )}

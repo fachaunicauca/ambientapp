@@ -21,7 +21,6 @@ export const getTestQuestionsPaged = async (
         });
 
         if (response.status === 200) {
-            console.log(response.data as PagedQuestions); 
             return response.data as PagedQuestions;
         }
 
@@ -52,7 +51,42 @@ export const saveQuestion = async (
     try {
         const microsApi = await microsApiServer();
         console.log(questionData);
-        const response = await microsApi.post(`/questions`, questionData);
+
+        const formData = new FormData();
+        
+        // Agregar campos simples
+        if(questionData.questionId){
+            formData.append('questionId', questionData.questionId.toString());
+        }
+        
+        formData.append('questionText', questionData.questionText);
+        formData.append('questionType', questionData.questionType);
+        formData.append('questionStructure', questionData.questionStructure);
+        formData.append('testId', questionData.testId.toString());
+        
+        // Agregar campos opcionales solo si tienen valor
+        if (questionData.questionTitle) {
+            formData.append('questionTitle', questionData.questionTitle);
+        }
+        
+        // Caso 1: Hay un nuevo archivo de imagen
+        if (questionData.questionImage) {
+            formData.append('questionImage', questionData.questionImage);
+        } 
+        // Caso 2: NO hay nuevo archivo, pero existe una imagen previa (mantenerla)
+        else if (questionData.questionImageId !== null && questionData.questionImageId !== undefined) {
+            formData.append('questionImageId', questionData.questionImageId.toString());
+            formData.append('questionImageUrl', questionData.questionImageUrl || '');
+        }
+        // Caso 3: No hay nuevo archivo y no hay imagen previa (no hacer nada)
+        
+        console.log('Enviando FormData:', formData);
+        
+        const response = await microsApi.post(`/questions`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
 
         if (response.status === 201) {
             return true;
@@ -85,7 +119,7 @@ export const saveQuestion = async (
             };
         }
 
-        return { general: `Error desconocido al guardar la pregunta. ${error}` };
+        return { general: `Error desconocido al guardar la pregunta. ${error} ${data}` };
     }
 };
 

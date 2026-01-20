@@ -71,7 +71,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
     }, [testId]);
 
     if (error) {
-        return <div className="text-redLight font-medium">{error}</div>;
+        return <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">{error}</div>;
     }
 
     return (

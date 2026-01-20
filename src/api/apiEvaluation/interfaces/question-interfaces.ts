@@ -2,6 +2,7 @@ export interface QuestionInfo{
     questionId: number;
     questionText: string;
     questionTitle: string | null;
+    questionImageId: number | null;
     questionImageUrl: string | null;
     questionImage: File | null;
     questionType: string;
