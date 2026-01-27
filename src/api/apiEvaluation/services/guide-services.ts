@@ -3,7 +3,6 @@
 import { microsApiServer } from "@/lib/axios";
 import { TestGuideRequest } from "../interfaces/guide-interfaces";
 import { AxiosError } from "axios";
-import { form } from "@heroui/theme";
 
 export const fetchFileData = async () => {
   try {
@@ -12,7 +11,7 @@ export const fetchFileData = async () => {
 
     const data = response.data;
 
-    return { success: true, files: data.testGuideList };
+    return { success: true, files: data };
   } catch (error) {
     const axiosError = AxiosError.from(error);
 

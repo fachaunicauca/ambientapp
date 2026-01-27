@@ -78,13 +78,9 @@ export default function Capacitacion() {
         setCurrentPage(0);
     };
 
-    const filteredData = guides.filter((item) =>
-        item.testGuideId.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
     const startIndex = currentPage * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const paginatedData = filteredData.slice(startIndex, endIndex);
+    const paginatedData = guides;
 
     return (
         <section>
@@ -133,7 +129,7 @@ export default function Capacitacion() {
                 )}
 
                 {/* Lista de archivos */}
-                {!loading && !error && (
+                {/* {!loading && !error && (
                     <ul className="space-y-3 mt-4">
                         {paginatedData.length > 0 ? (
                             paginatedData.map((guide, index) => (
@@ -178,25 +174,46 @@ export default function Capacitacion() {
                             </p>
                         )}
                     </ul>
-                )}
+                )} */}
 
                 {/* Paginación */}
-                {!loading && !error && (
-                    <PaginationControls
-                        currentPage={currentPage}
-                        totalPages={Math.ceil(
-                            filteredData.length / itemsPerPage
-                        )}
-                        onPageChange={setCurrentPage}
-                        actionText="Siguiente"
-                        disableNext={
-                            filteredData.length === 0 ||
-                            currentPage >=
-                                Math.ceil(filteredData.length / itemsPerPage) -
-                                    1
-                        }
-                    />
-                )}
+                {!loading &&
+                    !error && guides &&
+                    // Mostrar las guias almacenadas sin los paginationcontrols
+                    guides.map((guide, index) => (
+                        <FileItem
+                            key={index}
+                            file={{
+                                name: guide.testGuideId,
+                                url: guide.testGuideUrl,
+                                type: String(
+                                    guide.testGuideId.split(".").pop()
+                                ),
+                            }}
+                            onView={() => viewFile(guide)}
+                            onDelete={() => {}}
+                            deleteButton={
+                                <ConfirmDialog
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="text-red-500 hover:bg-red-100"
+                                        >
+                                            <Trash className="w-5 h-5" />
+                                        </Button>
+                                    }
+                                    onConfirm={() =>
+                                        handleDeleteFile(guide.testGuideId)
+                                    }
+                                    title="¿Eliminar archivo?"
+                                    description={`¿Estás seguro de que deseas eliminar "${guide.testGuideId}"? Esta acción no se puede deshacer.`}
+                                    confirmText="Eliminar"
+                                    confirmVariant="destructive"
+                                />
+                            }
+                        />
+                    ))}
             </div>
         </section>
     );
