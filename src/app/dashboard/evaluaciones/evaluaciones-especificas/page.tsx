@@ -19,8 +19,8 @@ export default function EvaluacionesEspecificas() {
     };
 
     return (
-        <div className="flex flex-col gap-8 mx-2 mt-4">
-            <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col gap-4 mx-2 mt-4">
+            <div className="flex items-center justify-between mb-2">
                 <Title title="Evaluaciones Específicas" />
 
                 <Button

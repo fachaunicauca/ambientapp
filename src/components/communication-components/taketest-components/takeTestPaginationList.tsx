@@ -84,9 +84,11 @@ export default function TakeTestsPaginationList() {
         if (!selectedTestId) {
             toast.error("No se ha seleccionado una evaluación.");
             return;
-        };
+        }
 
-        router.push(`/dashboard/comunicacion-riesgo/evaluacion/presentar?testId=${selectedTestId}`);
+        router.push(
+            `/dashboard/comunicacion-riesgo/evaluacion/presentar?testId=${selectedTestId}`
+        );
     };
 
     return (
@@ -132,8 +134,8 @@ export default function TakeTestsPaginationList() {
 
             {/* Header evaluaciones específicas */}
             <div className="flex items-center justify-between px-2">
-                <h3 className="font-bold text-lg text-gray-700">
-                    Evaluaciones especificas disponibles
+                <h3 className="font-semibold text-lg text-blueDark">
+                    Evaluaciones especificas activas
                 </h3>
 
                 {pagedData && (

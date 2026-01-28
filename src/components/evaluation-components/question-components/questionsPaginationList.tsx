@@ -27,6 +27,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
     const [selectedQuestion, setSelectedQuestion] =
         useState<QuestionInfo | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [pageInput, setPageInput] = useState<string>("1");
 
     const fetchQuestionsPage = async (page: number) => {
         setLoading(true);
@@ -70,8 +71,18 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         fetchQuestionsPage(0);
     }, [testId]);
 
+    useEffect(() => {
+        if (data) {
+            setPageInput(String(data.number + 1));
+        }
+    }, [data]);
+
     if (error) {
-        return <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">{error}</div>;
+        return (
+            <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
+                {error}
+            </div>
+        );
     }
 
     return (
@@ -124,13 +135,39 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
 
             {/* Paginación */}
             {data && data.totalPages > 1 && (
-                <div className="flex items-center justify-between py-6 mt-2 border-t border-gray-100">
-                    <p className="text-sm text-gray-500">
-                        Página{" "}
-                        <span className="font-bold text-gray-900">
-                            {data.number + 1}
-                        </span>{" "}
-                        de {data.totalPages}
+                <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+                    <p className="text-sm text-gray-700 flex items-center gap-2 font-medium">
+                        Página
+                        <input
+                            type="number"
+                            min={1}
+                            max={data.totalPages}
+                            value={pageInput}
+                            onChange={(e) => setPageInput(e.target.value)}
+                            onBlur={() => {
+                                const page = Number(pageInput);
+                                if (
+                                    !Number.isNaN(page) &&
+                                    page >= 1 &&
+                                    page <= data.totalPages &&
+                                    page - 1 !== currentPage
+                                ) {
+                                    fetchQuestionsPage(page - 1);
+                                } else {
+                                    setPageInput(String(currentPage + 1));
+                                }
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    e.currentTarget.blur();
+                                }
+                            }}
+                            className="w-16 text-center border border-gray-300 rounded-md px-2 py-1 text-gray-900
+                            bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
+                        <span className="text-gray-600">
+                            de <strong>{data.totalPages}</strong>
+                        </span>
                     </p>
 
                     <div className="flex gap-3">
@@ -138,10 +175,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                             variant="outline"
                             onClick={() => {
                                 fetchQuestionsPage(currentPage - 1);
-                                window.scrollTo({
-                                    top: 0,
-                                    behavior: "smooth",
-                                });
+                                window.scrollTo({ top: 0, behavior: "smooth" });
                             }}
                             disabled={data.first || loading}
                             className="gap-2"
@@ -154,10 +188,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                             variant="outline"
                             onClick={() => {
                                 fetchQuestionsPage(currentPage + 1);
-                                window.scrollTo({
-                                    top: 0,
-                                    behavior: "smooth",
-                                });
+                                window.scrollTo({ top: 0, behavior: "smooth" });
                             }}
                             disabled={data.last || loading}
                             className="gap-2"

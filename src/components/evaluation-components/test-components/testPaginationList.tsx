@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
     getTestsPaged,
     deleteTest,
-} from "@/api/apiEvaluation/services/test-services"; 
+} from "@/api/apiEvaluation/services/test-services";
 import { PagedTests } from "@/api/apiEvaluation/interfaces/test-interfaces";
 import { Button } from "@/components/ui/buttons/button";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
@@ -64,12 +64,9 @@ export default function TestsPaginationList() {
     }
 
     return (
-        <div className="flex flex-col gap-6 mx-2">
+        <div className="flex flex-col gap-2 mx-2">
             {/* Header */}
-            <div className="flex items-center justify-between px-2">
-                <h3 className="font-bold text-lg text-gray-700">
-                    Evaluaciones Disponibles
-                </h3>
+            <div className="flex justify-end px-2">
                 <span className="text-sm text-gray-500 font-medium">
                     Total: {data.totalElements}
                 </span>
@@ -77,7 +74,7 @@ export default function TestsPaginationList() {
 
             {/* Lista de Tests */}
             <div
-                className={`flex flex-col gap-4 transition-opacity duration-300 ${
+                className={`flex flex-col gap-1 transition-opacity duration-300 ${
                     loading ? "opacity-40 pointer-events-none" : "opacity-100"
                 }`}
             >
@@ -85,7 +82,11 @@ export default function TestsPaginationList() {
                     <TestListItem
                         key={test.testId}
                         testInfo={test}
-                        onView={(id) => router.push(`/dashboard/evaluaciones/evaluaciones-especificas/evaluacion?id=${id}`)}
+                        onView={(id) =>
+                            router.push(
+                                `/dashboard/evaluaciones/evaluaciones-especificas/evaluacion?id=${id}`
+                            )
+                        }
                         onDelete={handleDelete}
                     />
                 ))}

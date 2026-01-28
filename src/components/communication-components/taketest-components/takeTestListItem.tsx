@@ -1,6 +1,5 @@
 import { TestBasicInfo } from "@/api/apiEvaluation/interfaces/takeTest-interfaces";
-import { Button } from "@/components/ui/buttons/button";
-import { ClipboardCheck, PlayCircle } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 
 interface TakeTestListItemProps {
     testInfo: TestBasicInfo;
@@ -12,29 +11,31 @@ export const TakeTestListItem = ({
     viewTeacher = true,
 }: TakeTestListItemProps) => {
     return (
-        <div className="flex gap-4 items-start">
-            {/* Información básica del Test */}
-            <div className="flex gap-4 items-start mb-4 md:mb-0">
-                <div className="p-2 rounded-lg text-gray-600">
-                    <ClipboardCheck size={50}/>
-                </div>
+        <div className="flex items-start gap-4">
+            {/* Icono */}
+            <div className="flex items-center justify-center h-10 w-10 rounded-md bg-blueLight text-white">
+                <ClipboardList size={20} />
+            </div>
 
-                <div className="space-y-1">
-                    <h3 className="text-md font-bold text-gray-900">
-                        {testInfo.testTitle}
-                    </h3>
+            {/* Información */}
+            <div className="space-y-1">
+                <h3 className="text-base font-semibold text-blueDark">
+                    {testInfo.testTitle}
+                </h3>
 
-                    {/* Descripción completa siempre visible */}
-                    <p className="text-sm text-gray-500 whitespace-pre-line">
-                        {testInfo.testDescription || "Sin descripción"}
+                {/* Descripción completa */}
+                <p className="text-sm text-gray-500 whitespace-pre-line max-w-3xl">
+                    {testInfo.testDescription || "Sin descripción"}
+                </p>
+
+                {viewTeacher && (
+                    <p className="text-xs text-gray-400">
+                        Docente:{" "}
+                        <span className="font-medium">
+                            {testInfo.teacherEmail}
+                        </span>
                     </p>
-
-                    {viewTeacher && (
-                        <p className="text-xs text-gray-400">
-                            Docente: {testInfo.teacherEmail}
-                        </p>
-                    )}
-                </div>
+                )}
             </div>
         </div>
     );

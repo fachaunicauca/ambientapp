@@ -40,10 +40,10 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
                     <Button
                         variant="default"
                         onClick={() => setIsEditModalOpen(true)}
-                        className="w-2/12 items-center gap-2 "
+                        className="w-min items-center gap-2 "
                     >
                         <Pencil size={16} />
-                        Editar Información
+                        Editar evaluación
                     </Button>
                 )}
             </div>
@@ -57,7 +57,7 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
             {/* Detalles del Test */}
             {testInfo && <TestDetailsCard testInfo={testInfo} />}
 
-            <section className="border-t pt-8">
+            <section className="pt-8">
                 <QuestionsPaginationList testId={testId} onDelete={fetchData}/>
             </section>
 

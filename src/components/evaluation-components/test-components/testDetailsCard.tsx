@@ -5,6 +5,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/navigation/tooltip";
+import { TEST_STATE_LABELS } from "@/config/testConfig";
 
 import { Info } from "lucide-react";
 
@@ -110,13 +111,9 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
                         Estado
                     </dt>
                     <dd
-                        className={`text-lg font-bold ${
-                            testInfo.testState === 1
-                                ? "text-green-600"
-                                : "text-red-600"
-                        }`}
+                        className={`text-lg font-bold`}
                     >
-                        {testInfo.testState === 1 ? "Activo" : "Inactivo"}
+                        {TEST_STATE_LABELS[testInfo.testState]}
                     </dd>
                 </div>
             </dl>
