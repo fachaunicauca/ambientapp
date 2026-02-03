@@ -77,14 +77,6 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         }
     }, [data]);
 
-    if (error) {
-        return (
-            <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
-                {error}
-            </div>
-        );
-    }
-
     return (
         <div className="flex flex-col gap-6 mx-2">
             {/* Header */}
@@ -112,7 +104,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
             {/* Contenido */}
             {!data || data.content.length === 0 ? (
                 <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">
-                    No hay preguntas registradas.
+                    {error ? error : "No hay preguntas registradas."}
                 </div>
             ) : (
                 <div

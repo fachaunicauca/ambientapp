@@ -298,7 +298,7 @@ export default function QuestionFormModal({
                                 />
 
                                 {errors.questionImage && (
-                                    <p className="mt-2 text-sm text-red-600">
+                                    <p className="mt-2 text-sm text-redLight">
                                         {errors.questionImage}
                                     </p>
                                 )}

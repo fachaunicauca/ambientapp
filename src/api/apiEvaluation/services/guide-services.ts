@@ -13,7 +13,7 @@ export const fetchFileData = async () => {
 
     return { success: true, files: data };
   } catch (error) {
-    const axiosError = AxiosError.from(error);
+    const axiosError = error as AxiosError;
 
     if (!axiosError.status || axiosError.status !== 404) {
       throw new Error(`Error HTTP: ${axiosError.status}`);

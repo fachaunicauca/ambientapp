@@ -79,7 +79,7 @@ export const getGeneralTest = async (): Promise<TestBasicInfo | string> => {
 export const startTestAttempt = async (
     testId: number,
     studentEmail: string
-): Promise<TakeTestInfo | string> => {
+): Promise<TakeTestInfo | string | Record<string, string>> => {
     try {
         const microsApi = await microsApiServer();
 
@@ -97,14 +97,18 @@ export const startTestAttempt = async (
 
         if (axiosError.response) {
             const status = axiosError.response.status;
-            const message = axiosError.response.data as string;
 
-            if (status === 403 || status === 404 || status === 409) {
-                return message;
+            if (status === 404 || status === 409) {
+                return axiosError.response.data as string;
+            }
+
+            if (status === 403) {
+                return axiosError.response.data as Record<string, string>;
             }
 
             return `Error ${status}: ${
-                message || "Error al iniciar la evaluación."
+                (axiosError.response.data as string) ||
+                "Error al iniciar la evaluación."
             }`;
         }
 
@@ -136,11 +140,23 @@ export const scoreAndSaveStudentAttempt = async (
                 return message;
             }
 
+            if (status === 503) {
+                return (
+                    "Se ha perdido la conexión con el sistema. " +
+                    "Sus respuestan han sido guardadas, no cierre la pestaña e intente enviar nuevamente en unos minutos."
+                );
+            }
+
             return `Error ${status}: ${
-                message || "Error al calificar y guardar el intento."
+                message ||
+                "Ocurrio un error al calificar y guardar el intento." +
+                    "Sus respuestan han sido guardadas, no cierre la pestaña e intente enviar nuevamente en unos minutos."
             }`;
         }
 
-        return "Error desconocido al calificar y guardar el intento.";
+        return (
+            "Ocurrio un error desconocido al calificar y guardar el intento." +
+            "Sus respuestan han sido guardadas, no cierre la pestaña e intente enviar nuevamente en unos minutos."
+        );
     }
 };

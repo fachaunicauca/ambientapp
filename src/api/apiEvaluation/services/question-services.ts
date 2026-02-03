@@ -24,10 +24,6 @@ export const getTestQuestionsPaged = async (
             return response.data as PagedQuestions;
         }
 
-        if (response.status === 204) {
-            return response.data as string;
-        }
-
         throw new Error();
     } catch (error) {
         const axiosError = error as AxiosError;
@@ -35,6 +31,10 @@ export const getTestQuestionsPaged = async (
         if (axiosError.response) {
             const status = axiosError.response.status;
             const message = axiosError.response.data as string;
+            
+            if (status === 404) {
+                return message;
+            }
 
             return `Error ${status}: ${
                 message || "Error al obtener las preguntas."
@@ -144,10 +144,18 @@ export const deleteQuestionById = async (
             const message = axiosError.response.data as string;
 
             if (status === 404) {
-                return `Pregunta con ID ${questionId} no encontrada.`;
+                return message;
             }
+
+            if (status === 500) {
+                return message;
+            }
+
+            return `Error ${status}: ${
+                message || "Error desconocido."
+            }`;
         }
 
-        return `Error desconocido al eliminar la pregunta con ID ${questionId}.`;
+        return `Error desconocido al eliminar la pregunta con ID ${questionId}: ${error}`;
     }
 };

@@ -10,6 +10,8 @@ import { useAuthStore } from "@/store/authStore";
 import ConfirmDialog from "@/components/ui/modals/confirmDialog";
 import { Button } from "@/components/ui/buttons/button";
 import { useRouter, useSearchParams } from "next/navigation";
+import { TakeTestInfo } from "@/api/apiEvaluation/interfaces/takeTest-interfaces";
+import { START_ATTEMPT_ERROR_CODE } from "@/config/testConfig";
 
 export default function PresentarEvaluacion() {
     const searchParams = useSearchParams();
@@ -18,7 +20,7 @@ export default function PresentarEvaluacion() {
 
     const handleFatalError = (message: string) => {
         toast.info(message);
-        router.back();
+        router.replace("/dashboard/comunicacion-riesgo/evaluacion");
     };
 
     if (!testId) {
@@ -40,6 +42,19 @@ export default function PresentarEvaluacion() {
         responses,
     } = useStudentTestAttemptStore();
 
+    const handleAttemptNotAllowedError = (error: Record<string, string>) => {
+        if (
+            (error.code as START_ATTEMPT_ERROR_CODE) == "NO_REMAINING_ATTEMPTS"
+        ) {
+            router.replace(
+                `/dashboard/comunicacion-riesgo/evaluacion/presentar/sin-intentos?testId=${testId}&studentEmail=${studentEmail}`
+            );
+        } else {
+            toast.info(error.message);
+            router.replace("/dashboard/comunicacion-riesgo/evaluacion");
+        }
+    };
+
     useEffect(() => {
         const loadTest = async () => {
             if (testInfo?.testId === testId) {
@@ -54,9 +69,12 @@ export default function PresentarEvaluacion() {
                 if (clearAttempt) clearAttempt();
                 handleFatalError(result);
                 return;
+            } else if (typeof result === "object" && "code" in result) {
+                handleAttemptNotAllowedError(result as Record<string, string>);
+                return;
             }
 
-            startAttempt(studentEmail, result);
+            startAttempt(studentEmail, result as TakeTestInfo);
             setLoading(false);
         };
 
