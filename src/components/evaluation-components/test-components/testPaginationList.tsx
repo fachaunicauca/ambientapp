@@ -11,6 +11,7 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { TestListItem } from "./testListItem";
+import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
 
 export default function TestsPaginationList() {
     const router = useRouter();
@@ -24,9 +25,11 @@ export default function TestsPaginationList() {
         const result = await getTestsPaged(page, 5);
 
         if (typeof result !== "string") {
+            setError(undefined);
             setData(result);
             setCurrentPage(page);
         } else {
+            setData(null);
             setError(result);
         }
         setLoading(false);
@@ -34,12 +37,20 @@ export default function TestsPaginationList() {
 
     const handleDelete = async (id: number) => {
         setLoading(true);
+
         const result = await deleteTest(id);
+
         if (typeof result === "string") {
             setError(result);
         } else {
-            fetchTestsPage(currentPage);
+            // Si la pagina queda vacia despues de eliminar una pregunta, cargar la pagina anterior
+            if (data && data.content.length === 1 && currentPage > 0) {  
+                await fetchTestsPage(currentPage - 1);
+            }else{
+                await fetchTestsPage(currentPage);
+            }
         }
+
         setLoading(false);
     };
 
@@ -93,43 +104,16 @@ export default function TestsPaginationList() {
             </div>
 
             {/* Controles de Paginación */}
-            <div className="flex items-center justify-between py-6 mt-2 border-t border-gray-100">
-                <p className="text-sm text-gray-500">
-                    Página{" "}
-                    <span className="font-bold text-gray-900">
-                        {data.number + 1}
-                    </span>{" "}
-                    de {data.totalPages}
-                </p>
-
-                <div className="flex gap-3">
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            fetchTestsPage(currentPage - 1);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                        }}
-                        disabled={data.first || loading}
-                        className="gap-2"
-                    >
-                        <ChevronLeft size={18} />
-                        Anterior
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        onClick={() => {
-                            fetchTestsPage(currentPage + 1);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                        }}
-                        disabled={data.last || loading}
-                        className="gap-2"
-                    >
-                        Siguiente
-                        <ChevronRight size={18} />
-                    </Button>
-                </div>
-            </div>
+            {data && data.totalPages > 1 && (
+                <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={data.totalPages}
+                    first={data.first}
+                    last={data.last}
+                    loading={loading}
+                    onPageChange={fetchTestsPage}
+                />
+            )}
 
             {loading && (
                 <div className="fixed inset-0 bg-white/20 backdrop-blur-[1px] flex justify-center items-center z-50">

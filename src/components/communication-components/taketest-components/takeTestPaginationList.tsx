@@ -20,6 +20,7 @@ import {
 import { TakeTestListItem } from "./takeTestListItem";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/ui/modals/confirmDialog";
+import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
 
 export default function TakeTestsPaginationList() {
     const router = useRouter();
@@ -188,45 +189,16 @@ export default function TakeTestsPaginationList() {
                 )}
             </div>
 
-            {/* Paginación */}
-            {pagedData && (
-                <div className="flex items-center justify-between py-6 mt-2 border-t border-gray-100">
-                    <p className="text-sm text-gray-500">
-                        Página{" "}
-                        <span className="font-bold text-gray-900">
-                            {pagedData.number + 1}
-                        </span>{" "}
-                        de {pagedData.totalPages}
-                    </p>
-
-                    <div className="flex gap-3">
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                fetchTestsPage(currentPage - 1);
-                                window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
-                            disabled={pagedData.first || loadingPaged}
-                            className="gap-2"
-                        >
-                            <ChevronLeft size={18} />
-                            Anterior
-                        </Button>
-
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                fetchTestsPage(currentPage + 1);
-                                window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
-                            disabled={pagedData.last || loadingPaged}
-                            className="gap-2"
-                        >
-                            Siguiente
-                            <ChevronRight size={18} />
-                        </Button>
-                    </div>
-                </div>
+            {/* Controles de Paginación */}
+            {pagedData && pagedData.totalPages > 1 && (
+                <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={pagedData.totalPages}
+                    onPageChange={fetchTestsPage}
+                    loading={loadingPaged}
+                    first={pagedData.first}
+                    last={pagedData.last}
+                />
             )}
 
             {/* Loader global */}

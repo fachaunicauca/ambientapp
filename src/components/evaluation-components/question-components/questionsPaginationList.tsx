@@ -8,10 +8,11 @@ import {
     QuestionInfo,
 } from "@/api/apiEvaluation/interfaces/question-interfaces";
 import { Button } from "@/components/ui/buttons/button";
-import { ChevronLeft, ChevronRight, Loader2, Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import QuestionDetailsCard from "./questionDetailsCard";
 import QuestionFormModal from "./questionFormModal";
 import { toast } from "sonner";
+import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
 
 interface Props {
     testId: number;
@@ -27,7 +28,6 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
     const [selectedQuestion, setSelectedQuestion] =
         useState<QuestionInfo | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [pageInput, setPageInput] = useState<string>("1");
 
     const fetchQuestionsPage = async (page: number) => {
         setLoading(true);
@@ -38,6 +38,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
             setError(undefined);
         } else {
             setError(result);
+            setData(null);
         }
         setLoading(false);
     };
@@ -55,7 +56,12 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         if (typeof result === "string") {
             toast.error(result);
         } else {
-            await fetchQuestionsPage(currentPage);
+            // Si la pagina queda vacia despues de eliminar una pregunta, cargar la pagina anterior
+            if (data && data.content.length === 1 && currentPage > 0) {  
+                await fetchQuestionsPage(currentPage - 1);
+            } else {
+                await fetchQuestionsPage(currentPage);
+            }
             onDelete();
         }
 
@@ -70,12 +76,6 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
     useEffect(() => {
         fetchQuestionsPage(0);
     }, [testId]);
-
-    useEffect(() => {
-        if (data) {
-            setPageInput(String(data.number + 1));
-        }
-    }, [data]);
 
     return (
         <div className="flex flex-col gap-6 mx-2">
@@ -125,71 +125,16 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                 </div>
             )}
 
-            {/* Paginación */}
+            {/* Controles de Paginación */}
             {data && data.totalPages > 1 && (
-                <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
-                    <p className="text-sm text-gray-700 flex items-center gap-2 font-medium">
-                        Página
-                        <input
-                            type="number"
-                            min={1}
-                            max={data.totalPages}
-                            value={pageInput}
-                            onChange={(e) => setPageInput(e.target.value)}
-                            onBlur={() => {
-                                const page = Number(pageInput);
-                                if (
-                                    !Number.isNaN(page) &&
-                                    page >= 1 &&
-                                    page <= data.totalPages &&
-                                    page - 1 !== currentPage
-                                ) {
-                                    fetchQuestionsPage(page - 1);
-                                } else {
-                                    setPageInput(String(currentPage + 1));
-                                }
-                            }}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                    e.currentTarget.blur();
-                                }
-                            }}
-                            className="w-16 text-center border border-gray-300 rounded-md px-2 py-1 text-gray-900
-                            bg-white focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                        <span className="text-gray-600">
-                            de <strong>{data.totalPages}</strong>
-                        </span>
-                    </p>
-
-                    <div className="flex gap-3">
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                fetchQuestionsPage(currentPage - 1);
-                                window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
-                            disabled={data.first || loading}
-                            className="gap-2"
-                        >
-                            <ChevronLeft size={18} />
-                            Anterior
-                        </Button>
-
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                fetchQuestionsPage(currentPage + 1);
-                                window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
-                            disabled={data.last || loading}
-                            className="gap-2"
-                        >
-                            Siguiente
-                            <ChevronRight size={18} />
-                        </Button>
-                    </div>
-                </div>
+                <PaginationControls
+                    currentPage={currentPage}
+                    totalPages={data.totalPages}
+                    onPageChange={(page) => fetchQuestionsPage(page)}
+                    loading={loading}
+                    first={data.first}
+                    last={data.last}
+                />
             )}
 
             {/* Loader */}

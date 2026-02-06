@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import FileItem from "@/components/comunicationComponents/preparationComponent/fileItem";
 import SearchBar from "@/components/comunicationComponents/preparationComponent/searchBar";
-import PaginationControls from "@/components/comunicationComponents/testComponent/paginationControl";
 import Title from "@/components/ui/typography/title";
 import {
     TestGuide,

@@ -8,6 +8,7 @@ import {
     DialogTitle,
     DialogFooter,
     DialogClose,
+    DialogDescription
 } from "@/components/ui/modals/dialog";
 import { Button } from "@/components/ui/buttons/button";
 
@@ -40,12 +41,9 @@ export default function ConfirmDialog({
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>
-
-                {description && (
-                    <div className="py-2 text-sm text-gray-600">
-                        <p>{description}</p>
-                    </div>
-                )}
+                <DialogDescription>
+                        {description ? description : "¿Estás seguro de que deseas realizar esta acción?"}
+                </DialogDescription>
 
                 <DialogFooter className="mt-4 gap-2">
                     <DialogClose asChild>
