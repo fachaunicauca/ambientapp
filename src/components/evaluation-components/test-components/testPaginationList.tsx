@@ -61,7 +61,7 @@ export default function TestsPaginationList() {
     if (error) {
         return (
             <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
-                {error}
+                {error ? error : "Ocurrió un error al cargar las evaluaciones."}
             </div>
         );
     }

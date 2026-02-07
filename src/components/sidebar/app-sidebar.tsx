@@ -10,7 +10,8 @@ import {
     GraduationCap,
     TableProperties,
     X,
-    ClipboardCheck
+    ClipboardCheck,
+    BookOpen
 } from "lucide-react"
 
 import { NavMain } from "@/components/sidebar/nav-main"
@@ -72,6 +73,23 @@ const data = {
         },
         {
             id: 3,
+            title: "Curso",
+            url: '/dashboard/cursos',
+            icon: BookOpen,
+            items: [
+                
+                {
+                    title: "Estudiantes",
+                    url: "/dashboard/estudiantes",
+                },
+                {
+                    title: "Cursos",
+                    url: "/dashboard/cursos",
+                }
+            ],
+        },
+        {
+            id: 4,
             title: "Evaluaciones",
             url: '/dashboard/evaluaciones',
             icon: ClipboardCheck,
@@ -87,7 +105,7 @@ const data = {
             ],
         },
         {
-            id: 4,
+            id: 5,
             title: "Inventario",
             url: '/dashboard/inventario',
             icon: TableProperties,
@@ -99,7 +117,7 @@ const data = {
             ],
         },
         {
-            id: 5,
+            id: 6,
             title: "Sistema de gestión ambiental",
             url: "#",
             icon: Sprout,
@@ -123,7 +141,7 @@ const data = {
             ],
         },
         {
-            id: 6,
+            id: 7,
             title: "Comunicación de riesgo",
             url: "/dashboard/comunicacion-riesgo",
             icon: Skull,
@@ -147,7 +165,7 @@ const data = {
             ],
         },
         {
-            id: 7,
+            id: 8,
             title: "Guías de laboratorio",
             url: "#",
             icon: BookText,
@@ -183,7 +201,7 @@ const data = {
             ],
         },
         {
-            id: 8,
+            id: 9,
             title: "Plan de emergencia",
             url: "#",
             icon: Siren,
@@ -199,10 +217,10 @@ const data = {
 
 
 const ROLE_ACCESS_MAP = {
-    "ADMIN": [1, 2, 3, 4, 5, 6, 7, 8],
-    "TEACHER": [1, 2, 3, 4, 5, 6, 7, 8],
-    "STUDENT": [1, 5, 6, 7, 8],
-    "LABORATORY_WORKER": [1, 4, 5, 6, 7, 8],
+    "ADMIN": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "TEACHER": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "STUDENT": [1, 6, 7, 8, 9],
+    "LABORATORY_WORKER": [1, 4, 5, 6, 7, 8, 9],
 };
 
 const filterNavItemsByRole = (items: typeof data.navMain, roles: string[]) => {
