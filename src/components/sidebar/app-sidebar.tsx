@@ -73,7 +73,7 @@ const data = {
         },
         {
             id: 3,
-            title: "Curso",
+            title: "Cursos",
             url: '/dashboard/cursos',
             icon: BookOpen,
             items: [

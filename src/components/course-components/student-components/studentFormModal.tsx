@@ -1,4 +1,4 @@
-import { StudentInfo } from "@/api/apiStudents/interfaces/student-interfaces";
+import { StudentInfo } from "@/api/apiCourses/interfaces/student-interfaces";
 import { useEffect, useState } from "react";
 import {
     Dialog,
@@ -8,10 +8,10 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "../ui/modals/dialog";
-import { Input } from "../ui/form/input";
-import { Button } from "../ui/buttons/button";
-import { saveStudent } from "@/api/apiStudents/services/student-services";
+} from "../../ui/modals/dialog";
+import { Input } from "../../ui/form/input";
+import { Button } from "../../ui/buttons/button";
+import { saveStudent } from "@/api/apiCourses/services/student-services";
 
 interface StudentFormModalProps {
     isOpen: boolean;

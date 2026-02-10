@@ -23,6 +23,7 @@ export const routeList: Record<string, string> = {
     "/dashboard/comunicacion-riesgo/evaluacion/presentar/resultados": "Resultados",
     // Cursos
     "/dashboard/cursos": "Cursos",
+    "/dashboard/cursos/curso": "Curso",
     // Estudiantes
     "/dashboard/estudiantes": "Estudiantes",
 };

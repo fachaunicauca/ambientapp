@@ -23,14 +23,26 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
 
         if (typeof testResult === "string") {
             setError(testResult);
+            setTestInfo(undefined);
         } else {
             setTestInfo(testResult);
+            setError(undefined);
         }
     };
 
     useEffect(() => {
         fetchData();
     }, [testId]);
+
+    if (error) {
+        return (
+            <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
+                {error
+                    ? error
+                    : "Ocurrió un error al cargar la informacion de la evaluación."}
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col gap-2">
@@ -48,17 +60,11 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
                 )}
             </div>
 
-            {error && (
-                <div className="text-red-500 mb-4 font-medium">
-                    Error: {error}
-                </div>
-            )}
-
             {/* Detalles del Test */}
             {testInfo && <TestDetailsCard testInfo={testInfo} />}
 
             <section className="pt-8">
-                <QuestionsPaginationList testId={testId} onDelete={fetchData}/>
+                <QuestionsPaginationList testId={testId} onDelete={fetchData} />
             </section>
 
             {testInfo && (

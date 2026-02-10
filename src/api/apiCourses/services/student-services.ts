@@ -1,7 +1,10 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { PagedStudents, StudentInfo } from "../interfaces/student-interfaces";
+import {
+    PagedStudents,
+    StudentInfo,
+} from "../../apiCourses/interfaces/student-interfaces";
 import { AxiosError } from "axios";
 
 export const getStudentsPaged = async (

@@ -36,7 +36,7 @@ export default {
 				error: '#FF6D0A',
 				accesibility: '#249300',
 				neutroHover: '#F6F6F6',
-				neutroText: '#690007',
+				neutroText: '#454444',
 				security: '#E0E0FF',
 				card: {
 					DEFAULT: 'hsl(var(--card))',
