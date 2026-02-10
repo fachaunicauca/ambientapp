@@ -26,6 +26,7 @@ interface StudentsPaginationTableProps {
     onEdit?: (student: StudentInfo) => void;
     onDelete: (studentId: number) => void;
     deleteMessage: string;
+    subtitle?: string;
 }
 
 export default function StudentsPaginationTable({
@@ -37,6 +38,7 @@ export default function StudentsPaginationTable({
     onEdit,
     onDelete,
     deleteMessage,
+    subtitle,
 }: StudentsPaginationTableProps) {
     if (error || !data || data.content.length === 0) {
         return (
@@ -54,7 +56,7 @@ export default function StudentsPaginationTable({
                     Lista de estudiantes
                 </h2>
                 <p className="text-sm text-gray-500">
-                    Estudiantes registrados en el sistema
+                    {subtitle ? subtitle : "Estudiantes registrados en el sistema"}
                 </p>
             </div>
             <Table>
