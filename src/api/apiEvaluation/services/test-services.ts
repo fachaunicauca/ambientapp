@@ -129,7 +129,7 @@ export const saveTestInfo = async (
             };
         }
 
-        console.log(error);
+        console.log(axiosError.response);
         return {
             general: "Ocurrió un error inesperado al guardar la evaluación.",
         };

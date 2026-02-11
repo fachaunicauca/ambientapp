@@ -49,8 +49,12 @@ export default function PresentarEvaluacion() {
             router.replace(
                 `/dashboard/comunicacion-riesgo/evaluacion/presentar/sin-intentos?testId=${testId}&studentEmail=${studentEmail}`
             );
-        } else {
-            toast.info(error.message);
+        } else if((error.code as START_ATTEMPT_ERROR_CODE) == "ALREADY_PASSED") {
+            toast.success(error.message);
+            router.replace("/dashboard/comunicacion-riesgo/evaluacion");
+        }
+        else {
+            toast.error(error.message);
             router.replace("/dashboard/comunicacion-riesgo/evaluacion");
         }
     };

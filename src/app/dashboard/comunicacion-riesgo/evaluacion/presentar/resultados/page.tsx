@@ -33,8 +33,8 @@ export default function ResultadosEvaluacion() {
             }
 
             const attempt = buildAttemptPayload();
-            if (!attempt || attempt.studentResponses.length === 0) {
-                setError("No se encontraron respuestas para enviar.");
+            if (!attempt) {
+                setError("Ocurrio un error al obtener la informacion del intento.");
                 setLoading(false);
                 return;
             }

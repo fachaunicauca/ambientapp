@@ -21,6 +21,7 @@ export const routeList: Record<string, string> = {
     "/dashboard/evaluaciones/evaluaciones-especificas/evaluacion": "Evaluación",
     "/dashboard/comunicacion-riesgo/evaluacion/presentar": "Presentar Evaluación",
     "/dashboard/comunicacion-riesgo/evaluacion/presentar/resultados": "Resultados",
+    "/dashboard/comunicacion-riesgo/evaluacion/presentar/sin-intentos": "Sin intentos",
     // Cursos
     "/dashboard/cursos": "Cursos",
     "/dashboard/cursos/curso": "Curso",

@@ -34,7 +34,7 @@ export default function PresentarEvaluacionSinIntentos() {
                     <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:justify-center">
                         <Button
                             variant="secondary"
-                            className="w-full sm:w-auto border border-blueLight text-blueDark hover:bg-neutroHover"
+                            className="w-full sm:w-auto border border-blueLight text-blueDark hover:bg-gray-200 hover:text-blueDark"
                             onClick={() =>
                                 router.replace(
                                     "/dashboard/comunicacion-riesgo/evaluacion"
@@ -45,7 +45,7 @@ export default function PresentarEvaluacionSinIntentos() {
                         </Button>
 
                         <Button
-                            className="w-full sm:w-auto bg-blue hover:bg-blueDark text-white"
+                            className="w-full sm:w-auto bg-blue hover:bg-blueLight text-white"
                             onClick={() =>
                                 router.replace(
                                     "/dashboard/comunicacion-riesgo/evaluacion/solicitar-intentos"

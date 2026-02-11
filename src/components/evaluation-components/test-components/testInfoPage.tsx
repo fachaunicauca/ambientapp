@@ -74,6 +74,7 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
                     onClose={() => setIsEditModalOpen(false)}
                     initialData={testInfo}
                     teacherEmail={testInfo.teacherEmail}
+                    canModifyCourse={testInfo.testId !== 1}
                 />
             )}
         </div>

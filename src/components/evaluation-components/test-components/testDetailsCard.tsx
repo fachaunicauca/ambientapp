@@ -11,20 +11,30 @@ import { Info } from "lucide-react";
 
 export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
     return (
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700">
+        <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-100">
             {/* Descripción */}
-            <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            <div className="mb-6 pb-4 border-b border-gray-200 ">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
                     Descripción
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed">
                     {testInfo.testDescription ||
-                        "No hay una descripción detallada disponible para esta evaluación."}
+                        "No hay una descripción disponible para esta evaluación."}
                 </p>
+                <div className="flex items-center gap-2 text-sm mt-2">
+                    <span className="text-sm text-gray-900 font-semibold">
+                        Curso ID:
+                    </span>
+                    <span className="text-sm text-gray-700 leading-relaxed">
+                        {testInfo.courseId === 0
+                            ? "0 (Cualquier estudiante puede presentar la evaluacion)"
+                            : testInfo.courseId}
+                    </span>
+                </div>
             </div>
 
             {/* Titulo Parametros */}
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
                 Parametros de la Evaluación
             </h3>
 
@@ -32,10 +42,10 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                 {/* Duración */}
                 <div className="flex flex-col">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <dt className="text-sm font-medium text-gray-500 ">
                         Duración
                     </dt>
-                    <dd className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <dd className="text-lg font-semibold text-gray-900">
                         {testInfo.testDurationMinutes} minutos
                     </dd>
                 </div>
@@ -43,7 +53,7 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
                 {/* Número de Preguntas */}
                 <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <dt className="text-sm font-medium text-gray-500 ">
                             Número de Preguntas
                         </dt>
 
@@ -63,24 +73,24 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
                         </TooltipProvider>
                     </div>
 
-                    <dd className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <dd className="text-lg font-semibold text-gray-900 ">
                         {testInfo.testNumberOfQuestions}
                     </dd>
                 </div>
 
                 {/* Límite de Intentos */}
                 <div className="flex flex-col">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <dt className="text-sm font-medium text-gray-500">
                         Límite de Intentos
                     </dt>
-                    <dd className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <dd className="text-lg font-semibold text-gray-900">
                         {testInfo.testAttemptLimit}
                     </dd>
                 </div>
 
                 <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <dt className="text-sm font-medium text-gray-500">
                             Evaluación Periódica
                         </dt>
 
@@ -100,19 +110,17 @@ export const TestDetailsCard = ({ testInfo }: { testInfo: TestInfo }) => {
                         </TooltipProvider>
                     </div>
 
-                    <dd className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <dd className="text-lg font-semibold text-gray-900">
                         {testInfo.isPeriodic ? "Sí" : "No"}
                     </dd>
                 </div>
 
                 {/* Estado */}
                 <div className="flex flex-col">
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <dt className="text-sm font-medium text-gray-500">
                         Estado
                     </dt>
-                    <dd
-                        className={`text-lg font-bold`}
-                    >
+                    <dd className={`text-lg font-bold`}>
                         {TEST_STATE_LABELS[testInfo.testState]}
                     </dd>
                 </div>

@@ -8,6 +8,7 @@ import { TEST_STATE_LABELS } from "@/config/testConfig";
 
 interface TestFormModalProps {
     isOpen: boolean;
+    canModifyCourse?: boolean;
     onClose: () => void;
     onSuccess: () => void;
     initialData?: TestInfo | null;
@@ -16,6 +17,7 @@ interface TestFormModalProps {
 
 export default function TestFormModal({
     isOpen,
+    canModifyCourse = true,
     onClose,
     onSuccess,
     initialData,
@@ -29,6 +31,7 @@ export default function TestFormModal({
         testAttemptLimit: 1,
         testState: 1,
         isPeriodic: false,
+        courseId: 1,
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -43,6 +46,7 @@ export default function TestFormModal({
                 testAttemptLimit: initialData.testAttemptLimit,
                 testState: initialData.testState,
                 isPeriodic: initialData.isPeriodic,
+                courseId: initialData.courseId,
             });
         } else {
             setFormData({
@@ -53,6 +57,7 @@ export default function TestFormModal({
                 testAttemptLimit: 1,
                 testState: 0,
                 isPeriodic: false,
+                courseId: 1,
             });
         }
         setErrors({});
@@ -150,6 +155,36 @@ export default function TestFormModal({
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                                     rows={3}
                                 />
+                            </div>
+
+                            {/* ID del Curso */}
+                            <div>
+                                <label className="block mb-1 text-sm font-medium text-gray-700">
+                                    Curso ID*
+                                    {!canModifyCourse && (
+                                        <span className="text-xs font-normal text-gray-400 font-italic">
+                                            (No se puede modificar el Curso ID
+                                            de esta evaluación.)
+                                        </span>
+                                    )}
+                                </label>
+                                <Input
+                                    type="number"
+                                    min="0"
+                                    value={formData.courseId}
+                                    disabled={!canModifyCourse}
+                                    onChange={(e) =>
+                                        handleChange("courseId", e.target.value)
+                                    }
+                                    className={
+                                        errors.courseId ? "border-redLight" : ""
+                                    }
+                                />
+                                {errors.courseId && (
+                                    <p className="mt-1 text-xs text-redLight">
+                                        {errors.courseId}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Duración */}
@@ -304,7 +339,11 @@ export default function TestFormModal({
                                 </label>
                             </div>
                         </div>
-
+                        {errors.general && (
+                            <p className="mt-4 text-sm text-redLight">
+                                {errors.general}
+                            </p>
+                        )}
                         <div className="mt-6 flex gap-4 justify-end">
                             <Dialog.Close asChild>
                                 <Button
@@ -318,12 +357,6 @@ export default function TestFormModal({
                                 {initialData ? "Guardar Cambios" : "Crear Test"}
                             </Button>
                         </div>
-
-                        {errors.general && (
-                            <p className="mt-4 text-sm text-red-500">
-                                {errors.general}
-                            </p>
-                        )}
                     </div>
                 </Dialog.Content>
             </Dialog.Portal>

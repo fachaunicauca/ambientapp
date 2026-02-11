@@ -8,6 +8,7 @@ export interface TestInfo {
     testAttemptLimit: number;
     testState: number;
     isPeriodic: boolean;
+    courseId: number;
 }
 
 export interface PagedTests {
