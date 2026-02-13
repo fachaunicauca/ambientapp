@@ -1,5 +1,6 @@
 "use client";
 
+import { requestAttemptsReset } from "@/api/apiEvaluation/services/testResults-services";
 import { Button } from "@/components/ui/buttons/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -13,7 +14,20 @@ export default function PresentarEvaluacionSinIntentos() {
     if (!testId || !studentEmail) {
         toast.error("No se pudo identificar la evaluación o el estudiante.");
         router.replace("/dashboard/comunicacion-riesgo/evaluacion");
+        return;
     }
+
+    const handleRequestAttempts = () => {
+        const result = requestAttemptsReset(testId, studentEmail);
+
+        if (typeof result === "string") {
+            toast.error(result);
+        } else {
+            toast.success("Solicitud de intentos enviada correctamente.");
+        }
+
+        router.replace("/dashboard/comunicacion-riesgo/evaluacion");
+    };
 
     return (
         <div className="flex min-h-[70vh] items-center justify-center px-4">
@@ -46,11 +60,7 @@ export default function PresentarEvaluacionSinIntentos() {
 
                         <Button
                             className="w-full sm:w-auto bg-blue hover:bg-blueLight text-white"
-                            onClick={() =>
-                                router.replace(
-                                    "/dashboard/comunicacion-riesgo/evaluacion/solicitar-intentos"
-                                )
-                            }
+                            onClick={handleRequestAttempts}
                         >
                             Solicitar intentos
                         </Button>
