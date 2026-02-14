@@ -1,12 +1,3 @@
-export interface StudentTestConfig {
-    studentTestConfigId: number;
-    studentEmail: string;
-    attemptsUsed: number;
-    totalAttemptsUsed?: number;
-    lastAttemptAt?: string;
-    finalScore: number;
-}
-
 export interface AttemptRequestInfo {
     studentTestConfigId: number;
     studentEmail: string;
@@ -24,4 +15,23 @@ export interface PagedAttemptRequests {
     first: boolean;
     numberOfElements: number;
     empty: boolean;
+}
+
+export interface StudentTestResult {
+    studentId: number;
+    studentFirstName: string;
+    studentLastName: string;
+    studentEmail: string;
+    totalAttemptsUsed: number;
+    finalScore: number;
+}
+
+export interface PagedStudentsResults {
+    content: StudentTestResult[];
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
+    first: boolean;
+    last: boolean;
 }

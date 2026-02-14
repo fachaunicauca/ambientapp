@@ -5,7 +5,10 @@ import { Loader2 } from "lucide-react";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
 import { AttemptRequestListItem } from "./attemptRequestListItem";
 import { PagedAttemptRequests } from "@/api/apiEvaluation/interfaces/testResults-interfaces";
-import { getPendingAttemptRequests, resetStudentAttempts } from "@/api/apiEvaluation/services/testResults-services";
+import {
+    getPendingAttemptRequests,
+    resetStudentAttempts,
+} from "@/api/apiEvaluation/services/testResults-services";
 import { toast } from "sonner";
 
 interface AttemptRequestsPaginationListProps {
@@ -45,16 +48,16 @@ export default function AttemptRequestsPaginationList({
         if (typeof result === "string") {
             toast.error(result);
         } else {
-             // Si la pagina queda vacia despues de solucionar una solicitud, cargar la pagina anterior
-             if (data && data.content.length === 1 && currentPage > 0) {  
+            // Si la pagina queda vacia despues de solucionar una solicitud, cargar la pagina anterior
+            if (data && data.content.length === 1 && currentPage > 0) {
                 await fetchRequestsPage(currentPage - 1);
-             }else{
+            } else {
                 await fetchRequestsPage(currentPage);
-             }
+            }
         }
 
         setLoading(false);
-    }
+    };
 
     useEffect(() => {
         if (testId) {
@@ -62,18 +65,17 @@ export default function AttemptRequestsPaginationList({
         }
     }, [testId]);
 
-    if (error) {
+    if (error || !data || data.content.length === 0) {
         return (
-            <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
-                {error}
-            </div>
-        );
-    }
-
-    if (!data || data.content.length === 0) {
-        return (
-            <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400 mx-2">
-                No hay solicitudes pendientes para esta evaluación.
+            <div className="flex flex-col gap-4 mx-2">
+                <h2 className="text-lg font-semibold text-gray-700">
+                    Solicitudes Pendientes
+                </h2>
+                <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
+                    {error
+                        ? error
+                        : "No hay solicitudes pendientes para esta evaluación."}
+                </div>
             </div>
         );
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import AttemptRequestsPaginationList from "@/components/evaluation-components/results-components/attemptRequestPaginationList";
+import StudentsResultsPaginationTable from "@/components/evaluation-components/results-components/studentsResultsPaginationTable";
 import Title from "@/components/ui/typography/title";
 import { useSearchParams } from "next/navigation";
 
@@ -15,6 +16,8 @@ export default function EvaluacionResultados() {
             </div>
 
             <AttemptRequestsPaginationList testId={testId} />
+
+            <StudentsResultsPaginationTable testId={testId} />
         </div>
     );
 }

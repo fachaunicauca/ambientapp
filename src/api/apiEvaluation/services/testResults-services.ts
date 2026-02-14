@@ -1,7 +1,10 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { PagedAttemptRequests } from "../interfaces/testResults-interfaces";
+import {
+    PagedAttemptRequests,
+    PagedStudentsResults,
+} from "../interfaces/testResults-interfaces";
 import { AxiosError } from "axios";
 
 export const getPendingAttemptRequests = async (
@@ -114,5 +117,42 @@ export const resetStudentAttempts = async (
         }
 
         return `Error desconocido al restablecer los intentos del estudiante ${studentEmail} en el test con ID ${testId}.`;
+    }
+};
+
+export const getTestResultsPaged = async (
+    testId: number,
+    page: number,
+    size: number
+): Promise<PagedStudentsResults | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const response = await microsApi.get(`/tests/results/${testId}`, {
+            params: { page, size },
+        });
+
+        if (response.status === 200) {
+            return response.data as PagedStudentsResults;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            if (axiosError.response.status === 404) {
+                return (
+                    (axiosError.response.data as string) ||
+                    "No se encontró la evaluación o el curso no tiene estudiantes (404)."
+                );
+            }
+
+            return `Error ${axiosError.response.status}: ${
+                axiosError.response.data || "Error del servidor."
+            }`;
+        }
+
+        return `Error desconocido al obtener los resultados del test con id ${testId}.`;
     }
 };
