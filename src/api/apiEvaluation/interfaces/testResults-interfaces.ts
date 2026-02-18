@@ -1,3 +1,5 @@
+import { number } from "zod";
+
 export interface AttemptRequestInfo {
     studentTestConfigId: number;
     studentEmail: string;
@@ -34,4 +36,13 @@ export interface PagedStudentsResults {
     number: number;
     first: boolean;
     last: boolean;
+}
+
+export interface TestStats {
+    totalTaken: number;
+    totalPassed: number;
+    totalFailed: number;
+    totalNotTaken: number | null;
+    averageScore: number;
+    standardDeviation: number;
 }

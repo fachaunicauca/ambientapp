@@ -4,6 +4,7 @@ import { microsApiServer } from "@/lib/axios";
 import {
     PagedAttemptRequests,
     PagedStudentsResults,
+    TestStats,
 } from "../interfaces/testResults-interfaces";
 import { AxiosError } from "axios";
 
@@ -154,5 +155,38 @@ export const getTestResultsPaged = async (
         }
 
         return `Error desconocido al obtener los resultados del test con id ${testId}.`;
+    }
+};
+
+export const getTestStats = async (
+    testId: number
+): Promise<TestStats | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const response = await microsApi.get(`/tests/results/${testId}/stats`);
+
+        if (response.status === 200) {
+            return response.data as TestStats;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            if (axiosError.response.status === 404) {
+                return (
+                    (axiosError.response.data as string) ||
+                    "No se encontró la evaluación (404)."
+                );
+            }
+
+            return `Error ${axiosError.response.status}: ${
+                axiosError.response.data || "Error del servidor."
+            }`;
+        }
+
+        return `Error desconocido al obtener las estadísticas del test con id ${testId}.`;
     }
 };

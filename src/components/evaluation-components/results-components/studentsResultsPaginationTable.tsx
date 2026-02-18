@@ -56,13 +56,16 @@ export default function StudentsResultsPaginationTable({
     }
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 mb-8">
             <div className="border rounded-md overflow-hidden max-w-5xl mx-auto w-full">
                 {/* Header */}
-                <div className="px-4 py-3 border-b bg-gray-50">
+                <div className="px-4 py-3 border-b bg-gray-50 flex justify-between items-center">
                     <h2 className="text-lg font-semibold text-gray-800">
                         Resultados
                     </h2>
+                    <span className="text-sm text-gray-600">
+                        Total: {data.totalElements}
+                    </span>
                 </div>
 
                 <Table>
