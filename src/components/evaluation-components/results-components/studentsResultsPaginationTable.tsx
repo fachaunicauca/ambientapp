@@ -30,7 +30,7 @@ export default function StudentsResultsPaginationTable({
     const fetchResults = async (page: number) => {
         setLoading(true);
 
-        const response = await getTestResultsPaged(testId, page, 10);
+        const response = await getTestResultsPaged(testId, page, 20);
 
         if (typeof response === "string") {
             setError(response);
@@ -81,7 +81,7 @@ export default function StudentsResultsPaginationTable({
                                 Correo electrónico
                             </TableHead>
                             <TableHead className="font-bold text-gray-800 text-center">
-                                Intentos usados
+                                Total Intentos usados
                             </TableHead>
                             <TableHead className="font-bold text-gray-800 text-center">
                                 Nota final

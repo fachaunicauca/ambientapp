@@ -29,7 +29,7 @@ export const CourseListItem = ({
                     </h3>
 
                     <p className="text-sm text-gray-500 whitespace-pre-line max-w-3xl">
-                        {courseInfo.courseDescription || "Sin descripción"}
+                        Grupo: {courseInfo.courseGroup || "Sin Grupo"}
                     </p>
 
                     <p className="text-xs text-gray-400">

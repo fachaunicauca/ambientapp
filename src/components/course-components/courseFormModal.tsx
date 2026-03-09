@@ -30,7 +30,7 @@ export default function CourseFormModal({
 }: CourseFormModalProps) {
     const [formData, setFormData] = useState({
         courseName: "",
-        courseDescription: "",
+        courseGroup: "",
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -39,12 +39,12 @@ export default function CourseFormModal({
         if (initialData) {
             setFormData({
                 courseName: initialData.courseName,
-                courseDescription: initialData.courseDescription,
+                courseGroup: initialData.courseGroup,
             });
         } else {
             setFormData({
                 courseName: "",
-                courseDescription: "",
+                courseGroup: "",
             });
         }
 
@@ -59,7 +59,7 @@ export default function CourseFormModal({
         const submitData: any = {
             courseName: formData.courseName.trim(),
             teacherEmail: teacherEmail,
-            courseDescription: formData.courseDescription.trim(),
+            courseGroup: formData.courseGroup.trim().toUpperCase(),
         };
 
         if (initialData) {
@@ -115,17 +115,22 @@ export default function CourseFormModal({
                     )}
                 </div>
 
-                {/* Descripción */}
+                {/* Grupo */}
                 <div>
                     <label className="block mb-1 text-sm font-medium text-gray-700">
-                        Descripción
+                        Grupo
                     </label>
                     <Input
-                        value={formData.courseDescription}
+                        value={formData.courseGroup}
                         onChange={(e) =>
-                            handleChange("courseDescription", e.target.value)
+                            handleChange("courseGroup", e.target.value)
                         }
                     />
+                    {errors.courseGroup && (
+                        <p className="mt-1 text-xs text-redLight">
+                            {errors.courseGroup}
+                        </p>
+                    )}
                 </div>
 
                 <DialogFooter className="mt-6 gap-4">

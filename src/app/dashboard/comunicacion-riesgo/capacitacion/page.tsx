@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import FileItem from "@/components/comunicationComponents/preparationComponent/fileItem";
-import SearchBar from "@/components/comunicationComponents/preparationComponent/searchBar";
+import SearchBar from "@/components/ui/navigation/searchBar";
 import Title from "@/components/ui/typography/title";
 import {
     TestGuide,
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/buttons/button";
 import { Trash, Upload } from "lucide-react";
 import UploadGuideModal from "@/components/comunicationComponents/preparationComponent/uploadGuideModal";
 import ConfirmDialog from "@/components/ui/modals/confirmDialog";
+import { QUESTION_TYPE_LABELS } from "@/config/testConfig";
 
 export default function Capacitacion() {
     const router = useRouter();
@@ -78,8 +79,6 @@ export default function Capacitacion() {
     };
 
     const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedData = guides;
 
     return (
         <section>
@@ -98,6 +97,7 @@ export default function Capacitacion() {
                     <SearchBar
                         onSearch={handleSearch}
                         placeholder="Nombre del archivo"
+                        filters={QUESTION_TYPE_LABELS}
                     />
 
                     <Button

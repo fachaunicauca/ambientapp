@@ -2,7 +2,7 @@ export interface CourseInfo {
     courseId: number;
     courseName: string;
     teacherEmail: string;
-    courseDescription: string;
+    courseGroup: string;
 }
 
 export interface PagedCourses {

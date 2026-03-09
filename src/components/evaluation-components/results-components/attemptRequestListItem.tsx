@@ -34,7 +34,7 @@ export const AttemptRequestListItem = ({
             {/* Métricas */}
             <div className="grid grid-cols-2 gap-1">
                 <div className="rounded-md p-1">
-                    <p className="text-xs font-medium mb-0.5">Intentos</p>
+                    <p className="text-xs font-medium mb-0.5">Total Intentos</p>
                     <p className="text-xl font-bold">
                         {attemptRequestInfo.totalAttemptsUsed}
                     </p>

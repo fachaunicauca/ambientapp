@@ -104,19 +104,26 @@ export default function Curso() {
     };
 
     const handleUnenrollStudent = async (studentId: number) => {
-        if(!studentId || !courseInfo) {
+        if (!studentId || !courseInfo) {
             toast.error("Id del estudiante o Curso no proporcionado.");
             return;
         }
 
-        const result = await unenrollStudentFromCourse(studentId, courseInfo.courseId);
+        const result = await unenrollStudentFromCourse(
+            studentId,
+            courseInfo.courseId
+        );
 
         if (result === true) {
             toast.success("Estudiante removido del curso exitosamente.");
 
-            if (students && students.content.length === 1 && currentStudentsPage > 0) {
+            if (
+                students &&
+                students.content.length === 1 &&
+                currentStudentsPage > 0
+            ) {
                 setCurrentStudentsPage((prev) => prev - 1);
-            } else{
+            } else {
                 fetchStudents(currentStudentsPage);
             }
             return;
@@ -159,13 +166,18 @@ export default function Curso() {
                     </span>
                 </div>
 
-                <p className="text-sm text-gray-700 leading-relaxed w-11/12">
-                    {courseInfo?.courseDescription || (
-                        <span className="italic text-gray-400">
-                            Sin descripción
-                        </span>
-                    )}
-                </p>
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-600">
+                        Grupo:
+                    </span>
+                    <span className="text-sm font-semibold text-gray-800">
+                        {courseInfo?.courseGroup || (
+                            <span className="italic text-gray-400">
+                                Sin grupo
+                            </span>
+                        )}
+                    </span>
+                </div>
 
                 <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                     <span className="text-sm text-gray-500">Docente:</span>
