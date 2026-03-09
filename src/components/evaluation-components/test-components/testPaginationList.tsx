@@ -12,6 +12,10 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { TestListItem } from "./testListItem";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
+import SearchBar from "@/components/ui/navigation/searchBar";
+import { TESTS_FILTERS } from "@/config/testConfig";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "sonner";
 
 export default function TestsPaginationList() {
     const router = useRouter();
@@ -19,10 +23,25 @@ export default function TestsPaginationList() {
     const [error, setError] = useState<string>();
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
+    const isAdmin =
+        useAuthStore.getState().profile?.roles?.includes("ADMIN") ?? false;
 
-    const fetchTestsPage = async (page: number) => {
+    const [activeFilter, setActiveFilter] = useState<{
+        key?: string;
+        value?: string;
+    }>({});
+
+    const fetchTestsPage = async (
+        page: number,
+        filterKey?: string,
+        filterValue?: string
+    ) => {
         setLoading(true);
-        const result = await getTestsPaged(page, 5);
+
+        const result =
+            filterKey && filterValue
+                ? await getTestsPaged(page, 5, filterKey, filterValue)
+                : await getTestsPaged(page, 5);
 
         if (typeof result !== "string") {
             setError(undefined);
@@ -35,22 +54,43 @@ export default function TestsPaginationList() {
         setLoading(false);
     };
 
+    const handleSearch = (value: string, filterKey?: string) => {
+        if (filterKey === "teacherEmail" && isAdmin === false) {
+            toast.error(
+                "Solamente el administrador puede filtrar por docentes."
+            );
+        } else {
+            const newFilter = { key: filterKey, value };
+            setActiveFilter(newFilter);
+            fetchTestsPage(0, filterKey, value);
+        }
+    };
+
+    const handlePageChange = (page: number) => {
+        fetchTestsPage(page, activeFilter.key, activeFilter.value);
+    };
+
     const handleDelete = async (id: number) => {
         setLoading(true);
-
         const result = await deleteTest(id);
 
         if (typeof result === "string") {
             setError(result);
         } else {
-            // Si la pagina queda vacia despues de eliminar una pregunta, cargar la pagina anterior
-            if (data && data.content.length === 1 && currentPage > 0) {  
-                await fetchTestsPage(currentPage - 1);
-            }else{
-                await fetchTestsPage(currentPage);
+            if (data && data.content.length === 1 && currentPage > 0) {
+                await fetchTestsPage(
+                    currentPage - 1,
+                    activeFilter.key,
+                    activeFilter.value
+                );
+            } else {
+                await fetchTestsPage(
+                    currentPage,
+                    activeFilter.key,
+                    activeFilter.value
+                );
             }
         }
-
         setLoading(false);
     };
 
@@ -58,61 +98,71 @@ export default function TestsPaginationList() {
         fetchTestsPage(0);
     }, []);
 
-    if (error) {
-        return (
-            <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
-                {error ? error : "Ocurrió un error al cargar las evaluaciones."}
-            </div>
-        );
-    }
-
-    if (!data || data.content.length === 0) {
-        return (
-            <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400 mx-2">
-                No hay evaluaciones registradas.
-            </div>
-        );
-    }
-
     return (
-        <div className="flex flex-col gap-2 mx-2">
-            {/* Header */}
-            <div className="flex justify-end px-2">
-                <span className="text-sm text-gray-500 font-medium">
-                    Total: {data.totalElements}
-                </span>
-            </div>
+        <div className="flex flex-col gap-4 mx-2">
+            <SearchBar
+                placeholder="Buscar evaluación..."
+                filters={TESTS_FILTERS}
+                onSearch={handleSearch}
+            />
 
-            {/* Lista de Tests */}
-            <div
-                className={`flex flex-col gap-1 transition-opacity duration-300 ${
-                    loading ? "opacity-40 pointer-events-none" : "opacity-100"
-                }`}
-            >
-                {data.content.map((test) => (
-                    <TestListItem
-                        key={test.testId}
-                        testInfo={test}
-                        onView={(id) =>
-                            router.push(
-                                `/dashboard/evaluaciones/evaluaciones-especificas/evaluacion?id=${id}`
-                            )
-                        }
-                        onDelete={handleDelete}
-                    />
-                ))}
-            </div>
+            {error && (
+                <div className="text-center p-6 text-xl text-gray-400">
+                    {error}
+                </div>
+            )}
 
-            {/* Controles de Paginación */}
-            {data && data.totalPages > 1 && (
-                <PaginationControls
-                    currentPage={currentPage}
-                    totalPages={data.totalPages}
-                    first={data.first}
-                    last={data.last}
-                    loading={loading}
-                    onPageChange={fetchTestsPage}
-                />
+            {!error && (!data || data.content.length === 0) && (
+                <div className="text-center p-6 text-xl text-gray-400">
+                    No hay evaluaciones registradas.
+                </div>
+            )}
+
+            {data && data.content.length > 0 && (
+                <>
+                    <div className="flex items-center justify-between px-2">
+                        <span className="text-sm text-gray-500">
+                            {activeFilter.value?.trim()
+                                ? "Resultados de búsqueda"
+                                : "Evaluaciones almacenadas"}
+                        </span>
+                        <span className="text-sm text-gray-500 font-medium">
+                            Total: {data.totalElements}
+                        </span>
+                    </div>
+
+                    <div
+                        className={`flex flex-col gap-1 transition-opacity duration-300 ${
+                            loading
+                                ? "opacity-40 pointer-events-none"
+                                : "opacity-100"
+                        }`}
+                    >
+                        {data.content.map((test) => (
+                            <TestListItem
+                                key={test.testId}
+                                testInfo={test}
+                                onView={(id) =>
+                                    router.push(
+                                        `/dashboard/evaluaciones/evaluaciones-especificas/evaluacion?id=${id}`
+                                    )
+                                }
+                                onDelete={handleDelete}
+                            />
+                        ))}
+                    </div>
+
+                    {data.totalPages > 1 && (
+                        <PaginationControls
+                            currentPage={currentPage}
+                            totalPages={data.totalPages}
+                            first={data.first}
+                            last={data.last}
+                            loading={loading}
+                            onPageChange={handlePageChange}
+                        />
+                    )}
+                </>
             )}
 
             {loading && (

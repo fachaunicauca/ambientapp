@@ -37,13 +37,21 @@ export const getTestInfo = async (
 
 export const getTestsPaged = async (
     page: number,
-    size: number
+    size: number,
+    filterKey?: string,
+    filterValue?: string
 ): Promise<PagedTests | string> => {
     try {
         const microsApi = await microsApiServer();
         const response = await microsApi.get(`/tests`, {
-            params: { page, size },
+            params: {
+                page: page,
+                size: size,
+                ...(filterKey && { filterKey }),
+                ...(filterValue && { filterValue }),
+            },
         });
+        console.log("params enviados:", { page, size, filterKey, filterValue });
 
         if (response.status === 200) {
             const data: PagedTests = response.data;

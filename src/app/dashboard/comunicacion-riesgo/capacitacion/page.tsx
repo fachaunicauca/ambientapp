@@ -96,8 +96,7 @@ export default function Capacitacion() {
                 <div className="flex justify-between items-center">
                     <SearchBar
                         onSearch={handleSearch}
-                        placeholder="Nombre del archivo"
-                        filters={QUESTION_TYPE_LABELS}
+                        placeholder="Buscar guía..."
                     />
 
                     <Button
@@ -177,7 +176,8 @@ export default function Capacitacion() {
 
                 {/* Paginación */}
                 {!loading &&
-                    !error && guides &&
+                    !error &&
+                    guides &&
                     // Mostrar las guias almacenadas sin los paginationcontrols
                     guides.map((guide, index) => (
                         <FileItem

@@ -26,7 +26,15 @@ export default function SearchBar({
     };
 
     const handleSearch = () => {
-        onSearch(searchValue, selectedFilter);
+        let filterKey = selectedFilter;
+
+        // Si hay filtros disponibles y no hay ninguno seleccionado, toma el primero
+        if (filters && !filterKey && searchValue.trim()) {
+            filterKey = Object.keys(filters)[0];
+            setSelectedFilter(filterKey);
+        }
+
+        onSearch(searchValue, filterKey);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -41,7 +49,7 @@ export default function SearchBar({
     };
 
     return (
-        <div className="flex items-center w-3/6 border border-gray-300 rounded-md focus-within:border-blue focus-within:ring-1 focus-within:ring-blue bg-white">
+        <div className="flex items-center w-4/6 h-12 border border-gray-300 rounded-md focus-within:border-blue focus-within:ring-1 focus-within:ring-blue bg-white">
             {filters && (
                 <div className="relative border-r border-gray-300">
                     <Button
@@ -49,7 +57,7 @@ export default function SearchBar({
                         variant="ghost"
                         size="sm"
                         onClick={() => setShowFilters(!showFilters)}
-                        className="flex items-center gap-1 text-gray-600 rounded-r-none"
+                        className="flex items-center gap-1 text-gray-600 rounded-r-none text-sm"
                     >
                         <SlidersHorizontal className="w-4 h-4" />
                         {selectedFilter ? filters[selectedFilter] : "Filtros"}
