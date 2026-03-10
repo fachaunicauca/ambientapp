@@ -21,6 +21,8 @@ import { TakeTestListItem } from "./takeTestListItem";
 import { toast } from "sonner";
 import ConfirmDialog from "@/components/ui/modals/confirmDialog";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
+import SearchBar from "@/components/ui/navigation/searchBar";
+import { TESTS_FILTERS } from "@/config/testConfig";
 
 export default function TakeTestsPaginationList() {
     const router = useRouter();
@@ -40,6 +42,11 @@ export default function TakeTestsPaginationList() {
 
     const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
 
+    const [activeFilter, setActiveFilter] = useState<{
+        key?: string;
+        value?: string;
+    }>({});
+
     const fetchGeneralTest = async () => {
         setLoadingGeneral(true);
 
@@ -56,10 +63,17 @@ export default function TakeTestsPaginationList() {
         setLoadingGeneral(false);
     };
 
-    const fetchTestsPage = async (page: number) => {
+    const fetchTestsPage = async (
+        page: number,
+        filterKey?: string,
+        filterValue?: string
+    ) => {
         setLoadingPaged(true);
 
-        const result = await getActiveTestsPaged(page, 5);
+        const result =
+            filterKey && filterValue
+                ? await getActiveTestsPaged(page, 5, filterKey, filterValue) 
+                : await getActiveTestsPaged(page, 5);
 
         if (typeof result !== "string") {
             setPagedData(result);
@@ -67,6 +81,7 @@ export default function TakeTestsPaginationList() {
             setPagedError(null);
         } else {
             setPagedError(result);
+            setPagedData(null);
         }
 
         setLoadingPaged(false);
@@ -76,6 +91,18 @@ export default function TakeTestsPaginationList() {
         fetchGeneralTest();
         fetchTestsPage(0);
     }, []);
+
+    const handleSearch = (value: string, filterKey?: string) => {
+        const newFilter = { key: filterKey, value };
+
+        setActiveFilter(newFilter);
+
+        fetchTestsPage(0, filterKey, value);
+    };
+
+    const handlePageChange = (page: number) => {
+        fetchTestsPage(page, activeFilter.key, activeFilter.value);
+    };
 
     const handleTakeTest = (testId: number) => {
         setSelectedTestId(testId);
@@ -93,7 +120,7 @@ export default function TakeTestsPaginationList() {
     };
 
     return (
-        <div className="flex flex-col gap-8 mx-2">
+        <div className="flex flex-col gap-6 mx-2">
             {/* Evaluación General */}
             <div className="flex flex-col gap-3">
                 {generalTest && (
@@ -133,6 +160,13 @@ export default function TakeTestsPaginationList() {
                 )}
             </div>
 
+            {/* Barra de búsqueda */}
+            <SearchBar
+                placeholder="Buscar evaluación..."
+                filters={TESTS_FILTERS}
+                onSearch={handleSearch}
+            />
+
             {/* Header evaluaciones específicas */}
             <div className="flex items-center justify-between px-2">
                 <h3 className="font-semibold text-lg text-blueDark">
@@ -148,7 +182,7 @@ export default function TakeTestsPaginationList() {
 
             {/* Evaluaciones Paginadas */}
             <div
-                className={`flex flex-col gap-4 transition-opacity duration-300 ${
+                className={`flex flex-col gap-2 transition-opacity duration-300 ${
                     loadingPaged
                         ? "opacity-40 pointer-events-none"
                         : "opacity-100"
@@ -194,7 +228,7 @@ export default function TakeTestsPaginationList() {
                 <PaginationControls
                     currentPage={currentPage}
                     totalPages={pagedData.totalPages}
-                    onPageChange={fetchTestsPage}
+                    onPageChange={handlePageChange}
                     loading={loadingPaged}
                     first={pagedData.first}
                     last={pagedData.last}

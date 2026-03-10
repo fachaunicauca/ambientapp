@@ -121,7 +121,7 @@ export default function TestsPaginationList() {
             {data && data.content.length > 0 && (
                 <>
                     <div className="flex items-center justify-between px-2">
-                        <span className="text-sm text-gray-500">
+                        <span className="font-semibold text-base text-blueDark">
                             {activeFilter.value?.trim()
                                 ? "Resultados de búsqueda"
                                 : "Evaluaciones almacenadas"}

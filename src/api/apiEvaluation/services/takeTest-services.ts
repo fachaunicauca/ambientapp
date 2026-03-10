@@ -12,12 +12,19 @@ import { AxiosError } from "axios";
 
 export const getActiveTestsPaged = async (
     page: number,
-    size: number
+    size: number,
+    filterKey?: string,
+    filterValue?: string
 ): Promise<PagedTestsBasicInfo | string> => {
     try {
         const microsApi = await microsApiServer();
         const response = await microsApi.get(`/takeTest/tests`, {
-            params: { page, size },
+            params: {
+                page: page,
+                size: size,
+                ...(filterKey && { filterKey }),
+                ...(filterValue && { filterValue }),
+            },
         });
 
         if (response.status === 200) {
