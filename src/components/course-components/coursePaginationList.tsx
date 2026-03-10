@@ -11,6 +11,10 @@ import { CourseListItem } from "./courseListItem";
 import { PaginationControls } from "../ui/navigation/pagination-controls";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import SearchBar from "../ui/navigation/searchBar";
+import { COURSES_FILTERS } from "@/config/testConfig";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "sonner";
 
 export default function CoursePaginationList() {
     const router = useRouter();
@@ -18,11 +22,25 @@ export default function CoursePaginationList() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
+    const isAdmin =
+        useAuthStore.getState().profile?.roles?.includes("ADMIN") ?? false;
 
-    const fetchCoursesPage = async (page: number) => {
+    const [activeFilter, setActiveFilter] = useState<{
+        key?: string;
+        value?: string;
+    }>({});
+
+    const fetchCoursesPage = async (
+        page: number,
+        filterKey?: string,
+        filterValue?: string
+    ) => {
         setLoading(true);
 
-        const result = await getCoursesPaged(page, 5);
+        const result =
+            filterKey && filterValue
+                ? await getCoursesPaged(page, 5, filterKey, filterValue)
+                : await getCoursesPaged(page, 5);
 
         if (typeof result !== "string") {
             setData(result);
@@ -40,6 +58,22 @@ export default function CoursePaginationList() {
         fetchCoursesPage(0);
     }, []);
 
+    const handleSearch = (value: string, filterKey?: string) => {
+        if (filterKey === "teacherEmail" && isAdmin === false) {
+            toast.error(
+                "Solamente el administrador puede filtrar por docentes."
+            );
+        } else {
+            const newFilter = { key: filterKey, value };
+            setActiveFilter(newFilter);
+            fetchCoursesPage(0, filterKey, value);
+        }
+    };
+
+    const handlePageChange = (page: number) => {
+        fetchCoursesPage(page, activeFilter.key, activeFilter.value);
+    };
+
     const handleDelete = async (id: number) => {
         setLoading(true);
 
@@ -48,11 +82,18 @@ export default function CoursePaginationList() {
         if (typeof result === "string") {
             setError(result);
         } else {
-            // Si la pagina queda vacia despues de eliminar una pregunta, cargar la pagina anterior
             if (data && data.content.length === 1 && currentPage > 0) {
-                await fetchCoursesPage(currentPage - 1);
+                await fetchCoursesPage(
+                    currentPage - 1,
+                    activeFilter.key,
+                    activeFilter.value
+                );
             } else {
-                await fetchCoursesPage(currentPage);
+                await fetchCoursesPage(
+                    currentPage,
+                    activeFilter.key,
+                    activeFilter.value
+                );
             }
         }
 
@@ -61,10 +102,17 @@ export default function CoursePaginationList() {
 
     return (
         <div className="flex flex-col gap-6 mx-2">
+            <SearchBar
+                placeholder="Buscar curso..."
+                filters={COURSES_FILTERS}
+                onSearch={handleSearch}
+            />
             {/* Header */}
             <div className="flex items-center justify-between px-2">
-                <h3 className="font-semibold text-lg text-blueDark">
-                    Lista de Cursos
+                <h3 className="text-sm text-gray-500">
+                    {activeFilter.value?.trim()
+                        ? "Resultados de búsqueda"
+                        : "Cursos almacenados"}
                 </h3>
 
                 {data && (
@@ -76,7 +124,7 @@ export default function CoursePaginationList() {
 
             {/* Cursos paginados */}
             <div
-                className={`flex flex-col gap-4 transition-opacity duration-300 ${
+                className={`flex flex-col gap-2 transition-opacity duration-300 ${
                     loading ? "opacity-40 pointer-events-none" : "opacity-100"
                 }`}
             >
@@ -106,7 +154,7 @@ export default function CoursePaginationList() {
                 <PaginationControls
                     currentPage={currentPage}
                     totalPages={data.totalPages}
-                    onPageChange={fetchCoursesPage}
+                    onPageChange={handlePageChange}
                     loading={loading}
                     first={data.first}
                     last={data.last}

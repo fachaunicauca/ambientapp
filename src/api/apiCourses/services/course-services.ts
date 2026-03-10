@@ -6,15 +6,19 @@ import { AxiosError } from "axios";
 
 export const getCoursesPaged = async (
     page: number = 0,
-    size: number = 10 // Valor por defecto
+    size: number = 10, // Valor por defecto
+    filterKey?: string,
+    filterValue?: string
 ): Promise<PagedCourses | string> => {
     try {
         const microsApi = await microsApiServer();
 
         const response = await microsApi.get(`/courses`, {
             params: {
-                page,
-                size,
+                page: page,
+                size: size,
+                ...(filterKey && { filterKey }),
+                ...(filterValue && { filterValue }),
             },
         });
 

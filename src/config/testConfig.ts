@@ -17,3 +17,8 @@ export const TESTS_FILTERS = {
     teacherEmail: "Correo Docente",
     courseId: "Curso ID",
 };
+
+export const COURSES_FILTERS = {
+    courseName: "Nombre",
+    teacherEmail: "Correo Docente"
+};

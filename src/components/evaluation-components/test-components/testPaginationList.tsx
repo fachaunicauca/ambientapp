@@ -132,7 +132,7 @@ export default function TestsPaginationList() {
                     </div>
 
                     <div
-                        className={`flex flex-col gap-1 transition-opacity duration-300 ${
+                        className={`flex flex-col gap-2 transition-opacity duration-300 ${
                             loading
                                 ? "opacity-40 pointer-events-none"
                                 : "opacity-100"
