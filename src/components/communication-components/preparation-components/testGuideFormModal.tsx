@@ -52,10 +52,12 @@ export default function TestGuideFormModal({
 
         if (!selectedFile) return;
 
+        const filename = selectedFile.name.replace(/\.[^/.]+$/, "");
+
         setFormData((prev) => ({
             ...prev,
             file: selectedFile,
-            testGuideId: selectedFile.name,
+            testGuideId: filename,
         }));
     };
 

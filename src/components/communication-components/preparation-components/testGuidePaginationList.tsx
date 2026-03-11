@@ -59,17 +59,6 @@ export default function TestGuidePaginationList() {
     };
 
     const handleSearch = (value: string, filterKey?: string) => {
-        if (
-            filterKey === "teacherEmail" &&
-            roles.includes("TEACHER") &&
-            !roles.includes("ADMIN")
-        ) {
-            toast.error(
-                "Solamente el administrador puede filtrar por docentes."
-            );
-            return;
-        }
-
         const newFilter = { key: filterKey, value };
 
         setActiveFilter(newFilter);
@@ -87,7 +76,7 @@ export default function TestGuidePaginationList() {
         const result = await deleteTestGuide(id);
 
         if (typeof result === "string") {
-            setError(result);
+            toast.error(result);
         } else {
             if (data && data.content.length === 1 && currentPage > 0) {
                 await fetchGuidesPage(
@@ -134,11 +123,11 @@ export default function TestGuidePaginationList() {
             {data && data.content.length > 0 && (
                 <>
                     <div className="flex items-center justify-between px-2">
-                        <span className="font-semibold text-base text-blueDark">
+                        <h3 className="font-semibold text-base text-blueDark">
                             {activeFilter.value?.trim()
                                 ? "Resultados de búsqueda"
                                 : "Guías almacenadas"}
-                        </span>
+                        </h3>
 
                         <span className="text-sm text-gray-500 font-medium">
                             Total: {data.totalElements}

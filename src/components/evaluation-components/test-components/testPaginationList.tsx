@@ -75,7 +75,7 @@ export default function TestsPaginationList() {
         const result = await deleteTest(id);
 
         if (typeof result === "string") {
-            setError(result);
+            toast.error(result);
         } else {
             if (data && data.content.length === 1 && currentPage > 0) {
                 await fetchTestsPage(

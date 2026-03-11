@@ -108,19 +108,19 @@ export default function CoursePaginationList() {
                 onSearch={handleSearch}
             />
             {/* Header */}
-            <div className="flex items-center justify-between px-2">
-                <h3 className="text-sm text-gray-500">
-                    {activeFilter.value?.trim()
-                        ? "Resultados de búsqueda"
-                        : "Cursos almacenados"}
-                </h3>
+            {data && (
+                <div className="flex items-center justify-between px-2">
+                    <h3 className="font-semibold text-base text-blueDark">
+                        {activeFilter.value?.trim()
+                            ? "Resultados de búsqueda"
+                            : "Cursos almacenados"}
+                    </h3>
 
-                {data && (
                     <span className="text-sm text-gray-500 font-medium">
                         Total: {data.totalElements}
                     </span>
-                )}
-            </div>
+                </div>
+            )}
 
             {/* Cursos paginados */}
             <div
@@ -143,7 +143,7 @@ export default function CoursePaginationList() {
                 ))}
 
                 {error && (
-                    <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
+                    <div className="text-center p-6 text-lg text-gray-400">
                         {error}
                     </div>
                 )}
