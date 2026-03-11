@@ -51,7 +51,6 @@ export const getTestsPaged = async (
                 ...(filterValue && { filterValue }),
             },
         });
-        console.log("params enviados:", { page, size, filterKey, filterValue });
 
         if (response.status === 200) {
             const data: PagedTests = response.data;

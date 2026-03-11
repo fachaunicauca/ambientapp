@@ -1,7 +1,7 @@
 export const TEST_STATE_LABELS: { [key: number]: string } = {
     0: "Inactivo",
     1: "Activo",
-}
+};
 
 export const QUESTION_TYPE_LABELS: { [key: string]: string } = {
     MULTIPLE_CHOICE: "Opción Múltiple",
@@ -10,7 +10,11 @@ export const QUESTION_TYPE_LABELS: { [key: string]: string } = {
 
 export const MAX_TEST_SCORE: number = 5.0;
 
-export type START_ATTEMPT_ERROR_CODE = "ALREADY_PASSED" | "NO_REMAINING_ATTEMPTS" | "ATTEMPT_NOT_STARTED" | "STUDENT_NOT_ENROLLED";
+export type START_ATTEMPT_ERROR_CODE =
+    | "ALREADY_PASSED"
+    | "NO_REMAINING_ATTEMPTS"
+    | "ATTEMPT_NOT_STARTED"
+    | "STUDENT_NOT_ENROLLED";
 
 export const TESTS_FILTERS = {
     testTitle: "Título",
@@ -20,5 +24,10 @@ export const TESTS_FILTERS = {
 
 export const COURSES_FILTERS = {
     courseName: "Nombre",
-    teacherEmail: "Correo Docente"
+    teacherEmail: "Correo Docente",
+};
+
+export const TEST_GUIDES_FILTERS = {
+    testGuideId: "Nombre",
+    teacherEmail: "Correo Docente",
 };
