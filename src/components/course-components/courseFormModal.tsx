@@ -125,6 +125,7 @@ export default function CourseFormModal({
                         onChange={(e) =>
                             handleChange("courseGroup", e.target.value)
                         }
+                        className={errors.courseName ? "border-redLight" : ""}
                     />
                     {errors.courseGroup && (
                         <p className="mt-1 text-xs text-redLight">

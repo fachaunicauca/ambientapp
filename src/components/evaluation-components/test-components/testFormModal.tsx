@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/form/input";
 import { saveTestInfo } from "@/api/apiEvaluation/services/test-services";
 import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
 import { TEST_STATE_LABELS } from "@/config/testConfig";
+import { Textarea } from "@/components/ui/form/textarea";
 
 interface TestFormModalProps {
     isOpen: boolean;
@@ -101,12 +102,12 @@ export default function TestFormModal({
                 <Dialog.Content className="fixed inset-0 flex items-center justify-center z-50 p-4">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-lg max-h-[90vh] overflow-y-auto">
                         <Dialog.Title className="text-lg font-bold">
-                            {initialData ? "Editar Test" : "Crear Nuevo Test"}
+                            {initialData ? "Editar Evaluación" : "Crear Evaluación"}
                         </Dialog.Title>
                         <Dialog.Description className="mt-2 text-gray-700 text-sm">
                             {initialData
-                                ? "Modifica los detalles del test."
-                                : "Completa la información para crear un nuevo test."}
+                                ? "Modifica los detalles de la evaluación."
+                                : "Completa la información para crear una evaluación."}
                         </Dialog.Description>
 
                         <div className="mt-6 space-y-4">
@@ -143,7 +144,7 @@ export default function TestFormModal({
                                 <label className="block mb-1 text-sm font-medium text-gray-700">
                                     Descripción
                                 </label>
-                                <textarea
+                                <Textarea
                                     placeholder="Descripción opcional del test..."
                                     value={formData.testDescription}
                                     onChange={(e) =>
@@ -152,9 +153,18 @@ export default function TestFormModal({
                                             e.target.value
                                         )
                                     }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                    className={
+                                        errors.testDescription
+                                            ? "border-redLight"
+                                            : "border-gray-300"
+                                    }
                                     rows={3}
                                 />
+                                {errors.testDescription && (
+                                    <p className="mt-1 text-xs text-redLight">
+                                        {errors.testDescription}
+                                    </p>
+                                )}
                             </div>
 
                             {/* ID del Curso */}

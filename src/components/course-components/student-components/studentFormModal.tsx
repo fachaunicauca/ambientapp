@@ -96,7 +96,9 @@ export default function StudentFormModal({
             <DialogContent className="max-w-md">
                 <DialogHeader>
                     <DialogTitle>
-                        {initialData ? "Editar Estudiante" : "Crear Estudiante"}
+                        {initialData
+                            ? "Editar Estudiante"
+                            : "Registrar Estudiante"}
                     </DialogTitle>
                     <DialogDescription>
                         {initialData
@@ -173,7 +175,9 @@ export default function StudentFormModal({
                     </DialogClose>
 
                     <Button variant="default" onClick={handleSubmit}>
-                        {initialData ? "Guardar Cambios" : "Crear Estudiante"}
+                        {initialData
+                            ? "Guardar Cambios"
+                            : "Registrar"}
                     </Button>
                 </DialogFooter>
 
