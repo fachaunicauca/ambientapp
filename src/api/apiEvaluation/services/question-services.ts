@@ -1,7 +1,10 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { PagedQuestions, QuestionInfo } from "../interfaces/question-interfaces";
+import {
+    PagedQuestions,
+    QuestionInfo,
+} from "../interfaces/question-interfaces";
 import { AxiosError } from "axios";
 
 export const getTestQuestionsPaged = async (
@@ -31,7 +34,7 @@ export const getTestQuestionsPaged = async (
         if (axiosError.response) {
             const status = axiosError.response.status;
             const message = axiosError.response.data as string;
-            
+
             if (status === 404) {
                 return message;
             }
@@ -53,38 +56,47 @@ export const saveQuestion = async (
         console.log(questionData);
 
         const formData = new FormData();
-        
+
         // Agregar campos simples
-        if(questionData.questionId){
-            formData.append('questionId', questionData.questionId.toString());
+        if (questionData.questionId) {
+            formData.append("questionId", questionData.questionId.toString());
         }
-        
-        formData.append('questionText', questionData.questionText);
-        formData.append('questionType', questionData.questionType);
-        formData.append('questionStructure', questionData.questionStructure);
-        formData.append('testId', questionData.testId.toString());
-        
+
+        formData.append("questionText", questionData.questionText);
+        formData.append("questionType", questionData.questionType);
+        formData.append("questionStructure", questionData.questionStructure);
+        formData.append("testId", questionData.testId.toString());
+
         // Agregar campos opcionales solo si tienen valor
         if (questionData.questionTitle) {
-            formData.append('questionTitle', questionData.questionTitle);
+            formData.append("questionTitle", questionData.questionTitle);
         }
-        
+
         // Caso 1: Hay un nuevo archivo de imagen
         if (questionData.questionImage) {
-            formData.append('questionImage', questionData.questionImage);
-        } 
+            formData.append("questionImage", questionData.questionImage);
+        }
         // Caso 2: NO hay nuevo archivo, pero existe una imagen previa (mantenerla)
-        else if (questionData.questionImageId !== null && questionData.questionImageId !== undefined) {
-            formData.append('questionImageId', questionData.questionImageId.toString());
-            formData.append('questionImageUrl', questionData.questionImageUrl || '');
+        else if (
+            questionData.questionImageId !== null &&
+            questionData.questionImageId !== undefined
+        ) {
+            formData.append(
+                "questionImageId",
+                questionData.questionImageId.toString()
+            );
+            formData.append(
+                "questionImageUrl",
+                questionData.questionImageUrl || ""
+            );
         }
         // Caso 3: No hay nuevo archivo y no hay imagen previa (no hacer nada)
-        
-        console.log('Enviando FormData:', formData);
-        
+
+        console.log("Enviando FormData:", formData);
+
         const response = await microsApi.post(`/questions`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                "Content-Type": "multipart/form-data",
             },
         });
 
@@ -119,7 +131,9 @@ export const saveQuestion = async (
             };
         }
 
-        return { general: `Error desconocido al guardar la pregunta. ${error} ${data}` };
+        return {
+            general: `Error desconocido al guardar la pregunta. ${error} ${data}`,
+        };
     }
 };
 
@@ -151,11 +165,59 @@ export const deleteQuestionById = async (
                 return message;
             }
 
-            return `Error ${status}: ${
-                message || "Error desconocido."
-            }`;
+            return `Error ${status}: ${message || "Error desconocido."}`;
         }
 
         return `Error desconocido al eliminar la pregunta con ID ${questionId}: ${error}`;
+    }
+};
+
+export const importQuestions = async (
+    file: File,
+    selectedIndexes: number[],
+    testId: number
+): Promise<boolean | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const formData = new FormData();
+
+        // Archivo XML
+        formData.append("file", file);
+
+        // Lista de preguntas seleccionadas
+        selectedIndexes.forEach((idx) => {
+            formData.append("selectedIndexes", idx.toString());
+        });
+
+        // ID del test
+        formData.append("testId", testId.toString());
+
+        const response = await microsApi.post(`/questions/import`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        if (response.status === 200) {
+            return true;
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError<any>;
+
+        if (!axiosError.response) {
+            return "No se pudo conectar con el servidor.";
+        }
+
+        const { status, data } = axiosError.response;
+
+        // 400: error de archivo o parsing
+        if (status === 400 || status === 404) {
+            return data as string;
+        }
+
+        return `Error desconocido al importar preguntas. ${data}`;
     }
 };

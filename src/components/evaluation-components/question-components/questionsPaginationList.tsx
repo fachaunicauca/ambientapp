@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import {
     deleteQuestionById,
     getTestQuestionsPaged,
+    importQuestions,
 } from "@/api/apiEvaluation/services/question-services";
 import {
     PagedQuestions,
     QuestionInfo,
 } from "@/api/apiEvaluation/interfaces/question-interfaces";
 import { Button } from "@/components/ui/buttons/button";
-import { Loader2, Plus } from "lucide-react";
+import { Download, Loader2, Plus, Upload } from "lucide-react";
 import QuestionDetailsCard from "./questionDetailsCard";
 import QuestionFormModal from "./questionFormModal";
 import { toast } from "sonner";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
+import ConfirmDialog from "@/components/ui/modals/confirmDialog";
+import QuestionImporterModal from "./questionImporterModal";
 
 interface Props {
     testId: number;
@@ -24,10 +27,11 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
     const [error, setError] = useState<string>();
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [selectedQuestion, setSelectedQuestion] =
         useState<QuestionInfo | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
     const fetchQuestionsPage = async (page: number) => {
         setLoading(true);
@@ -43,8 +47,8 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         setLoading(false);
     };
 
-    const handleQuestionSuccess = () => {
-        setIsModalOpen(false);
+    const handleAddQuestionSuccess = () => {
+        setIsAddModalOpen(false);
         fetchQuestionsPage(currentPage);
     };
 
@@ -57,7 +61,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
             toast.error(result);
         } else {
             // Si la pagina queda vacia despues de eliminar una pregunta, cargar la pagina anterior
-            if (data && data.content.length === 1 && currentPage > 0) {  
+            if (data && data.content.length === 1 && currentPage > 0) {
                 await fetchQuestionsPage(currentPage - 1);
             } else {
                 await fetchQuestionsPage(currentPage);
@@ -73,6 +77,22 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         setIsEditModalOpen(true);
     };
 
+    const handleImportQuestions = async (file: File, selectedIdx: number[]) => {
+        console.log("Preguntas importadas:", selectedIdx);
+        setIsImportModalOpen(false);
+        setLoading(true);
+
+        const result = await importQuestions(file, selectedIdx, testId);
+
+        if (typeof result === "string") {
+            toast.error(result as string);
+        }
+
+        setLoading(false);
+
+        fetchQuestionsPage(currentPage);
+    };
+
     useEffect(() => {
         fetchQuestionsPage(0);
     }, [testId]);
@@ -81,49 +101,89 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         <div className="flex flex-col gap-6 mx-2">
             {/* Header */}
             <div className="flex items-center justify-between px-2">
-                <h3 className="font-bold text-lg text-gray-700">
-                    Preguntas almacenadas
-                </h3>
+                <div className="items-center gap-8">
+                    <h3 className="font-bold text-lg text-gray-700">
+                        Preguntas almacenadas
+                    </h3>
+                    {data && (
+                        <span className="text-sm text-gray-500 font-medium">
+                            Total: {data.totalElements}
+                        </span>
+                    )}
+                </div>
+                <div className="flex gap-3">
+                    <Button
+                        variant="default"
+                        onClick={() => setIsAddModalOpen(true)}
+                        className="w-min gap-2"
+                    >
+                        <Plus size={20} />
+                        Agregar Pregunta
+                    </Button>
 
-                <Button
-                    variant="default"
-                    onClick={() => setIsModalOpen(true)}
-                    className="w-min gap-2"
-                >
-                    <Plus size={20} />
-                    Agregar Pregunta
-                </Button>
+                    <Button
+                        variant="ghost"
+                        onClick={() => setIsImportModalOpen(true)}
+                        className="p-2 border rounded-md"
+                    >
+                        <Download size={20} />
+                        Importar
+                    </Button>
 
-                {data && (
-                    <span className="text-sm text-gray-500 font-medium">
-                        Total: {data.totalElements}
-                    </span>
-                )}
+                    {data && data.totalElements > 0 && (
+                        <ConfirmDialog
+                            trigger={
+                                <Button
+                                    variant="ghost"
+                                    className="p-2 border rounded-md"
+                                >
+                                    <Upload size={20} />
+                                    Exportar
+                                </Button>
+                            }
+                            title={"Exportar Preguntas"}
+                            description={`¿Estás seguro de que deseas exportar las preguntas de esta evaluación? Se exportaran ${data.totalElements} preguntas en formato Moodle XML.`}
+                            confirmText="Exportar"
+                            onConfirm={() => console.log("Exportar")}
+                        ></ConfirmDialog>
+                    )}
+                </div>
             </div>
 
             {/* Contenido */}
-            {!data || data.content.length === 0 ? (
-                <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">
-                    {error ? error : "No hay preguntas registradas."}
-                </div>
-            ) : (
-                <div
-                    className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition-opacity duration-300 ${
-                        loading
-                            ? "opacity-40 pointer-events-none"
-                            : "opacity-100"
-                    }`}
-                >
-                    {data.content.map((q) => (
-                        <QuestionDetailsCard
-                            key={q.questionId}
-                            question={q}
-                            onEdit={handleEditQuestion}
-                            onDelete={handleDeleteQuestion}
+            <div className="relative">
+                {!data || data.content.length === 0 ? (
+                    <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">
+                        {error ? error : "No hay preguntas registradas."}
+                    </div>
+                ) : (
+                    <div
+                        className={`grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 transition-opacity duration-300 ${
+                            loading
+                                ? "opacity-40 pointer-events-none"
+                                : "opacity-100"
+                        }`}
+                    >
+                        {data.content.map((q) => (
+                            <QuestionDetailsCard
+                                key={q.questionId}
+                                question={q}
+                                onEdit={handleEditQuestion}
+                                onDelete={handleDeleteQuestion}
+                            />
+                        ))}
+                    </div>
+                )}
+                {/* Loader superpuesto */}
+                {loading && (
+                    <div className="absolute inset-0 flex justify-center items-center">
+                        <Loader2
+                            className="animate-spin text-blue-600"
+                            size={32}
                         />
-                    ))}
-                </div>
-            )}
+                    </div>
+                )}
+            </div>
 
             {/* Controles de Paginación */}
             {data && data.totalPages > 1 && (
@@ -137,20 +197,15 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                 />
             )}
 
-            {/* Loader */}
-            {loading && (
-                <div className="flex justify-center items-center py-4">
-                    <Loader2 className="animate-spin text-blue-600" size={32} />
-                </div>
-            )}
-
+            {/* Modal Agregar Pregunta */}
             <QuestionFormModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSuccess={handleQuestionSuccess}
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                onSuccess={handleAddQuestionSuccess}
                 testId={testId}
             />
 
+            {/* Modal Editar Pregunta */}
             {selectedQuestion && (
                 <QuestionFormModal
                     isOpen={isEditModalOpen}
@@ -167,6 +222,13 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                     testId={testId}
                 />
             )}
+
+            {/* Modal Importar Preguntas */}
+            <QuestionImporterModal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                onImport={handleImportQuestions}
+            />
         </div>
     );
 }
