@@ -221,3 +221,46 @@ export const importQuestions = async (
         return `Error desconocido al importar preguntas. ${data}`;
     }
 };
+
+export const exportQuestions = async (
+    selectedIds: number[]
+): Promise<Blob | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const response = await microsApi.post(
+            `/questions/export`,
+            selectedIds,
+            {
+                responseType: "blob",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        const contentType = response.headers["content-type"] ?? "";
+
+        if (contentType.includes("xml")) {
+            // El interceptor convirtió el blob a string, revertir manualmente
+            const blob = new Blob([response.data], { type: "application/xml" });
+            return blob;
+        }
+
+        return response.data as string;
+    } catch (error) {
+        const axiosError = error as AxiosError<any>;
+
+        if (!axiosError.response) {
+            return "No se pudo conectar con el servidor.";
+        }
+
+        const { status, data } = axiosError.response;
+
+        if (status === 400) {
+            return data as string;
+        }
+
+        return `Error desconocido al exportar preguntas.`;
+    }
+};

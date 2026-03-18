@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
     deleteQuestionById,
+    exportQuestions,
     getTestQuestionsPaged,
     importQuestions,
 } from "@/api/apiEvaluation/services/question-services";
@@ -16,6 +17,8 @@ import { toast } from "sonner";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
 import ConfirmDialog from "@/components/ui/modals/confirmDialog";
 import QuestionImporterModal from "./questionImporterModal";
+import QuestionExporterModal from "./questionExporterModal";
+import { all } from "axios";
 
 interface Props {
     testId: number;
@@ -32,6 +35,8 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         useState<QuestionInfo | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+    const [allQuestions, setAllQuestions] = useState<QuestionInfo[]>([]);
 
     const fetchQuestionsPage = async (page: number) => {
         setLoading(true);
@@ -45,6 +50,23 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
             setData(null);
         }
         setLoading(false);
+    };
+
+    const fetchAllQuestions = async (): Promise<QuestionInfo[]> => {
+        if (!data || data.content.length === 0) return [];
+
+        const result = await getTestQuestionsPaged(
+            testId,
+            0,
+            data.totalElements
+        );
+
+        if (typeof result === "string") {
+            toast.error(result as string);
+            return [];
+        }
+
+        return result.content;
     };
 
     const handleAddQuestionSuccess = () => {
@@ -93,6 +115,39 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
         fetchQuestionsPage(currentPage);
     };
 
+    const handleOpenExportModal = async () => {
+        setLoading(true);
+
+        const questions = await fetchAllQuestions();
+
+        setAllQuestions(questions);
+        setLoading(false);
+
+        setIsExportModalOpen(true);
+    };
+
+    const handleExportQuestions = async (selectedIds: number[]) => {
+        setLoading(true);
+
+        const result = await exportQuestions(selectedIds);
+
+        if (typeof result === "string") {
+            toast.error(result);
+        } else {
+            // Convertir el Blob en descarga automática
+            const url = URL.createObjectURL(result);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `preguntas-evaluacion-${testId}.xml`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            toast.success("Preguntas exportadas exitosamente.");
+        }
+
+        setLoading(false);
+    };
+
     useEffect(() => {
         fetchQuestionsPage(0);
     }, [testId]);
@@ -131,28 +186,21 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                     </Button>
 
                     {data && data.totalElements > 0 && (
-                        <ConfirmDialog
-                            trigger={
-                                <Button
-                                    variant="ghost"
-                                    className="p-2 border rounded-md"
-                                >
-                                    <Upload size={20} />
-                                    Exportar
-                                </Button>
-                            }
-                            title={"Exportar Preguntas"}
-                            description={`¿Estás seguro de que deseas exportar las preguntas de esta evaluación? Se exportaran ${data.totalElements} preguntas en formato Moodle XML.`}
-                            confirmText="Exportar"
-                            onConfirm={() => console.log("Exportar")}
-                        ></ConfirmDialog>
+                        <Button
+                            variant="ghost"
+                            className="p-2 border rounded-md"
+                            onClick={handleOpenExportModal}
+                        >
+                            <Upload size={20} />
+                            Exportar
+                        </Button>
                     )}
                 </div>
             </div>
 
             {/* Contenido */}
             <div className="relative">
-                {!data || data.content.length === 0 ? (
+                {!loading && (!data || data.content.length === 0) ? (
                     <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">
                         {error ? error : "No hay preguntas registradas."}
                     </div>
@@ -164,14 +212,15 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                                 : "opacity-100"
                         }`}
                     >
-                        {data.content.map((q) => (
-                            <QuestionDetailsCard
-                                key={q.questionId}
-                                question={q}
-                                onEdit={handleEditQuestion}
-                                onDelete={handleDeleteQuestion}
-                            />
-                        ))}
+                        {data &&
+                            data.content.map((q) => (
+                                <QuestionDetailsCard
+                                    key={q.questionId}
+                                    question={q}
+                                    onEdit={handleEditQuestion}
+                                    onDelete={handleDeleteQuestion}
+                                />
+                            ))}
                     </div>
                 )}
                 {/* Loader superpuesto */}
@@ -228,6 +277,14 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
                 isOpen={isImportModalOpen}
                 onClose={() => setIsImportModalOpen(false)}
                 onImport={handleImportQuestions}
+            />
+
+            {/* Modal Exportar Preguntas */}
+            <QuestionExporterModal
+                isOpen={isExportModalOpen}
+                onClose={() => setIsExportModalOpen(false)}
+                onExport={handleExportQuestions}
+                questions={allQuestions}
             />
         </div>
     );

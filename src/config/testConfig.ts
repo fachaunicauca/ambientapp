@@ -31,3 +31,8 @@ export const TEST_GUIDES_FILTERS = {
     testGuideId: "Nombre",
     teacherEmail: "Correo Docente",
 };
+
+export const QUESTION_FILTERS = {
+    questionTitle: "Título",
+    questionText: "Texto",
+};
