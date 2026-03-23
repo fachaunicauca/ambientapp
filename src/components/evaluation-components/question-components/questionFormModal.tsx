@@ -165,12 +165,12 @@ export default function QuestionFormModal({
                     <DialogTitle>
                         {initialData
                             ? "Editar Pregunta"
-                            : "Crear Nueva Pregunta"}
+                            : "Agregar Pregunta"}
                     </DialogTitle>
                     <DialogDescription>
                         {initialData
                             ? "Modifica los datos de la pregunta."
-                            : "Completa el formulario para crear una nueva pregunta."}
+                            : "Completa el formulario para agregar una nueva pregunta."}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -350,7 +350,7 @@ export default function QuestionFormModal({
                     </DialogClose>
 
                     <Button variant="default" onClick={handleSubmit}>
-                        {initialData ? "Guardar Cambios" : "Crear Pregunta"}
+                        {initialData ? "Guardar Cambios" : "Agregar Pregunta"}
                     </Button>
                 </DialogFooter>
 

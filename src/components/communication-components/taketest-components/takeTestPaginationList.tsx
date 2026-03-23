@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/buttons/button";
-import { ChevronLeft, ChevronRight, Loader2, PlayCircle } from "lucide-react";
+import { History, Loader2, PlayCircle } from "lucide-react";
 
 import {
     PagedTestsBasicInfo,
@@ -14,7 +14,6 @@ import {
 import {
     getActiveTestsPaged,
     getGeneralTest,
-    startTestAttempt,
 } from "@/api/apiEvaluation/services/takeTest-services";
 
 import { TakeTestListItem } from "./takeTestListItem";
@@ -72,7 +71,7 @@ export default function TakeTestsPaginationList() {
 
         const result =
             filterKey && filterValue
-                ? await getActiveTestsPaged(page, 5, filterKey, filterValue) 
+                ? await getActiveTestsPaged(page, 5, filterKey, filterValue)
                 : await getActiveTestsPaged(page, 5);
 
         if (typeof result !== "string") {
@@ -119,6 +118,12 @@ export default function TakeTestsPaginationList() {
         );
     };
 
+    const handleVisualizeAttempts = (testId: number) => {
+        router.push(
+            `/dashboard/comunicacion-riesgo/evaluacion/intentos?testId=${testId}`
+        );
+    };
+
     return (
         <div className="flex flex-col gap-6 mx-2">
             {/* Evaluación General */}
@@ -132,24 +137,37 @@ export default function TakeTestsPaginationList() {
                             />
                         </div>
 
-                        <ConfirmDialog
-                            trigger={
-                                <Button
-                                    onClick={() =>
-                                        handleTakeTest(generalTest.testId)
-                                    }
-                                    className="gap-2 w-min"
-                                >
-                                    <PlayCircle size={16} />
-                                    Presentar evaluación
-                                </Button>
-                            }
-                            onConfirm={handleConfirmStartTest}
-                            title="Presentar evaluación general"
-                            description="¿Estás seguro de que deseas presentar la evaluación general?"
-                            confirmText="Iniciar evaluación"
-                            confirmVariant="default"
-                        />
+                        <div className="flex flex-col gap-2 w-min">
+                            <ConfirmDialog
+                                trigger={
+                                    <Button
+                                        onClick={() =>
+                                            handleTakeTest(generalTest.testId)
+                                        }
+                                        className="gap-2 w-min"
+                                    >
+                                        <PlayCircle size={16} />
+                                        Presentar evaluación
+                                    </Button>
+                                }
+                                onConfirm={handleConfirmStartTest}
+                                title="Presentar evaluación general"
+                                description="¿Estás seguro de que deseas presentar la evaluación general?"
+                                confirmText="Iniciar evaluación"
+                                confirmVariant="default"
+                            />
+
+                            <Button
+                                variant="outline"
+                                className="w-full"
+                                onClick={() =>
+                                    handleVisualizeAttempts(generalTest.testId)
+                                }
+                            >
+                                <History size={16} />
+                                Ver Intentos
+                            </Button>
+                        </div>
                     </div>
                 )}
 
@@ -196,23 +214,36 @@ export default function TakeTestsPaginationList() {
                         <div className="flex-1">
                             <TakeTestListItem testInfo={test} />
                         </div>
-
-                        <ConfirmDialog
-                            trigger={
-                                <Button
-                                    onClick={() => handleTakeTest(test.testId)}
-                                    className="gap-2 w-min"
-                                >
-                                    <PlayCircle size={16} />
-                                    Presentar evaluación
-                                </Button>
-                            }
-                            onConfirm={handleConfirmStartTest}
-                            title={`Presentar Evaluación: ${test.testTitle}`}
-                            description={`¿Estás seguro de que deseas presentar la evaluación?`}
-                            confirmText="Iniciar evaluación"
-                            confirmVariant="default"
-                        />
+                        <div className="flex flex-col gap-2 w-min">
+                            <ConfirmDialog
+                                trigger={
+                                    <Button
+                                        onClick={() =>
+                                            handleTakeTest(test.testId)
+                                        }
+                                        className="gap-2 w-min"
+                                    >
+                                        <PlayCircle size={16} />
+                                        Presentar evaluación
+                                    </Button>
+                                }
+                                onConfirm={handleConfirmStartTest}
+                                title={`Presentar Evaluación: ${test.testTitle}`}
+                                description={`¿Estás seguro de que deseas presentar la evaluación?`}
+                                confirmText="Iniciar evaluación"
+                                confirmVariant="default"
+                            />
+                            <Button
+                                variant="outline"
+                                className="w-full"
+                                onClick={() =>
+                                    handleVisualizeAttempts(test.testId)
+                                }
+                            >
+                                <History size={16} />
+                                Ver Intentos
+                            </Button>
+                        </div>
                     </div>
                 ))}
 

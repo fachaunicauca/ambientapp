@@ -48,6 +48,7 @@ export interface StudentTestAttempt {
 }
 
 export interface StudentTestAttemptResult {
+    testAttemptId: number;
     studentEmail: string;
     testAttemptDate: string;
     testAttemptNumberOfQuestions: number;

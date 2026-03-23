@@ -83,6 +83,42 @@ export const getGeneralTest = async (): Promise<TestBasicInfo | string> => {
     }
 };
 
+export const getStudentTestAttempts = async (
+    testId: number,
+    studentEmail: string
+): Promise<StudentTestAttemptResult[] | string> => {
+    try {
+        const microsApi = await microsApiServer();
+
+        const response = await microsApi.get(`takeTest/tests/results`, {
+            params: { studentEmail, testId },
+        });
+
+        if (response.status === 200) {
+            return response.data as StudentTestAttemptResult[];
+        }
+
+        throw new Error();
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.response) {
+            const status = axiosError.response.status;
+
+            if (status === 404) {
+                return axiosError.response.data as string;
+            }
+
+            return `Error ${status}: ${
+                (axiosError.response.data as string) ||
+                "Error al obtener los intentos de la evaluación."
+            }`;
+        }
+
+        return "Error desconocido al obtener los intentos.";
+    }
+};
+
 export const startTestAttempt = async (
     testId: number,
     studentEmail: string
