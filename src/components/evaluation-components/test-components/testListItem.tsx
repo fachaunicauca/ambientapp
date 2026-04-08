@@ -27,7 +27,7 @@ export const TestListItem = ({
                         {testInfo.testTitle}
                     </h3>
 
-                    <p className="text-sm text-gray-500 line-clamp-2 max-w-xl mb-1">
+                    <p className="text-sm text-gray-500 line-clamp-2 max-w-2xl mb-1">
                         {testInfo.testDescription || "Sin descripción"}
                     </p>
                     <p className="text-xs text-gray-400">

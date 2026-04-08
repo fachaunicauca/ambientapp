@@ -206,7 +206,7 @@ export default function Curso() {
             </div>
 
             {studentsError || !students ? (
-                <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
+                <div className="text-center text-lg p-6 text-gray-400">
                     {studentsError
                         ? studentsError
                         : "No se pudieron cargar los estudiantes del curso."}

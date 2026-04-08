@@ -118,7 +118,7 @@ export default function TestFormModal({
                                 </label>
                                 <Input
                                     type="text"
-                                    placeholder="Ej: Test de Capacitación Módulo 1"
+                                    placeholder="Titulo de la evaluación..."
                                     value={formData.testTitle}
                                     onChange={(e) =>
                                         handleChange(
@@ -145,7 +145,7 @@ export default function TestFormModal({
                                     Descripción
                                 </label>
                                 <Textarea
-                                    placeholder="Descripción opcional del test..."
+                                    placeholder="Descripción de la evaluación..."
                                     value={formData.testDescription}
                                     onChange={(e) =>
                                         handleChange(
@@ -327,7 +327,7 @@ export default function TestFormModal({
                                 )}
                             </div>
 
-                            {/* Test periódico */}
+                            {/* Es semestral */}
                             <div className="flex items-center gap-3">
                                 <input
                                     type="checkbox"
@@ -345,7 +345,7 @@ export default function TestFormModal({
                                     htmlFor="isPeriodic"
                                     className="text-sm font-medium text-gray-700"
                                 >
-                                    Test periódico
+                                    Es semestral
                                 </label>
                             </div>
                         </div>
@@ -364,7 +364,7 @@ export default function TestFormModal({
                                 </Button>
                             </Dialog.Close>
                             <Button variant="default" onClick={handleSubmit}>
-                                {initialData ? "Guardar Cambios" : "Crear Test"}
+                                {initialData ? "Guardar Cambios" : "Crear Evaluación"}
                             </Button>
                         </div>
                     </div>

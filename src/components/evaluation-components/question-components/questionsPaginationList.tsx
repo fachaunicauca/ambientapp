@@ -201,7 +201,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
             {/* Contenido */}
             <div className="relative">
                 {!loading && (!data || data.content.length === 0) ? (
-                    <div className="text-center p-10 border-2 border-dashed rounded-xl text-gray-400">
+                    <div className="text-center p-10 text-gray-400 text-lg">
                         {error ? error : "No hay preguntas registradas."}
                     </div>
                 ) : (

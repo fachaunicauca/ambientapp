@@ -102,7 +102,7 @@ export const saveTestInfo = async (
 
         throw new Error();
     } catch (error) {
-        const axiosError = error as AxiosError<any>;
+        const axiosError = error as AxiosError;
 
         if (!axiosError.response) {
             return { general: "No se pudo conectar con el servidor." };
@@ -112,7 +112,7 @@ export const saveTestInfo = async (
 
         // 400 y objeto: errores de campos
         if (status === 400 && typeof data === "object") {
-            return data;
+            return data as Record<string, string>;
         }
 
         // 400 y string: error de numero de preguntas

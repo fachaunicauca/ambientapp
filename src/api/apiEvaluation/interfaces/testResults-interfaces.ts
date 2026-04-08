@@ -1,5 +1,3 @@
-import { number } from "zod";
-
 export interface AttemptRequestInfo {
     studentTestConfigId: number;
     studentEmail: string;

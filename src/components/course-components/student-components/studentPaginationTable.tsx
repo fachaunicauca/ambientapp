@@ -42,7 +42,7 @@ export default function StudentsPaginationTable({
 }: StudentsPaginationTableProps) {
     if (error || !data || data.content.length === 0) {
         return (
-            <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
+            <div className="text-center text-lg p-6 text-gray-400">
                 {error ?? "No hay estudiantes registrados."}
             </div>
         );
@@ -56,7 +56,9 @@ export default function StudentsPaginationTable({
                     Lista de estudiantes
                 </h2>
                 <p className="text-sm text-gray-500">
-                    {subtitle ? subtitle : "Estudiantes registrados en el sistema"}
+                    {subtitle
+                        ? subtitle
+                        : "Estudiantes registrados en el sistema"}
                 </p>
             </div>
             <Table>

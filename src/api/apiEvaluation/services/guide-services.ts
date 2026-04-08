@@ -77,7 +77,7 @@ export const uploadFile = async (
 
         throw new Error();
     } catch (error) {
-        const axiosError = error as AxiosError<any>;
+        const axiosError = error as AxiosError;
 
         if (!axiosError.response) {
             return { general: "No se pudo conectar con el servidor." };
@@ -87,7 +87,7 @@ export const uploadFile = async (
 
         // 400 y objeto: errores de campo
         if (status === 400 && typeof data === "object") {
-            return data;
+            return data as Record<string, string>;
         }
 
         // 409 y string: conflicto por ID ya existente

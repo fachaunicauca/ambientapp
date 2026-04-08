@@ -92,8 +92,6 @@ export const saveQuestion = async (
         }
         // Caso 3: No hay nuevo archivo y no hay imagen previa (no hacer nada)
 
-        console.log("Enviando FormData:", formData);
-
         const response = await microsApi.post(`/questions`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -106,7 +104,7 @@ export const saveQuestion = async (
 
         throw new Error();
     } catch (error) {
-        const axiosError = error as AxiosError<any>;
+        const axiosError = error as AxiosError;
 
         if (!axiosError.response) {
             return { general: "No se pudo conectar con el servidor." };
@@ -116,7 +114,7 @@ export const saveQuestion = async (
 
         // 400 y objeto: errores de campo
         if (status === 400 && typeof data === "object") {
-            return data;
+            return data as Record<string, string>;
         }
 
         // 400 y string: error de estructura
@@ -205,7 +203,7 @@ export const importQuestions = async (
 
         throw new Error();
     } catch (error) {
-        const axiosError = error as AxiosError<any>;
+        const axiosError = error as AxiosError;
 
         if (!axiosError.response) {
             return "No se pudo conectar con el servidor.";
@@ -249,7 +247,7 @@ export const exportQuestions = async (
 
         return response.data as string;
     } catch (error) {
-        const axiosError = error as AxiosError<any>;
+        const axiosError = error as AxiosError;
 
         if (!axiosError.response) {
             return "No se pudo conectar con el servidor.";
