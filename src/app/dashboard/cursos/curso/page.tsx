@@ -16,7 +16,7 @@ import Title from "@/components/ui/typography/title";
 import { useAuthStore } from "@/store/authStore";
 import { Pencil, Plus } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function Curso() {
@@ -38,7 +38,7 @@ export default function Curso() {
         router.replace("/dashboard/cursos");
     }
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         const result: CourseInfo | string = await getCourseById(
             Number(courseId)
         );
@@ -50,31 +50,34 @@ export default function Curso() {
             setCourseInfo(result as CourseInfo);
             setError(undefined);
         }
-    };
+    }, [courseId]);
 
-    const fetchStudents = async (page: number) => {
-        setLoadingStudents(true);
-        const result = await getCourseStudents(Number(courseId), page, 10);
+    const fetchStudents = useCallback(
+        async (page: number) => {
+            setLoadingStudents(true);
+            const result = await getCourseStudents(Number(courseId), page, 10);
 
-        if (typeof result === "string") {
-            setStudents(undefined);
-            setStudentsError(result);
-        } else {
-            setStudents(result as PagedStudents);
-            setStudentsError(undefined);
-        }
-        setLoadingStudents(false);
-    };
+            if (typeof result === "string") {
+                setStudents(undefined);
+                setStudentsError(result);
+            } else {
+                setStudents(result as PagedStudents);
+                setStudentsError(undefined);
+            }
+            setLoadingStudents(false);
+        },
+        [courseId]
+    );
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     useEffect(() => {
         if (courseInfo) {
             fetchStudents(currentStudentsPage);
         }
-    }, [courseInfo, currentStudentsPage]);
+    }, [courseInfo, currentStudentsPage, fetchStudents]);
 
     const handleEditSuccess = () => {
         setIsModalOpen(false);

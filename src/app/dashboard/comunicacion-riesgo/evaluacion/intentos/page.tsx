@@ -6,9 +6,7 @@ import { AttemptResultCard } from "@/components/communication-components/taketes
 import Title from "@/components/ui/typography/title";
 import { useAuthStore } from "@/store/authStore";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { set } from "zod";
+import { useCallback, useEffect, useState } from "react";
 
 export default function IntentosEvaluacion() {
     const searchParams = useSearchParams();
@@ -17,20 +15,9 @@ export default function IntentosEvaluacion() {
     const [attempts, setAttempts] = useState<StudentTestAttemptResult[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-    if (!testId) {
-        return (
-            <>
-                <Title title="Intentos Presentados" />
-                <div className="flex flex-col items-center justify-center h-64">
-                    <p className="text-gray-500 text-lg">
-                        No se ha especificado un test para mostrar los intentos.
-                    </p>
-                </div>
-            </>
-        );
-    }
+    const fetchStudentAttempts = useCallback(async () => {
+        if (!testId) return;
 
-    const fetchStudentAttempts = async () => {
         const result = await getStudentTestAttempts(
             parseInt(testId),
             studentEmail
@@ -44,11 +31,25 @@ export default function IntentosEvaluacion() {
 
         setError(null);
         setAttempts(result);
-    };
+    }, [testId, studentEmail]);
 
     useEffect(() => {
+        if (!testId) return;
         fetchStudentAttempts();
-    }, [testId]);
+    }, [testId, fetchStudentAttempts]);
+
+    if (!testId) {
+        return (
+            <>
+                <Title title="Intentos Presentados" />
+                <div className="flex flex-col items-center justify-center h-64">
+                    <p className="text-gray-500 text-lg">
+                        No se ha especificado un test para mostrar los intentos.
+                    </p>
+                </div>
+            </>
+        );
+    }
 
     return (
         <div>

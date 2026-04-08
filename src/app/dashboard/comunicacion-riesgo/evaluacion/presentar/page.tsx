@@ -3,7 +3,7 @@
 import { startTestAttempt } from "@/api/apiEvaluation/services/takeTest-services";
 import { useStudentTestAttemptStore } from "@/store/studentTestAttemptStore";
 import { Clock, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TakeTestQuestionCard from "@/components/communication-components/taketest-components/takeTestQuestionCard";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/authStore";
@@ -18,10 +18,13 @@ export default function PresentarEvaluacion() {
     const router = useRouter();
     const testId = Number(searchParams.get("testId"));
 
-    const handleFatalError = (message: string) => {
-        toast.info(message);
-        router.replace("/dashboard/comunicacion-riesgo/evaluacion");
-    };
+    const handleFatalError = useCallback(
+        (message: string) => {
+            toast.info(message);
+            router.replace("/dashboard/comunicacion-riesgo/evaluacion");
+        },
+        [router]
+    );
 
     if (!testId) {
         handleFatalError("No se pudo identificar la evaluación.");
@@ -42,22 +45,27 @@ export default function PresentarEvaluacion() {
         responses,
     } = useStudentTestAttemptStore();
 
-    const handleAttemptNotAllowedError = (error: Record<string, string>) => {
-        if (
-            (error.code as START_ATTEMPT_ERROR_CODE) == "NO_REMAINING_ATTEMPTS"
-        ) {
-            router.replace(
-                `/dashboard/comunicacion-riesgo/evaluacion/presentar/sin-intentos?testId=${testId}&studentEmail=${studentEmail}`
-            );
-        } else if((error.code as START_ATTEMPT_ERROR_CODE) == "ALREADY_PASSED") {
-            toast.success(error.message);
-            router.replace("/dashboard/comunicacion-riesgo/evaluacion");
-        }
-        else {
-            toast.error(error.message);
-            router.replace("/dashboard/comunicacion-riesgo/evaluacion");
-        }
-    };
+    const handleAttemptNotAllowedError = useCallback(
+        (error: Record<string, string>) => {
+            if (
+                (error.code as START_ATTEMPT_ERROR_CODE) ==
+                "NO_REMAINING_ATTEMPTS"
+            ) {
+                router.replace(
+                    `/dashboard/comunicacion-riesgo/evaluacion/presentar/sin-intentos?testId=${testId}&studentEmail=${studentEmail}`
+                );
+            } else if (
+                (error.code as START_ATTEMPT_ERROR_CODE) == "ALREADY_PASSED"
+            ) {
+                toast.success(error.message);
+                router.replace("/dashboard/comunicacion-riesgo/evaluacion");
+            } else {
+                toast.error(error.message);
+                router.replace("/dashboard/comunicacion-riesgo/evaluacion");
+            }
+        },
+        [router, testId, studentEmail]
+    );
 
     useEffect(() => {
         const loadTest = async () => {
@@ -83,16 +91,23 @@ export default function PresentarEvaluacion() {
         };
 
         loadTest();
-    }, [testId]);
+    }, [
+        testId,
+        studentEmail,
+        startAttempt,
+        clearAttempt,
+        handleFatalError,
+        handleAttemptNotAllowedError,
+        testInfo?.testId,
+    ]);
 
-    const handleFinishTest = async () => {
+    const handleFinishTest = useCallback(async () => {
         if (isSubmitting) return;
-
         setIsSubmitting(true);
         router.replace(
             "/dashboard/comunicacion-riesgo/evaluacion/presentar/resultados"
         );
-    };
+    }, [isSubmitting, router]);
 
     useEffect(() => {
         if (loading || !testInfo) return;
@@ -110,7 +125,7 @@ export default function PresentarEvaluacion() {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [loading, testInfo, getRemainingTimeSeconds]);
+    }, [loading, testInfo, getRemainingTimeSeconds, handleFinishTest]);
 
     const handleStudentResponse = (questionId: number, response: string) => {
         saveResponse(questionId, response);

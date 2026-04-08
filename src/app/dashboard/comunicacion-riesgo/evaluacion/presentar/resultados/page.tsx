@@ -8,12 +8,13 @@ import Title from "@/components/ui/typography/title";
 import { useStudentTestAttemptStore } from "@/store/studentTestAttemptStore";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ResultadosEvaluacion() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<StudentTestAttemptResult | null>(null);
+    const hasSubmitted = useRef(false);
     const {
         testInfo,
         testResult,
@@ -26,6 +27,9 @@ export default function ResultadosEvaluacion() {
 
     useEffect(() => {
         const submitAttempt = async () => {
+            if (hasSubmitted.current) return;
+            hasSubmitted.current = true;
+
             if (testResult) {
                 setResult(testResult);
                 setLoading(false);
@@ -42,7 +46,6 @@ export default function ResultadosEvaluacion() {
             }
 
             setLoading(true);
-
             const response = await scoreAndSaveStudentAttempt(attempt);
 
             if (typeof response === "string") {

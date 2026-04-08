@@ -7,7 +7,7 @@ import StudentsResultsPaginationTable from "@/components/evaluation-components/r
 import Title from "@/components/ui/typography/title";
 import { MAX_TEST_SCORE } from "@/config/testConfig";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function EvaluacionResultados() {
@@ -23,7 +23,7 @@ export default function EvaluacionResultados() {
         router.replace("/dashboard/evaluaciones/evaluaciones-especificas");
     }
 
-    const fetchTestStats = async () => {
+    const fetchTestStats = useCallback(async () => {
         const response = await getTestStats(testId);
 
         if (typeof response === "string") {
@@ -33,13 +33,13 @@ export default function EvaluacionResultados() {
             setStatsError(undefined);
             setStats(response);
         }
-    };
+    }, [testId]);
 
     useEffect(() => {
         if (testId) {
             fetchTestStats();
         }
-    }, [testId]);
+    }, [testId, fetchTestStats]);
 
     return (
         <div className="flex flex-col gap-6">
@@ -60,6 +60,13 @@ export default function EvaluacionResultados() {
 
                 {/* Body */}
                 <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {statsError ? (
+                        <div className="col-span-4 text-center text-gray-400 py-4">
+                            {statsError}
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                     {/* Fila 1 */}
                     <div className="bg-gray-100 rounded-xl p-4 shadow-sm">
                         <p className="text-xs text-gray-500 uppercase">
