@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
 import { AttemptRequestListItem } from "./attemptRequestListItem";
@@ -23,22 +23,25 @@ export default function AttemptRequestsPaginationList({
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    const fetchRequestsPage = async (page: number) => {
-        setLoading(true);
+    const fetchRequestsPage = useCallback(
+        async (page: number) => {
+            setLoading(true);
 
-        const result = await getPendingAttemptRequests(testId, page, 4);
+            const result = await getPendingAttemptRequests(testId, page, 4);
 
-        if (typeof result !== "string") {
-            setError(undefined);
-            setData(result);
-            setCurrentPage(page);
-        } else {
-            setData(null);
-            setError(result);
-        }
+            if (typeof result !== "string") {
+                setError(undefined);
+                setData(result);
+                setCurrentPage(page);
+            } else {
+                setData(null);
+                setError(result);
+            }
 
-        setLoading(false);
-    };
+            setLoading(false);
+        },
+        [testId]
+    );
 
     const handleResetAttempts = async (studentEmail: string) => {
         setLoading(true);
@@ -63,7 +66,7 @@ export default function AttemptRequestsPaginationList({
         if (testId) {
             fetchRequestsPage(0);
         }
-    }, [testId]);
+    }, [testId, fetchRequestsPage]);
 
     if (error || !data || data.content.length === 0) {
         return (
@@ -71,7 +74,7 @@ export default function AttemptRequestsPaginationList({
                 <h2 className="text-lg font-semibold text-gray-700">
                     Solicitudes Pendientes
                 </h2>
-                <div className="text-center p-6 border border-dashed rounded-xl text-gray-400">
+                <div className="text-center p-6 text-lg text-gray-400">
                     {error
                         ? error
                         : "No hay solicitudes pendientes para esta evaluación."}

@@ -10,6 +10,18 @@ export interface QuestionInfo{
     testId: number;
 }
 
+export interface SaveQuestionPayload{
+    questionId?: number;
+    questionText: string;
+    questionTitle: string | null;
+    questionImageId: number | null;
+    questionImageUrl: string | null;
+    questionImage: File | null;
+    questionType: string;
+    questionStructure: string;
+    testId: number;
+}
+
 export interface PagedQuestions {
     content: QuestionInfo[];
     totalPages: number;

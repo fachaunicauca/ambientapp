@@ -1,7 +1,11 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { PagedTests, TestInfo } from "../interfaces/test-interfaces";
+import {
+    PagedTests,
+    SaveTestPayload,
+    TestInfo,
+} from "../interfaces/test-interfaces";
 import { AxiosError } from "axios";
 
 export const getTestInfo = async (
@@ -80,7 +84,7 @@ export const getTestsPaged = async (
 };
 
 export const saveTestInfo = async (
-    testData: TestInfo
+    testData: SaveTestPayload
 ): Promise<boolean | Record<string, string>> => {
     try {
         const microsApi = await microsApiServer();

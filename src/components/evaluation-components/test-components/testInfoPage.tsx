@@ -4,7 +4,7 @@ import { getTestInfo } from "@/api/apiEvaluation/services/test-services";
 import { Button } from "@/components/ui/buttons/button";
 import Title from "@/components/ui/typography/title";
 import { ChartColumn, Pencil } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TestDetailsCard } from "./testDetailsCard";
 import QuestionsPaginationList from "../question-components/questionsPaginationList";
 import TestFormModal from "./testFormModal";
@@ -20,7 +20,7 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
     const [error, setError] = useState<string>();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         const testResult: TestInfo | string = await getTestInfo(testId);
 
         if (typeof testResult === "string") {
@@ -30,11 +30,11 @@ export default function TestInfoPage({ testId }: TestInfoPageProps) {
             setTestInfo(testResult);
             setError(undefined);
         }
-    };
+    }, [testId]);
 
     useEffect(() => {
         fetchData();
-    }, [testId]);
+    }, [fetchData]);
 
     if (error) {
         return (

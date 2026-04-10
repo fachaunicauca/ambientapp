@@ -11,7 +11,7 @@ import {
 } from "../../ui/layout/table";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getTestResultsPaged } from "@/api/apiEvaluation/services/testResults-services";
 import { MAX_TEST_SCORE } from "@/config/testConfig";
 
@@ -27,25 +27,28 @@ export default function StudentsResultsPaginationTable({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>();
 
-    const fetchResults = async (page: number) => {
-        setLoading(true);
+    const fetchResults = useCallback(
+        async (page: number) => {
+            setLoading(true);
 
-        const response = await getTestResultsPaged(testId, page, 20);
+            const response = await getTestResultsPaged(testId, page, 20);
 
-        if (typeof response === "string") {
-            setError(response);
-            setData(null);
-        } else {
-            setError(undefined);
-            setData(response);
-        }
+            if (typeof response === "string") {
+                setError(response);
+                setData(null);
+            } else {
+                setError(undefined);
+                setData(response);
+            }
 
-        setLoading(false);
-    };
+            setLoading(false);
+        },
+        [testId]
+    );
 
     useEffect(() => {
         fetchResults(currentPage);
-    }, [currentPage, testId]);
+    }, [currentPage, fetchResults]);
 
     if (error || !data || data.content.length === 0) {
         return (

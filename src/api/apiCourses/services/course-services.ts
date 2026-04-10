@@ -1,7 +1,7 @@
 "use server";
 
 import { microsApiServer } from "@/lib/axios";
-import { CourseInfo, PagedCourses } from "../interfaces/course-interfaces";
+import { CourseInfo, PagedCourses, SaveCoursePayload } from "../interfaces/course-interfaces";
 import { AxiosError } from "axios";
 
 export const getCoursesPaged = async (
@@ -81,7 +81,7 @@ export const getCourseById = async (
 };
 
 export const saveCourse = async (
-    courseData: CourseInfo
+    courseData: SaveCoursePayload
 ): Promise<boolean | Record<string, string>> => {
     try {
         const microsApi = await microsApiServer();

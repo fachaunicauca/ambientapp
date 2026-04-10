@@ -1,4 +1,4 @@
-import { CourseInfo } from "@/api/apiCourses/interfaces/course-interfaces";
+import { CourseInfo, SaveCoursePayload } from "@/api/apiCourses/interfaces/course-interfaces";
 import { saveCourse } from "@/api/apiCourses/services/course-services";
 import { useEffect, useState } from "react";
 import {
@@ -56,7 +56,7 @@ export default function CourseFormModal({
     };
 
     const handleSubmit = async () => {
-        const submitData: CourseInfo = {
+        const submitData: SaveCoursePayload = {
             courseName: formData.courseName.trim(),
             teacherEmail: teacherEmail,
             courseGroup: formData.courseGroup.trim().toUpperCase()

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
     deleteQuestionById,
     exportQuestions,
@@ -15,10 +15,8 @@ import QuestionDetailsCard from "./questionDetailsCard";
 import QuestionFormModal from "./questionFormModal";
 import { toast } from "sonner";
 import { PaginationControls } from "@/components/ui/navigation/pagination-controls";
-import ConfirmDialog from "@/components/ui/modals/confirmDialog";
 import QuestionImporterModal from "./questionImporterModal";
 import QuestionExporterModal from "./questionExporterModal";
-import { all } from "axios";
 
 interface Props {
     testId: number;
@@ -38,19 +36,22 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [allQuestions, setAllQuestions] = useState<QuestionInfo[]>([]);
 
-    const fetchQuestionsPage = async (page: number) => {
-        setLoading(true);
-        const result = await getTestQuestionsPaged(testId, page, 6);
-        if (typeof result !== "string") {
-            setData(result);
-            setCurrentPage(page);
-            setError(undefined);
-        } else {
-            setError(result);
-            setData(null);
-        }
-        setLoading(false);
-    };
+    const fetchQuestionsPage = useCallback(
+        async (page: number) => {
+            setLoading(true);
+            const result = await getTestQuestionsPaged(testId, page, 6);
+            if (typeof result !== "string") {
+                setData(result);
+                setCurrentPage(page);
+                setError(undefined);
+            } else {
+                setError(result);
+                setData(null);
+            }
+            setLoading(false);
+        },
+        [testId]
+    );
 
     const fetchAllQuestions = async (): Promise<QuestionInfo[]> => {
         if (!data || data.content.length === 0) return [];
@@ -150,7 +151,7 @@ export default function QuestionsPaginationList({ testId, onDelete }: Props) {
 
     useEffect(() => {
         fetchQuestionsPage(0);
-    }, [testId]);
+    }, [fetchQuestionsPage]);
 
     return (
         <div className="flex flex-col gap-6 mx-2">

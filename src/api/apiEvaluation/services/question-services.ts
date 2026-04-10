@@ -3,7 +3,7 @@
 import { microsApiServer } from "@/lib/axios";
 import {
     PagedQuestions,
-    QuestionInfo,
+    SaveQuestionPayload,
 } from "../interfaces/question-interfaces";
 import { AxiosError } from "axios";
 
@@ -49,7 +49,7 @@ export const getTestQuestionsPaged = async (
 };
 
 export const saveQuestion = async (
-    questionData: QuestionInfo
+    questionData: SaveQuestionPayload
 ): Promise<boolean | Record<string, string>> => {
     try {
         const microsApi = await microsApiServer();

@@ -8,7 +8,10 @@ import {
     DialogClose,
     DialogDescription,
 } from "@/components/ui/modals/dialog";
-import { QuestionInfo } from "@/api/apiEvaluation/interfaces/question-interfaces";
+import {
+    QuestionInfo,
+    SaveQuestionPayload,
+} from "@/api/apiEvaluation/interfaces/question-interfaces";
 import { saveQuestion } from "@/api/apiEvaluation/services/question-services";
 import { Input } from "@/components/ui/form/input";
 import { Button } from "@/components/ui/buttons/button";
@@ -17,6 +20,7 @@ import { QuestionStructureRenderer } from "./questionStructureRenderer";
 import { QuestionType } from "@/types/questionTypes";
 import { Textarea } from "@/components/ui/form/textarea";
 import { Trash2, Upload } from "lucide-react";
+import Image from "next/image";
 
 interface QuestionFormModalProps {
     isOpen: boolean;
@@ -123,7 +127,7 @@ export default function QuestionFormModal({
     );
 
     const handleSubmit = async () => {
-        const submitData: any = {
+        const submitData: SaveQuestionPayload = {
             questionText: formData.questionText,
             questionTitle: formData.questionTitle.trim() || null,
             questionType: formData.questionType,
@@ -140,14 +144,12 @@ export default function QuestionFormModal({
             if (imageFile) {
                 submitData.questionImage = imageFile;
             } else {
-                console.log("No new image file, keeping existing image info");
                 submitData.questionImageId = formData.questionImageId;
                 submitData.questionImageUrl = formData.questionImageUrl;
             }
         } else {
             submitData.questionImage = imageFile;
         }
-        console.log("Submitting data:", submitData);
         const result = await saveQuestion(submitData);
 
         if (result === true) {
@@ -231,20 +233,25 @@ export default function QuestionFormModal({
 
                     {previewUrl ? (
                         <div className="space-y-3">
-                            <div className="relative inline-block">
-                                <img
-                                    src={previewUrl}
-                                    alt="Preview"
-                                    className="max-h-64 rounded-lg border-2 border-gray-200 shadow-sm"
-                                />
-                                <Button
-                                    variant={"destructive"}
-                                    onClick={handleRemoveImage}
-                                    className="absolute -top-2 -right-2 text-white rounded-full p-2 shadow-lg transition-colors"
-                                    title="Eliminar imagen"
-                                >
-                                    <Trash2 size={16} />
-                                </Button>
+                            <div className="flex justify-center">
+                                <div className="relative inline-block">
+                                    <Image
+                                        src={previewUrl}
+                                        alt="Preview"
+                                        width={400}
+                                        height={400}
+                                        className="h-auto max-w-xs rounded-md"
+                                    />
+
+                                    <Button
+                                        variant={"destructive"}
+                                        onClick={handleRemoveImage}
+                                        className="absolute -top-2 -right-2 text-white rounded-full p-2 shadow-lg"
+                                        title="Eliminar imagen"
+                                    >
+                                        <Trash2 size={16} />
+                                    </Button>
+                                </div>
                             </div>
 
                             <div className="text-sm text-gray-600">

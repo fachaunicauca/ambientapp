@@ -1,4 +1,11 @@
 export interface CourseInfo {
+    courseId: number;
+    courseName: string;
+    teacherEmail: string;
+    courseGroup: string;
+}
+
+export interface SaveCoursePayload {
     courseId?: number;
     courseName: string;
     teacherEmail: string;

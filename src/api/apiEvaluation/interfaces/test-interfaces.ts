@@ -11,6 +11,19 @@ export interface TestInfo {
     courseId: number;
 }
 
+export interface SaveTestPayload {
+    testId?: number;
+    teacherEmail: string;
+    testTitle: string;
+    testDescription: string | null;
+    testDurationMinutes: number;
+    testNumberOfQuestions: number;
+    testAttemptLimit: number;
+    testState: number;
+    isPeriodic: boolean;
+    courseId: number;
+}
+
 export interface PagedTests {
     content: TestInfo[];
     totalPages: number;

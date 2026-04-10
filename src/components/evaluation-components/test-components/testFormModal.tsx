@@ -3,7 +3,10 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/buttons/button";
 import { Input } from "@/components/ui/form/input";
 import { saveTestInfo } from "@/api/apiEvaluation/services/test-services";
-import { TestInfo } from "@/api/apiEvaluation/interfaces/test-interfaces";
+import {
+    SaveTestPayload,
+    TestInfo,
+} from "@/api/apiEvaluation/interfaces/test-interfaces";
 import { TEST_STATE_LABELS } from "@/config/testConfig";
 import { Textarea } from "@/components/ui/form/textarea";
 
@@ -64,12 +67,15 @@ export default function TestFormModal({
         setErrors({});
     }, [initialData, isOpen]);
 
-    const handleChange = (field: string, value: any) => {
+    const handleChange = (
+        field: keyof typeof formData,
+        value: string | number | boolean
+    ) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
     const handleSubmit = async () => {
-        const submitData: any = {
+        const submitData: SaveTestPayload = {
             ...formData,
             teacherEmail,
             testDescription: formData.testDescription.trim() || null,
@@ -102,7 +108,9 @@ export default function TestFormModal({
                 <Dialog.Content className="fixed inset-0 flex items-center justify-center z-50 p-4">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-lg max-h-[90vh] overflow-y-auto">
                         <Dialog.Title className="text-lg font-bold">
-                            {initialData ? "Editar Evaluación" : "Crear Evaluación"}
+                            {initialData
+                                ? "Editar Evaluación"
+                                : "Crear Evaluación"}
                         </Dialog.Title>
                         <Dialog.Description className="mt-2 text-gray-700 text-sm">
                             {initialData
@@ -364,7 +372,9 @@ export default function TestFormModal({
                                 </Button>
                             </Dialog.Close>
                             <Button variant="default" onClick={handleSubmit}>
-                                {initialData ? "Guardar Cambios" : "Crear Evaluación"}
+                                {initialData
+                                    ? "Guardar Cambios"
+                                    : "Crear Evaluación"}
                             </Button>
                         </div>
                     </div>
