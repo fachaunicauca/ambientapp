@@ -107,7 +107,7 @@ export default function Curso() {
     };
 
     const handleUnenrollStudent = async (studentId: number) => {
-        if (!studentId || !courseInfo) {
+        if (!studentId || !courseInfo || !courseInfo.courseId) {
             toast.error("Id del estudiante o Curso no proporcionado.");
             return;
         }

@@ -56,10 +56,10 @@ export default function CourseFormModal({
     };
 
     const handleSubmit = async () => {
-        const submitData: any = {
+        const submitData: CourseInfo = {
             courseName: formData.courseName.trim(),
             teacherEmail: teacherEmail,
-            courseGroup: formData.courseGroup.trim().toUpperCase(),
+            courseGroup: formData.courseGroup.trim().toUpperCase()
         };
 
         if (initialData) {

@@ -108,6 +108,7 @@ export default function StudentsPaginationTable({
                                         title="¿Eliminar estudiante?"
                                         description={deleteMessage}
                                         onConfirm={() =>
+                                            student.studentId !== undefined &&
                                             onDelete(student.studentId)
                                         }
                                         trigger={

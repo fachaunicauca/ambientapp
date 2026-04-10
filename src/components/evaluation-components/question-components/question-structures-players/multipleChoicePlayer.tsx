@@ -1,7 +1,7 @@
 import { ChoiceResponse, MultipleChoiceStructure } from "@/types/questionTypes";
 import { parseJson } from "@/utils/parseJson";
 import { Check } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { QuestionStructureComponentProps } from "../questionStructureRenderer";
 
 export const MultipleChoicePlayer = ({

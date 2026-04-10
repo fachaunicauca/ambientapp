@@ -1,6 +1,7 @@
 import { TakeTestQuestion } from "@/api/apiEvaluation/interfaces/takeTest-interfaces";
 import { QuestionStructureRenderer } from "@/components/evaluation-components/question-components/questionStructureRenderer";
 import { QuestionType } from "@/types/questionTypes";
+import Image from "next/image";
 
 interface TakeTestQuestionCardProps {
     question: TakeTestQuestion;
@@ -13,7 +14,7 @@ export default function TakeTestQuestionCard({
     question,
     index,
     onStudentResponse,
-    savedResponse
+    savedResponse,
 }: TakeTestQuestionCardProps) {
     return (
         <div className="w-full bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
@@ -37,11 +38,12 @@ export default function TakeTestQuestionCard({
 
             {/* Imagen (si existe) */}
             {question.questionImageUrl && (
-                <div className="mb-6 flex justify-center">
-                    <img
+                <div className="relative w-6/12 h-64 mx-auto mb-2">
+                    <Image
                         src={question.questionImageUrl}
                         alt="Imagen de la pregunta"
-                        className="w-4/12 rounded-lg border border-gray-200 dark:border-gray-700"
+                        fill
+                        className="object-contain"
                     />
                 </div>
             )}

@@ -14,8 +14,15 @@ export default function MultipleChoiceBuilder({
     const [nextId, setNextId] = useState(1);
     const [isInitialized, setIsInitialized] = useState(false);
 
-    // Parsear la estructura inicial SOLO UNA VEZ
     useEffect(() => {
+        const initializeDefaultAnswers = () => {
+            setAnswers([
+                { id: 1, text: "", correct: false },
+                { id: 2, text: "", correct: false },
+            ]);
+            setNextId(3);
+        };
+
         try {
             const parsed = parseJson<MultipleChoiceStructure>(structure);
             if (parsed?.answers && parsed.answers.length > 0) {
@@ -29,16 +36,10 @@ export default function MultipleChoiceBuilder({
             initializeDefaultAnswers();
         }
         setIsInitialized(true);
+        // No es necesario incluir la dependencia de structure ni onChange ya que este efecto
+        // solo debe ejecutarse una vez al montar el componente
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const initializeDefaultAnswers = () => {
-        const defaultAnswers: ChoiceAnswer[] = [
-            { id: 1, text: "", correct: false },
-            { id: 2, text: "", correct: false },
-        ];
-        setAnswers(defaultAnswers);
-        setNextId(3);
-    };
 
     // Notificar cambios SOLO después de la inicialización
     useEffect(() => {
@@ -50,7 +51,7 @@ export default function MultipleChoiceBuilder({
             };
             onChange(JSON.stringify(newStructure));
         }
-    }, [answers, isInitialized]); 
+    }, [answers, isInitialized]);
 
     const addAnswer = () => {
         const newAnswer: ChoiceAnswer = {

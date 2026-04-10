@@ -60,6 +60,9 @@ export default function ResultadosEvaluacion() {
         };
 
         submitAttempt();
+        // No es necesario incluir las dependencias del store ya que este efecto solo debe
+        // ejecutarse una vez al montar el componente, y las funciones del store son estables
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleBackToEvaluations = () => {

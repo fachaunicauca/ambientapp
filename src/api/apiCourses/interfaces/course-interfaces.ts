@@ -1,5 +1,5 @@
 export interface CourseInfo {
-    courseId: number;
+    courseId?: number;
     courseName: string;
     teacherEmail: string;
     courseGroup: string;

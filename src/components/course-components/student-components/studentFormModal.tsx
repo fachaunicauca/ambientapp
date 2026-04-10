@@ -58,7 +58,7 @@ export default function StudentFormModal({
     };
 
     const handleSubmit = async () => {
-        const submitData: any = {
+        const submitData: StudentInfo = {
             studentFirstName: formData.studentFirstName.trim(),
             studentLastName: formData.studentLastName.trim(),
             studentEmail: formData.studentEmail.trim(),
