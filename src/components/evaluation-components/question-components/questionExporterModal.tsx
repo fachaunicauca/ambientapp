@@ -73,6 +73,7 @@ export default function QuestionExporterModal({
                     );
                 if (searchFilterKey === "questionText")
                     return q.questionText.toLowerCase().includes(needle);
+                return false;
             })();
             const matchesType =
                 filterType === "all" || q.questionType === filterType;
@@ -90,7 +91,11 @@ export default function QuestionExporterModal({
 
     const toggleQuestion = (id: number) => {
         const newSet = new Set(selectedIds);
-        newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+        if (newSet.has(id)) {
+            newSet.delete(id);
+        } else {
+            newSet.add(id);
+        }
         setSelectedIds(newSet);
         if (errors.general) setErrors({});
     };
@@ -109,7 +114,11 @@ export default function QuestionExporterModal({
         e.preventDefault();
         e.stopPropagation();
         const newSet = new Set(expandedQuestions);
-        newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+        if (newSet.has(id)) {
+            newSet.delete(id);
+        } else {
+            newSet.add(id);
+        }
         setExpandedQuestions(newSet);
     };
 
@@ -230,7 +239,9 @@ export default function QuestionExporterModal({
                                             {questionIndexMap.get(q.questionId)}
                                         </span>
                                         <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500 font-medium">
-                                            {QUESTION_TYPE_LABELS[q.questionType] || q.questionType}
+                                            {QUESTION_TYPE_LABELS[
+                                                q.questionType
+                                            ] || q.questionType}
                                         </span>
                                     </div>
 

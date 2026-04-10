@@ -51,7 +51,7 @@ export default function MultipleChoiceBuilder({
             };
             onChange(JSON.stringify(newStructure));
         }
-    }, [answers, isInitialized]);
+    }, [answers, isInitialized, onChange]);
 
     const addAnswer = () => {
         const newAnswer: ChoiceAnswer = {

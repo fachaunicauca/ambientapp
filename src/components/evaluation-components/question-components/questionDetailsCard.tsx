@@ -6,6 +6,7 @@ import { QuestionType } from "@/types/questionTypes";
 import ConfirmDialog from "@/components/ui/modals/confirmDialog";
 import { Button } from "@/components/ui/buttons/button";
 import { Pencil, Trash2 } from "lucide-react";
+import Image from "next/image";
 
 interface QuestionDetailsCardProps {
     question: QuestionInfo;
@@ -50,12 +51,17 @@ export default function QuestionDetailsCard({
                         <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                             Imagen
                         </dt>
+
                         <dd className="text-lg font-semibold text-gray-900 dark:text-white">
-                            <img
-                                src={question.questionImageUrl}
-                                alt="Imagen de la Pregunta"
-                                className="max-w-full h-auto rounded-md"
-                            />
+                            <div className="relative mx-auto">
+                                <Image
+                                    src={question.questionImageUrl}
+                                    alt="Imagen de la Pregunta"
+                                    width={800}
+                                    height={600}
+                                    className="object-contain rounded-md"
+                                />
+                            </div>
                         </dd>
                     </div>
                 )}

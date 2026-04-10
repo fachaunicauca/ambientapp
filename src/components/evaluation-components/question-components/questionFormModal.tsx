@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
     Dialog,
-    DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -112,9 +111,16 @@ export default function QuestionFormModal({
         }
     };
 
-    const handleChange = (field: string, value: string) => {
+    const handleChange = useCallback((field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
-    };
+    }, []);
+
+    const handleStructureChange = useCallback(
+        (newStructure: string) => {
+            handleChange("questionStructure", newStructure);
+        },
+        [handleChange]
+    );
 
     const handleSubmit = async () => {
         const submitData: any = {
@@ -163,9 +169,7 @@ export default function QuestionFormModal({
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
-                        {initialData
-                            ? "Editar Pregunta"
-                            : "Agregar Pregunta"}
+                        {initialData ? "Editar Pregunta" : "Agregar Pregunta"}
                     </DialogTitle>
                     <DialogDescription>
                         {initialData
@@ -333,9 +337,7 @@ export default function QuestionFormModal({
                         mode="builder"
                         questionType={formData.questionType as QuestionType}
                         structure={formData.questionStructure}
-                        onChange={(newStructure) => {
-                            handleChange("questionStructure", newStructure);
-                        }}
+                        onChange={handleStructureChange}
                     />
                 </div>
                 {errors.questionStructure && (

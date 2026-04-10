@@ -140,7 +140,11 @@ export default function QuestionImporterModal({
 
     const toggleQuestion = (index: number) => {
         const newSet = new Set(selected);
-        newSet.has(index) ? newSet.delete(index) : newSet.add(index);
+        if (newSet.has(index)) {
+            newSet.delete(index);
+        } else {
+            newSet.add(index);
+        }
         setSelected(newSet);
     };
 
@@ -186,12 +190,16 @@ export default function QuestionImporterModal({
 
     const toggleOpenCategory = (name: string) => {
         const newSet = new Set(openCategories);
-        newSet.has(name) ? newSet.delete(name) : newSet.add(name);
+        if (newSet.has(name)) {
+            newSet.delete(name);
+        } else {
+            newSet.add(name);
+        }
         setOpenCategories(newSet);
     };
 
     const handleSubmit = () => {
-        if(!file){
+        if (!file) {
             setErrors({ file: "Debes seleccionar un archivo." });
             return;
         }
@@ -201,7 +209,10 @@ export default function QuestionImporterModal({
             return;
         }
 
-        onImport(file, Array.from(selected).sort((a, b) => a - b));
+        onImport(
+            file,
+            Array.from(selected).sort((a, b) => a - b)
+        );
         handleClose();
     };
 
@@ -238,7 +249,11 @@ export default function QuestionImporterModal({
         e.preventDefault();
         e.stopPropagation();
         const newSet = new Set(expandedQuestions);
-        newSet.has(index) ? newSet.delete(index) : newSet.add(index);
+        if (newSet.has(index)) {
+            newSet.delete(index);
+        } else {
+            newSet.add(index);
+        }
         setExpandedQuestions(newSet);
     };
 

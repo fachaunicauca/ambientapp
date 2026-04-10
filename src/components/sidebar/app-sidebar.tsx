@@ -25,8 +25,6 @@ import {
 import Image from "next/image"
 import { SidebarTrigger, useSidebar } from "@/components/ui/navigation/sidebar";
 import { useAuthStore } from "@/store/authStore"
-import { title } from "process"
-import { url } from "inspector"
 
 const data = {
     navMain: [

@@ -1,4 +1,4 @@
-import { MultipleChoiceStructure } from "@/types/questionTypes";
+import { ChoiceAnswer, MultipleChoiceStructure } from "@/types/questionTypes";
 import { parseJson } from "@/utils/parseJson";
 import { QuestionStructureComponentProps } from "../questionStructureRenderer";
 
@@ -23,7 +23,7 @@ export const MultipleChoiceView = ({
                 Opciones ({parsedStructure.correctAnswerCount} correctas):
             </p>
             <ul className="grid grid-cols-1 gap-2">
-                {parsedStructure.answers.map((ans: any) => (
+                {parsedStructure.answers.map((ans: ChoiceAnswer) => (
                     <li
                         key={ans.id}
                         className={`p-3 rounded border ${

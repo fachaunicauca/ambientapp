@@ -6,8 +6,7 @@ import {
     deleteTest,
 } from "@/api/apiEvaluation/services/test-services";
 import { PagedTests } from "@/api/apiEvaluation/interfaces/test-interfaces";
-import { Button } from "@/components/ui/buttons/button";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { TestListItem } from "./testListItem";
